@@ -1,0 +1,48 @@
+# Build folders
+bin/
+obj/
+out/
+
+# Visual Studio / Rider / VS Code
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vscode/
+
+# Logs
+*.log
+
+# NuGet packages
+*.nupkg
+*.snupkg
+packages/
+
+# Local settings
+appsettings.*.json
+
+# ReSharper / JetBrains
+_ReSharper*/
+*.DotSettings.user
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*.DS_Store
+
+# Publish files
+*.Publish.xml
+
+# Test coverage files
+TestResults/
+*.coverage
+*.coveragexml
+*.trx
+*.lcov
+
+# Environment files
+.env
+.env.local
+.env.*.local

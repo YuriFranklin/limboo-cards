@@ -1,0 +1,10 @@
+{
+  "settings": {
+    "documentationRules": {
+      "companyName": "LimbooCards",
+      "documentExposedElements": false,
+      "documentInternalElements": false,
+      "fileHeaderTemplate": null
+    }
+  }
+}
