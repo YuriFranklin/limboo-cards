@@ -6,6 +6,9 @@
     <RootNamespace>LimbooCards</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="HotChocolate.ApolloFederation" Version="15.1.8" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.8" />
+    <PackageReference Include="HotChocolate.AspNetCore.Voyager" Version="10.5.5" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.19" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

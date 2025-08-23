@@ -1,4 +1,5 @@
 using System.Reflection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var assembly = Assembly.GetExecutingAssembly();
@@ -10,22 +11,14 @@ foreach (var type in serviceTypes)
     builder.Services.AddScoped(type);
 }
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services
+    .AddGraphQLServer()
+    .AddApolloFederation();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
-app.MapControllers();
+app.MapGraphQL("/graphql");
 
 app.Run();
