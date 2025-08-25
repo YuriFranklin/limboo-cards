@@ -1,8 +1,6 @@
-namespace LimbooCards.UnitTests
+namespace LimbooCards.UnitTests.Domain
 {
-    using OneOf;
     using LimbooCards.Domain.Entities;
-
     public class SubjectTests
     {
         [Fact]

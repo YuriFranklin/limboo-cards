@@ -4,9 +4,9 @@ namespace LimbooCards.Domain.Entities
     {
         public Card(
             string title,
-            string description,
             bool hasDescription,
             Guid createdBy,
+            string? description = null,
             Guid? id = null,
             Guid? bucketId = null,
             Guid? planId = null,
@@ -34,7 +34,7 @@ namespace LimbooCards.Domain.Entities
 
         public Guid Id { get; private set; }
         public string Title { get; private set; }
-        public string Description { get; private set; }
+        public string? Description { get; private set; }
         public bool HasDescription { get; private set; }
         public Guid CreatedBy { get; private set; }
         public DateTime CreatedAt { get; private set; }
