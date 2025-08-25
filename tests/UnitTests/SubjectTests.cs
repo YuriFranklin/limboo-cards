@@ -10,8 +10,8 @@ namespace LimbooCards.UnitTests
         {
             var contents = new List<Content>
             {
-                new("Content1", "Checklist1", OneOf<string,bool>.FromT0("Value1")),
-                new("Content2", "Checklist2", OneOf<string,bool>.FromT1(true))
+                new("Content1", "Checklist1", ContentStatus.OK),
+                new("Content2", "Checklist2", ContentStatus.OK)
             };
 
             var equivalencies = new List<string> { "Equiv1", "Equiv2" };
@@ -21,6 +21,8 @@ namespace LimbooCards.UnitTests
                 new("PublisherB", isExpect: true)
             };
 
+            var ofert = new Ofert("DIG", "AE");
+
             var subject = new Subject(
                 id: null,
                 name: "Mathematics",
@@ -28,7 +30,8 @@ namespace LimbooCards.UnitTests
                 status: SubjectStatus.Incomplete,
                 equivalencies: equivalencies,
                 contents: contents,
-                publishers: publishers
+                publishers: publishers,
+                oferts: new List<Ofert> { ofert }
             );
 
             Assert.NotEqual(Guid.Empty, subject.Id);
@@ -109,12 +112,15 @@ namespace LimbooCards.UnitTests
         {
             var ex = Assert.Throws<ArgumentException>(() =>
             {
+                var ofert = new Ofert("DIG", "AE");
+
                 var subject = new Subject(
                     id: Guid.NewGuid(),
                     name: "Math",
                     semester: "1st",
                     status: SubjectStatus.Incomplete,
-                    equivalencies: new List<string> { "Equiv1", "" }
+                    equivalencies: new List<string> { "Equiv1", "" },
+                    oferts: new List<Ofert> { ofert }
                 );
             });
 
@@ -126,11 +132,14 @@ namespace LimbooCards.UnitTests
         {
             var ex = Assert.Throws<ArgumentException>(() =>
             {
+                var ofert = new Ofert("DIG", "AE");
+
                 var subject = new Subject(
                     id: Guid.NewGuid(),
                     name: "Math",
                     semester: "1st",
                     status: SubjectStatus.Incomplete,
+                    oferts: new List<Ofert> { ofert },
                     contents: new List<Content> { null! }
                 );
             });
@@ -148,6 +157,8 @@ namespace LimbooCards.UnitTests
                 new("PublisherC")
             };
 
+            var ofert = new Ofert("DIG", "AE");
+
             var ex = Assert.Throws<ArgumentException>(() =>
             {
                 var subject = new Subject(
@@ -155,7 +166,8 @@ namespace LimbooCards.UnitTests
                     name: "Math",
                     semester: "1st",
                     status: SubjectStatus.Incomplete,
-                    publishers: publishers
+                    publishers: publishers,
+                    oferts: new List<Ofert> { ofert }
                 );
             });
 
@@ -171,6 +183,8 @@ namespace LimbooCards.UnitTests
                 new("PublisherB", isCurrent: true)
             };
 
+            var ofert = new Ofert("DIG", "AE");
+
             var ex = Assert.Throws<ArgumentException>(() =>
             {
                 var subject = new Subject(
@@ -178,7 +192,8 @@ namespace LimbooCards.UnitTests
                     name: "Math",
                     semester: "1st",
                     status: SubjectStatus.Incomplete,
-                    publishers: publishers
+                    publishers: publishers,
+                    oferts: new List<Ofert> { ofert }
                 );
             });
 
@@ -194,6 +209,8 @@ namespace LimbooCards.UnitTests
                 new("PublisherB", isExpect: true)
             };
 
+            var ofert = new Ofert("DIG", "AE");
+
             var ex = Assert.Throws<ArgumentException>(() =>
             {
                 var subject = new Subject(
@@ -201,7 +218,8 @@ namespace LimbooCards.UnitTests
                     name: "Math",
                     semester: "1st",
                     status: SubjectStatus.Incomplete,
-                    publishers: publishers
+                    publishers: publishers,
+                    oferts: new List<Ofert> { ofert }
                 );
             });
 

@@ -2,16 +2,16 @@ namespace LimbooCards.Domain.Entities
 {
     public class User
     {
-        public User(Guid id, string username)
+        public User(Guid id, string fullName)
         {
             this.Id = id;
-            this.Username = username;
+            this.FullName = fullName;
 
             this.Validate();
         }
 
         public Guid Id { get; private set; }
-        public string Username { get; private set; }
+        public string FullName { get; private set; }
 
         private void Validate()
         {
@@ -20,9 +20,9 @@ namespace LimbooCards.Domain.Entities
                 throw new ArgumentException("Id must be set.", nameof(this.Id));
             }
 
-            if (string.IsNullOrWhiteSpace(this.Username))
+            if (string.IsNullOrWhiteSpace(this.FullName))
             {
-                throw new ArgumentException("Username cannot be empty.", nameof(this.Username));
+                throw new ArgumentException("FullName cannot be empty.", nameof(this.FullName));
             }
         }
     }

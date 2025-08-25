@@ -3,12 +3,14 @@ namespace LimbooCards.Domain.Entities
     public class ChecklistItem
     {
         public ChecklistItem(
+            string id,
             string title,
             bool isChecked,
             string orderHint,
             DateTime updatedAt,
             Guid updatedBy)
         {
+            this.Id = id;
             this.Title = title;
             this.IsChecked = isChecked;
             this.OrderHint = orderHint;
@@ -18,6 +20,7 @@ namespace LimbooCards.Domain.Entities
             this.Validate();
         }
 
+        public string Id { get; private set; }
         public string Title { get; private set; }
         public bool IsChecked { get; private set; }
         public string OrderHint { get; private set; }
@@ -26,6 +29,10 @@ namespace LimbooCards.Domain.Entities
 
         private void Validate()
         {
+            if (string.IsNullOrWhiteSpace(this.Id))
+            {
+                throw new ArgumentException("Id cannot be empty.", nameof(this.Id));
+            }
             if (string.IsNullOrWhiteSpace(this.Title))
             {
                 throw new ArgumentException("Title cannot be empty.", nameof(this.Title));

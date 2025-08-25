@@ -7,18 +7,18 @@ namespace LimbooCards.UnitTests
         public void User_ShouldInitializeProperties_WhenValidParametersProvided()
         {
             var id = Guid.NewGuid();
-            var username = "testuser";
+            var fullName = "Test User";
 
-            var user = new User(id, username);
+            var user = new User(id, fullName);
 
             Assert.Equal(id, user.Id);
-            Assert.Equal(username, user.Username);
+            Assert.Equal(fullName, user.FullName);
         }
 
         [Fact]
         public void User_ShouldThrowException_WhenIdIsEmpty()
         {
-            var exception = Assert.Throws<ArgumentException>(() => new User(Guid.Empty, "testuser"));
+            var exception = Assert.Throws<ArgumentException>(() => new User(Guid.Empty, "Test User"));
             Assert.Contains("Id must be set.", exception.Message);
         }
 
@@ -26,11 +26,11 @@ namespace LimbooCards.UnitTests
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void User_ShouldThrowException_WhenUsernameIsInvalid(string invalidUsername)
+        public void User_ShouldThrowException_WhenUsernameIsInvalid(string invalidFullName)
         {
             var id = Guid.NewGuid();
-            var exception = Assert.Throws<ArgumentException>(() => new User(id, invalidUsername));
-            Assert.Equal("Username cannot be empty. (Parameter 'Username')", exception.Message);
+            var exception = Assert.Throws<ArgumentException>(() => new User(id, invalidFullName));
+            Assert.Equal("FullName cannot be empty. (Parameter 'FullName')", exception.Message);
         }
     }
 }

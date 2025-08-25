@@ -9,6 +9,7 @@ namespace LimbooCards.UnitTests
             var updatedAt = DateTime.UtcNow;
 
             var item = new ChecklistItem(
+                id: "1",
                 title: "Item 1",
                 isChecked: false,
                 orderHint: "A",
@@ -33,6 +34,7 @@ namespace LimbooCards.UnitTests
             var ex = Assert.Throws<ArgumentException>(() =>
             {
                 var item = new ChecklistItem(
+                    id: "1",
                     title: "",
                     isChecked: false,
                     orderHint: "A",
@@ -53,6 +55,7 @@ namespace LimbooCards.UnitTests
             var ex = Assert.Throws<ArgumentException>(() =>
             {
                 var item = new ChecklistItem(
+                    id: "1",
                     title: "Item 1",
                     isChecked: false,
                     orderHint: "",
@@ -72,6 +75,7 @@ namespace LimbooCards.UnitTests
             var ex = Assert.Throws<ArgumentException>(() =>
             {
                 var item = new ChecklistItem(
+                    id: "1",
                     title: "Item 1",
                     isChecked: false,
                     orderHint: "A",
@@ -91,6 +95,7 @@ namespace LimbooCards.UnitTests
             var ex = Assert.Throws<ArgumentException>(() =>
             {
                 var item = new ChecklistItem(
+                    id: "1",
                     title: "Item 1",
                     isChecked: false,
                     orderHint: "A",

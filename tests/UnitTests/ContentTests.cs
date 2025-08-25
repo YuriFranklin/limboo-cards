@@ -1,36 +1,32 @@
 namespace LimbooCards.UnitTests
 {
-    using OneOf;
     public class ContentTests
     {
         [Fact]
-        public void Content_ShouldInitializeWithStringValue()
+        public void Content_ShouldInitialize_WithStatus()
         {
             var content = new Content(
                 name: "Content Name",
                 checklistItemTitle: "Checklist Item",
-                value: OneOf<string, bool>.FromT0("Some value")
+                status: ContentStatus.OK
             );
 
             Assert.Equal("Content Name", content.Name);
             Assert.Equal("Checklist Item", content.ChecklistItemTitle);
-            Assert.True(content.Value.IsT0);
-            Assert.Equal("Some value", content.Value.AsT0);
+            Assert.Equal(ContentStatus.OK, content.ContentStatus);
         }
 
         [Fact]
-        public void Content_ShouldInitializeWithBoolValue()
+        public void Content_ShouldInitialize_WithoutStatus()
         {
             var content = new Content(
                 name: "Content Name",
-                checklistItemTitle: "Checklist Item",
-                value: OneOf<string, bool>.FromT1(true)
+                checklistItemTitle: "Checklist Item"
             );
 
             Assert.Equal("Content Name", content.Name);
             Assert.Equal("Checklist Item", content.ChecklistItemTitle);
-            Assert.True(content.Value.IsT1);
-            Assert.True(content.Value.AsT1);
+            Assert.Null(content.ContentStatus);
         }
 
         [Fact]
@@ -40,8 +36,7 @@ namespace LimbooCards.UnitTests
             {
                 var content = new Content(
                     name: "",
-                    checklistItemTitle: "Checklist Item",
-                    value: OneOf<string, bool>.FromT0("Value")
+                    checklistItemTitle: "Checklist Item"
                 );
             });
 
@@ -55,27 +50,11 @@ namespace LimbooCards.UnitTests
             {
                 var content = new Content(
                     name: "Content Name",
-                    checklistItemTitle: "",
-                    value: OneOf<string, bool>.FromT0("Value")
+                    checklistItemTitle: ""
                 );
             });
 
             Assert.Contains("ChecklistItemTitle cannot be empty.", ex.Message.Split(Environment.NewLine)[0]);
-        }
-
-        [Fact]
-        public void Content_ShouldThrow_WhenStringValueIsEmpty()
-        {
-            var ex = Assert.Throws<ArgumentException>(() =>
-            {
-                var content = new Content(
-                    name: "Content Name",
-                    checklistItemTitle: "Checklist Item",
-                    value: OneOf<string, bool>.FromT0("")
-                );
-            });
-
-            Assert.Contains("Value (string) cannot be empty.", ex.Message.Split(Environment.NewLine)[0]);
         }
     }
 }
