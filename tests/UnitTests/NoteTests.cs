@@ -1,6 +1,5 @@
 namespace LimbooCards.UnitTests
 {
-    using LimbooCards.Domain.Entities;
     public class NoteTests
     {
         [Fact]
