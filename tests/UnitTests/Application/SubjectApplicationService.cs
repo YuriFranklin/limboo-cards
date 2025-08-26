@@ -1,0 +1,127 @@
+namespace LimbooCards.UnitTests.Application
+{
+    using AutoMapper;
+    using LimbooCards.Application.DTOs;
+    using LimbooCards.Application.Services;
+    using LimbooCards.Domain.Repositories;
+    using Moq;
+    public class SubjectApplicationServiceTests
+    {
+        private readonly Mock<ISubjectRepository> subjectRepositoryMock = new();
+        private readonly Mock<IUserRepository> userRepositoryMock = new();
+        private readonly Mock<IMapper> mapperMock = new();
+        private readonly SubjectApplicationService service;
+
+        public SubjectApplicationServiceTests()
+        {
+            service = new SubjectApplicationService(subjectRepositoryMock.Object, userRepositoryMock.Object, mapperMock.Object);
+        }
+
+        [Fact]
+        public async Task CreateSubjectAsync_Should_Create_Subject()
+        {
+            var dto = new CreateSubjectDto
+            {
+                Name = "Math",
+                Semester = "2025.1",
+                Status = SubjectStatus.Complete,
+                OwnerId = Guid.NewGuid(),
+                CoOwnerIds = new List<Guid> { Guid.NewGuid() },
+                Oferts = new List<OfertDto> { new() { Project = "P1", Module = "M1" } },
+            };
+
+            var owner = new User(dto.OwnerId.Value, "Owner Name");
+            var coOwner = new User(dto.CoOwnerIds.First(), "CoOwner Name");
+
+            userRepositoryMock.Setup(r => r.GetUserByIdAsync(dto.OwnerId.Value)).ReturnsAsync(owner);
+            userRepositoryMock.Setup(r => r.GetUserByIdAsync(dto.CoOwnerIds.First())).ReturnsAsync(coOwner);
+
+            mapperMock.Setup(m => m.Map<Ofert>(It.IsAny<OfertDto>())).Returns((OfertDto o) => new Ofert(o.Project, o.Module));
+
+            var result = await service.CreateSubjectAsync(dto);
+
+            Assert.NotNull(result);
+            Assert.Equal(dto.Name, result.Name);
+            Assert.Equal(owner, result.Owner);
+            Assert.NotNull(result.CoOwners);
+            Assert.Contains(coOwner, result.CoOwners);
+            subjectRepositoryMock.Verify(r => r.AddSubjectAsync(It.IsAny<Subject>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task GetSubjectByIdAsync_Should_Return_SubjectDto_When_Found()
+        {
+            var subjectId = Guid.NewGuid();
+            var subject = new Subject(subjectId, "Math", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P1", "M1") });
+            var dto = new SubjectDto { Name = "Math" };
+
+            subjectRepositoryMock.Setup(r => r.GetSubjectByIdAsync(subjectId)).ReturnsAsync(subject);
+            mapperMock.Setup(m => m.Map<SubjectDto>(subject)).Returns(dto);
+
+            var result = await service.GetSubjectByIdAsync(subjectId);
+
+            Assert.NotNull(result);
+            Assert.Equal(dto.Name, result.Name);
+        }
+
+        [Fact]
+        public async Task GetAllSubjectsAsync_Should_Return_SubjectDtos()
+        {
+            var subjects = new List<Subject>
+        {
+            new(Guid.NewGuid(), "Math", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P1","M1") }),
+            new(Guid.NewGuid(), "Physics", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P2","M2") })
+        };
+
+            var dtos = subjects.Select(s => new SubjectDto { Name = s.Name }).ToList();
+
+            subjectRepositoryMock.Setup(r => r.GetAllSubjectsAsync()).ReturnsAsync(subjects);
+            mapperMock.Setup(m => m.Map<IEnumerable<SubjectDto>>(subjects)).Returns(dtos);
+
+            var result = await service.GetAllSubjectsAsync();
+
+            Assert.Equal(2, result.Count());
+            Assert.Contains(result, r => r.Name == "Math");
+            Assert.Contains(result, r => r.Name == "Physics");
+        }
+
+        [Fact]
+        public async Task UpdateSubjectAsync_Should_Update_Subject()
+        {
+            var dto = new UpdateSubjectDto
+            {
+                Id = Guid.NewGuid(),
+                Name = "Math Updated",
+                Semester = "2025.1",
+                Status = SubjectStatus.Complete,
+                OwnerId = Guid.NewGuid(),
+                CoOwnerIds = new List<Guid> { Guid.NewGuid() },
+                Oferts = new List<OfertDto> { new() { Project = "P1", Module = "M1" } }
+            };
+
+            var existingSubject = new Subject(dto.Id, "Math", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P0", "M0") });
+            var owner = new User(dto.OwnerId.Value, "Owner Name");
+            var coOwner = new User(dto.CoOwnerIds.First(), "CoOwner Name");
+
+            subjectRepositoryMock.Setup(r => r.GetSubjectByIdAsync(dto.Id)).ReturnsAsync(existingSubject);
+            userRepositoryMock.Setup(r => r.GetUserByIdAsync(dto.OwnerId.Value)).ReturnsAsync(owner);
+            userRepositoryMock.Setup(r => r.GetUserByIdAsync(dto.CoOwnerIds.First())).ReturnsAsync(coOwner);
+            mapperMock.Setup(m => m.Map<Ofert>(It.IsAny<OfertDto>())).Returns((OfertDto o) => new Ofert(o.Project, o.Module));
+
+            await service.UpdateSubjectAsync(dto);
+
+            subjectRepositoryMock.Verify(r => r.UpdateSubjectAsync(It.IsAny<Subject>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteSubjectAsync_Should_Call_Repository()
+        {
+            var subjectId = Guid.NewGuid();
+
+            await service.DeleteSubjectAsync(subjectId);
+
+            subjectRepositoryMock.Verify(r => r.DeleteSubjectAsync(subjectId), Times.Once);
+        }
+    }
+
+}
