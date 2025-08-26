@@ -1,11 +1,5 @@
 namespace LimbooCards.UnitTests.Application
 {
-    using AutoMapper;
-    using LimbooCards.Application.DTOs;
-    using LimbooCards.Application.Services;
-    using LimbooCards.Domain.Entities;
-    using LimbooCards.Domain.Repositories;
-    using Moq;
     public class CardApplicationServiceTests
     {
         private readonly Mock<ICardRepository> cardRepositoryMock;
@@ -20,7 +14,7 @@ namespace LimbooCards.UnitTests.Application
         }
 
         [Fact]
-        public async Task CreateCardAsync_ShouldAddCardAndReturnIt()
+        public async Task CreateCardAsync_ShouldAddCardAndReturn_CardDto()
         {
             var dto = new CreateCardDto
             {
@@ -29,13 +23,23 @@ namespace LimbooCards.UnitTests.Application
                 Description = "Description"
             };
             var card = new Card(title: dto.Title, description: dto.Description, hasDescription: false, createdBy: dto.CreatedBy);
+            var cardDto = new CardDto
+            {
+                Title = card.Title,
+                CreatedBy = card.CreatedBy,
+                Description = card.Description
+            };
 
             mapperMock.Setup(m => m.Map<Card>(dto)).Returns(card);
+            mapperMock.Setup(m => m.Map<CardDto>(card)).Returns(cardDto);
 
             var result = await service.CreateCardAsync(dto);
 
             cardRepositoryMock.Verify(r => r.AddCardAsync(card), Times.Once);
-            Assert.Equal(card, result);
+            Assert.NotNull(result);
+            Assert.Equal(card.Title, result.Title);
+            Assert.Equal(card.Description, result.Description);
+            Assert.Equal(card.CreatedBy, result.CreatedBy);
         }
 
         [Fact]

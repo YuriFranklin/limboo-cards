@@ -10,12 +10,13 @@ namespace LimbooCards.Application.Services
         private readonly ICardRepository cardRepository = cardRepository;
         private readonly IMapper mapper = mapper;
 
-        public async Task<Card> CreateCardAsync(CreateCardDto dto)
+        public async Task<CardDto> CreateCardAsync(CreateCardDto dto)
         {
             var card = mapper.Map<Card>(dto);
 
             await this.cardRepository.AddCardAsync(card);
-            return card;
+
+            return mapper.Map<CardDto>(card);
         }
 
         public async Task<CardDto?> GetCardByIdAsync(Guid cardId)

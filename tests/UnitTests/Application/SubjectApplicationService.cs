@@ -1,10 +1,5 @@
 namespace LimbooCards.UnitTests.Application
 {
-    using AutoMapper;
-    using LimbooCards.Application.DTOs;
-    using LimbooCards.Application.Services;
-    using LimbooCards.Domain.Repositories;
-    using Moq;
     public class SubjectApplicationServiceTests
     {
         private readonly Mock<ISubjectRepository> subjectRepositoryMock = new();
@@ -18,7 +13,7 @@ namespace LimbooCards.UnitTests.Application
         }
 
         [Fact]
-        public async Task CreateSubjectAsync_Should_Create_Subject()
+        public async Task CreateSubjectAsync_Should_Create_SubjectDto()
         {
             var dto = new CreateSubjectDto
             {
@@ -38,15 +33,28 @@ namespace LimbooCards.UnitTests.Application
 
             mapperMock.Setup(m => m.Map<Ofert>(It.IsAny<OfertDto>())).Returns((OfertDto o) => new Ofert(o.Project, o.Module));
 
+            var subjectDto = new SubjectDto
+            {
+                Name = dto.Name,
+                Semester = dto.Semester,
+                Status = dto.Status,
+                Owner = new UserDto { Id = owner.Id, FullName = owner.FullName },
+                CoOwners = new List<UserDto> { new UserDto { Id = coOwner.Id, FullName = coOwner.FullName } },
+                Oferts = dto.Oferts.Select(o => new OfertDto { Project = o.Project, Module = o.Module }).ToList()
+            };
+
+            mapperMock.Setup(m => m.Map<SubjectDto>(It.IsAny<Subject>())).Returns(subjectDto);
+
             var result = await service.CreateSubjectAsync(dto);
 
             Assert.NotNull(result);
             Assert.Equal(dto.Name, result.Name);
-            Assert.Equal(owner, result.Owner);
+            Assert.Equal(owner.FullName, result.Owner?.FullName);
             Assert.NotNull(result.CoOwners);
-            Assert.Contains(coOwner, result.CoOwners);
+            Assert.Contains(result.CoOwners, c => c.Id == coOwner.Id && c.FullName == coOwner.FullName);
             subjectRepositoryMock.Verify(r => r.AddSubjectAsync(It.IsAny<Subject>()), Times.Once);
         }
+
 
         [Fact]
         public async Task GetSubjectByIdAsync_Should_Return_SubjectDto_When_Found()

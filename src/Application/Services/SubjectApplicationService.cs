@@ -11,7 +11,7 @@ namespace LimbooCards.Application.Services
         private readonly IUserRepository userRepository = userRepository;
         private readonly IMapper mapper = mapper;
 
-        public async Task<Subject> CreateSubjectAsync(CreateSubjectDto dto)
+        public async Task<SubjectDto> CreateSubjectAsync(CreateSubjectDto dto)
         {
             var oferts = dto.Oferts?.Select(o => mapper.Map<Ofert>(o)).ToList() ?? new List<Ofert>();
             var contents = dto.Contents?.Select(c => mapper.Map<Content>(c)).ToList();
@@ -20,7 +20,8 @@ namespace LimbooCards.Application.Services
             User? owner = null;
             if (dto.OwnerId.HasValue)
             {
-                owner = await userRepository.GetUserByIdAsync(dto.OwnerId.Value) ?? throw new ArgumentException("Owner not found");
+                owner = await userRepository.GetUserByIdAsync(dto.OwnerId.Value)
+                        ?? throw new ArgumentException("Owner not found");
             }
 
             List<User>? coOwners = null;
@@ -29,7 +30,8 @@ namespace LimbooCards.Application.Services
                 coOwners = new List<User>();
                 foreach (var id in dto.CoOwnerIds)
                 {
-                    var co = await userRepository.GetUserByIdAsync(id) ?? throw new ArgumentException($"CoOwner {id} not found");
+                    var co = await userRepository.GetUserByIdAsync(id)
+                            ?? throw new ArgumentException($"CoOwner {id} not found");
                     coOwners.Add(co);
                 }
             }
@@ -50,7 +52,8 @@ namespace LimbooCards.Application.Services
             );
 
             await this.subjectRepository.AddSubjectAsync(subject);
-            return subject;
+
+            return mapper.Map<SubjectDto>(subject);
         }
 
         public async Task<SubjectDto?> GetSubjectByIdAsync(Guid subjectId)

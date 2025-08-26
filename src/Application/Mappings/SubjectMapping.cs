@@ -14,6 +14,8 @@ namespace LimbooCards.Application.Mappings
                 .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner))
                 .ForMember(dest => dest.CoOwners, opt => opt.MapFrom(src => src.CoOwners));
 
+            CreateMap<SubjectDto, Subject>();
+
             CreateMap<Ofert, OfertDto>().ReverseMap();
 
             CreateMap<Content, ContentDto>().ReverseMap();

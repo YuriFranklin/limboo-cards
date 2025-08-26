@@ -1,4 +1,4 @@
-namespace LimbooCards.Domain.Entities
+namespace LimbooCards.Domain.Events
 {
     public class ChecklistItemCompleted
     {
