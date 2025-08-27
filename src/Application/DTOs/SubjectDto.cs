@@ -14,7 +14,5 @@ namespace LimbooCards.Application.DTOs
         public UserDto? Owner { get; set; }
         public List<UserDto>? CoOwners { get; set; }
         public List<SubjectPublisherDto>? Publishers { get; set; }
-        public bool? IsCurrent { get; set; }
-        public bool? IsExpect { get; set; }
     }
 }

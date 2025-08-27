@@ -45,6 +45,37 @@ namespace LimbooCards.UnitTests.Application
         }
 
         [Fact]
+        public async Task GetUsersByNameAsync_Should_Return_UserDtos_When_Found()
+        {
+            var fullName = "Jane";
+            var users = new List<User>
+            {
+                new(Guid.NewGuid(), "Jane Doe", "user1@test.com"),
+                new(Guid.NewGuid(), "Alice", "user2@test.com"),
+                new(Guid.NewGuid(), "Bob", "user3@test.com")
+            };
+
+            var expectedDtos = users
+                .Where(u => u.FullName.Contains(fullName, StringComparison.OrdinalIgnoreCase))
+                .Select(u => new UserDto { Id = u.Id, FullName = u.FullName })
+                .ToList();
+
+            userRepositoryMock
+                .Setup(r => r.GetUsersByNameAsync(fullName))
+                .ReturnsAsync([.. users.Where(u => u.FullName.Contains(fullName, StringComparison.OrdinalIgnoreCase))]);
+
+            mapperMock
+                .Setup(m => m.Map<IEnumerable<UserDto>>(It.IsAny<IEnumerable<User>>()))
+                .Returns(expectedDtos);
+
+            var result = await service.GetUsersByNameAsync(fullName);
+
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+            Assert.All(result, dto => Assert.Contains(fullName, dto.FullName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        [Fact]
         public async Task GetAllUsersAsync_Should_Return_List_Of_UserDto()
         {
             var users = new List<User>

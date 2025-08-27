@@ -25,6 +25,12 @@ namespace LimbooCards.Application.Services
             return mapper.Map<UserDto>(user);
         }
 
+        public async Task<IEnumerable<UserDto>> GetUsersByNameAsync(string fullName)
+        {
+            var users = await userRepository.GetUsersByNameAsync(fullName);
+            return mapper.Map<IEnumerable<UserDto>>(users);
+        }
+
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
             var users = await userRepository.GetAllUsersAsync();

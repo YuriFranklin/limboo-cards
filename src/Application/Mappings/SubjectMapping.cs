@@ -6,9 +6,9 @@ namespace LimbooCards.Application.Mappings
     using System.Linq;
     using System.Collections.Generic;
 
-    public class MappingProfile : Profile
+    public class SubjectMappingProfile : Profile
     {
-        public MappingProfile()
+        public SubjectMappingProfile()
         {
             CreateMap<Subject, SubjectDto>()
                 .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner))
@@ -26,7 +26,7 @@ namespace LimbooCards.Application.Mappings
 
             CreateMap<CreateSubjectDto, Subject>()
                 .ForMember(dest => dest.Oferts, opt => opt.MapFrom(src =>
-                    src.Oferts != null ? src.Oferts.Select(o => new Ofert(o.Project, o.Module)).ToList() : new List<Ofert>()))
+                    src.Oferts != null ? src.Oferts.Select(o => new Ofert(o.Project, o.Module)).ToList() : null))
                 .ForMember(dest => dest.Contents, opt => opt.MapFrom(src =>
                     src.Contents != null ? src.Contents.Select(c => new Content(c.Name, c.ChecklistItemTitle, c.ContentStatus)).ToList() : null))
                 .ForMember(dest => dest.Publishers, opt => opt.MapFrom(src =>

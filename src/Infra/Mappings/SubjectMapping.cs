@@ -38,11 +38,19 @@ namespace LimbooCards.Infra.Mappings
                     { "BQ_4", dto.BQ_4 }
                     })
             ))
-            .ForCtorParam("owner", opt => opt.MapFrom(_ => (User?)null))
-            .ForCtorParam("coOwners", opt => opt.MapFrom(_ => (List<User>?)null))
-            .ForCtorParam("publishers", opt => opt.MapFrom(_ => (List<SubjectPublisher>?)null))
-            .ForCtorParam("isCurrent", opt => opt.MapFrom(_ => (bool?)null))
-            .ForCtorParam("isExpect", opt => opt.MapFrom(_ => (bool?)null));
+            .ForCtorParam("owner", opt => opt.MapFrom(dto => GetOwner(dto.OWNERS)))
+            .ForCtorParam("coOwners", opt => opt.MapFrom(dto => GetCoOwners(dto.OWNERS)))
+            .ForCtorParam("publishers", opt => opt.MapFrom(dto => dto.PUBLISHERS));
+        }
+
+        private static List<UserAutomateDto>? GetCoOwners(List<UserAutomateDto>? owners)
+        {
+            return owners != null && owners.Count > 1 ? [.. owners.Skip(1)] : new List<UserAutomateDto>();
+        }
+
+        private static UserAutomateDto? GetOwner(List<UserAutomateDto>? owners)
+        {
+            return owners != null && owners.Count >= 1 ? owners[0] : null;
         }
     }
 }

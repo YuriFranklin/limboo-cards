@@ -5,7 +5,6 @@ namespace LimbooCards.Infra.Repositories
     using LimbooCards.Domain.Entities;
     using LimbooCards.Domain.Repositories;
     using LimbooCards.Infra.DTOs;
-    using LimbooCards.Infra.Mappings;
 
     public class SubjectAutomateRepository(HttpClient httpClient, IMapper mapper) : ISubjectRepository
     {

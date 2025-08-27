@@ -4,6 +4,7 @@ namespace LimbooCards.Domain.Repositories
     public interface IUserRepository
     {
         public Task<User?> GetUserByIdAsync(Guid userId);
+        public Task<IEnumerable<User>> GetUsersByNameAsync(string fullName);
         public Task DeleteUserAsync(Guid userId);
         public Task<IEnumerable<User>> GetAllUsersAsync();
         public Task AddUserAsync(User user);

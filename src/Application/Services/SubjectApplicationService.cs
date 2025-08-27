@@ -46,9 +46,7 @@ namespace LimbooCards.Application.Services
                 contents: contents,
                 owner: owner,
                 coOwners: coOwners,
-                publishers: publishers,
-                isCurrent: dto.IsCurrent,
-                isExpect: dto.IsExpect
+                publishers: publishers
             );
 
             await this.subjectRepository.AddSubjectAsync(subject);
@@ -108,9 +106,7 @@ namespace LimbooCards.Application.Services
                 contents: contents,
                 owner: owner,
                 coOwners: coOwners,
-                publishers: publishers,
-                isCurrent: dto.IsCurrent,
-                isExpect: dto.IsExpect
+                publishers: publishers
             );
 
             await this.subjectRepository.UpdateSubjectAsync(updatedSubject);

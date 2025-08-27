@@ -28,6 +28,8 @@ namespace LimbooCards.Infra.DTOs
         public string? BQ_3 { get; set; }
         public string? BQ_4 { get; set; }
         public string? UUID { get; set; }
+        public List<UserAutomateDto>? OWNERS { get; set; }
+        public List<SubjectPublisherAutomateDto>? PUBLISHERS { get; set; }
         public string? EXTRA_PROPS { get; set; }
     }
 }

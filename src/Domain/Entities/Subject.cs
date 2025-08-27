@@ -12,9 +12,7 @@ namespace LimbooCards.Domain.Entities
             List<Content>? contents = null,
             User? owner = null,
             List<User>? coOwners = null,
-            List<SubjectPublisher>? publishers = null,
-            bool? isCurrent = null,
-            bool? isExpect = null
+            List<SubjectPublisher>? publishers = null
         )
         {
             this.Id = id ?? Guid.NewGuid();
@@ -27,9 +25,6 @@ namespace LimbooCards.Domain.Entities
             this.Owner = owner;
             this.CoOwners = coOwners;
             this.Publishers = publishers;
-            this.IsCurrent = isCurrent;
-            this.IsExpect = isExpect;
-
             this.Validate();
         }
 
@@ -43,8 +38,6 @@ namespace LimbooCards.Domain.Entities
         public List<Content>? Contents { get; private set; }
         public List<User>? CoOwners { get; private set; }
         public List<SubjectPublisher>? Publishers { get; private set; }
-        public bool? IsCurrent { get; private set; }
-        public bool? IsExpect { get; private set; }
 
         private void Validate()
         {
