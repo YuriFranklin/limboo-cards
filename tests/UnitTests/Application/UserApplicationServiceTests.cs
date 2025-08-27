@@ -15,7 +15,7 @@ namespace LimbooCards.UnitTests.Application
         public async Task CreateUserAsync_Should_Create_And_Return_UserDto()
         {
             var dto = new CreateUserDto { FullName = "John Doe" };
-            var user = new User(Guid.NewGuid(), dto.FullName);
+            var user = new User(Guid.NewGuid(), dto.FullName, "user@test.com");
             var userDto = new UserDto { Id = user.Id, FullName = user.FullName };
 
             mapperMock.Setup(m => m.Map<User>(dto)).Returns(user);
@@ -32,7 +32,7 @@ namespace LimbooCards.UnitTests.Application
         public async Task GetUserByIdAsync_Should_Return_UserDto_When_Found()
         {
             var userId = Guid.NewGuid();
-            var user = new User(userId, "Jane Doe");
+            var user = new User(userId, "Jane Doe", "user@test.com");
             var userDto = new UserDto { Id = userId, FullName = user.FullName };
 
             userRepositoryMock.Setup(r => r.GetUserByIdAsync(userId)).ReturnsAsync(user);
@@ -49,8 +49,8 @@ namespace LimbooCards.UnitTests.Application
         {
             var users = new List<User>
             {
-                new User(Guid.NewGuid(), "Alice"),
-                new User(Guid.NewGuid(), "Bob")
+                new User(Guid.NewGuid(), "Alice", "user@test.com"),
+                new User(Guid.NewGuid(), "Bob", "user@test.com")
             };
             var userDtos = users.Select(u => new UserDto { Id = u.Id, FullName = u.FullName }).ToList();
 
@@ -67,9 +67,9 @@ namespace LimbooCards.UnitTests.Application
         [Fact]
         public async Task UpdateUserAsync_Should_Update_And_Return_UserDto()
         {
-            var dto = new UpdateUserDto { Id = Guid.NewGuid(), FullName = "Updated Name" };
-            var existingUser = new User(dto.Id, "Old Name");
-            var updatedUser = new User(dto.Id, dto.FullName);
+            var dto = new UpdateUserDto { Id = Guid.NewGuid(), FullName = "Updated Name", Email = "user@test.com" };
+            var existingUser = new User(dto.Id, "Old Name", "user@test.com");
+            var updatedUser = new User(dto.Id, dto.FullName, "user@test.com");
             var updatedUserDto = new UserDto { Id = dto.Id, FullName = dto.FullName };
 
             userRepositoryMock.Setup(r => r.GetUserByIdAsync(dto.Id)).ReturnsAsync(existingUser);

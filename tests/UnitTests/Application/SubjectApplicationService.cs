@@ -25,8 +25,8 @@ namespace LimbooCards.UnitTests.Application
                 Oferts = new List<OfertDto> { new() { Project = "P1", Module = "M1" } },
             };
 
-            var owner = new User(dto.OwnerId.Value, "Owner Name");
-            var coOwner = new User(dto.CoOwnerIds.First(), "CoOwner Name");
+            var owner = new User(dto.OwnerId.Value, "Owner Name", "user@test.com");
+            var coOwner = new User(dto.CoOwnerIds.First(), "CoOwner Name", "user@test.com");
 
             userRepositoryMock.Setup(r => r.GetUserByIdAsync(dto.OwnerId.Value)).ReturnsAsync(owner);
             userRepositoryMock.Setup(r => r.GetUserByIdAsync(dto.CoOwnerIds.First())).ReturnsAsync(coOwner);
@@ -108,8 +108,8 @@ namespace LimbooCards.UnitTests.Application
             };
 
             var existingSubject = new Subject(dto.Id, "Math", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P0", "M0") });
-            var owner = new User(dto.OwnerId.Value, "Owner Name");
-            var coOwner = new User(dto.CoOwnerIds.First(), "CoOwner Name");
+            var owner = new User(dto.OwnerId.Value, "Owner Name", "user@test.com");
+            var coOwner = new User(dto.CoOwnerIds.First(), "CoOwner Name", "user@test.com");
 
             subjectRepositoryMock.Setup(r => r.GetSubjectByIdAsync(dto.Id)).ReturnsAsync(existingSubject);
             userRepositoryMock.Setup(r => r.GetUserByIdAsync(dto.OwnerId.Value)).ReturnsAsync(owner);

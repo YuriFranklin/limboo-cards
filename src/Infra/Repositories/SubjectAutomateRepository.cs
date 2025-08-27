@@ -1,14 +1,16 @@
 namespace LimbooCards.Infra.Repositories
 {
     using System.Net.Http.Json;
+    using AutoMapper;
     using LimbooCards.Domain.Entities;
     using LimbooCards.Domain.Repositories;
     using LimbooCards.Infra.DTOs;
-    using LimbooCards.Infra.Mappers;
+    using LimbooCards.Infra.Mappings;
 
-    public class SubjectAutomateRepository(HttpClient httpClient) : ISubjectRepository
+    public class SubjectAutomateRepository(HttpClient httpClient, IMapper mapper) : ISubjectRepository
     {
         private readonly HttpClient httpClient = httpClient;
+        private readonly IMapper mapper = mapper;
         public Task AddSubjectAsync(Subject subject)
         {
             throw new NotImplementedException();
@@ -30,7 +32,7 @@ namespace LimbooCards.Infra.Repositories
 
             if (result == null) { return null; }
 
-            return SubjectMapper.AutomateToDomain(result);
+            return mapper.Map<Subject>(result);
         }
 
         public Task UpdateSubjectAsync(Subject subject)

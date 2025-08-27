@@ -6,7 +6,7 @@ namespace LimbooCards.Domain.Entities
             Guid? id,
             string name,
             string semester,
-            SubjectStatus status,
+            SubjectStatus? status,
             List<Ofert>? oferts = null,
             List<string>? equivalencies = null,
             List<Content>? contents = null,
@@ -37,7 +37,7 @@ namespace LimbooCards.Domain.Entities
         public string Name { get; private set; }
         public User? Owner { get; private set; }
         public string Semester { get; private set; }
-        public SubjectStatus Status { get; private set; }
+        public SubjectStatus? Status { get; private set; }
         public List<Ofert> Oferts { get; private set; }
         public List<string>? Equivalencies { get; private set; }
         public List<Content>? Contents { get; private set; }
@@ -57,7 +57,7 @@ namespace LimbooCards.Domain.Entities
             if (string.IsNullOrWhiteSpace(this.Semester))
                 throw new ArgumentException("Semester cannot be empty.", nameof(this.Semester));
 
-            if (!Enum.IsDefined(typeof(SubjectStatus), this.Status))
+            if (this.Oferts != null && this.Status != null && !Enum.IsDefined(typeof(SubjectStatus), this.Status))
                 throw new ArgumentException("Invalid status value.", nameof(this.Status));
 
             if (this.Oferts == null || !this.Oferts.Any())
