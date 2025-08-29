@@ -20,9 +20,13 @@ namespace LimbooCards.Infra.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Subject>> GetAllSubjectsAsync()
+        public async Task<IEnumerable<Subject>> GetAllSubjectsAsync()
         {
-            throw new NotImplementedException();
+            var result = await this.httpClient.GetFromJsonAsync<IEnumerable<SubjectAutomateDto>>("/subjects");
+
+            if (result == null || !result.Any()) { return []; }
+
+            return mapper.Map<IEnumerable<Subject>>(result);
         }
 
         public async Task<Subject?> GetSubjectByIdAsync(Guid subjectId)

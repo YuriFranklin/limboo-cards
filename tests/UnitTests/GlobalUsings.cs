@@ -5,6 +5,7 @@ global using Xunit;
 global using Moq;
 global using Moq.Protected;
 global using AutoMapper;
+global using FluentAssertions;
 
 global using LimbooCards.Domain.Entities;
 global using LimbooCards.Domain.Events;

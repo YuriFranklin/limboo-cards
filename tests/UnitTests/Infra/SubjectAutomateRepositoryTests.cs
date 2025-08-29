@@ -65,12 +65,13 @@ namespace LimbooCards.UnitTests.Infra
                 status: SubjectStatus.Complete,
                 oferts: [new("DIG", "D")],
                 equivalencies: ["Introdução à Matemática"],
-                contents: null,
+                contents: [],
                 owner: new User(
                         id: userId,
                         fullName: "João Silva",
                         email: "user@test.com"
                     ),
+                coOwners: [],
                 publishers: [new SubjectPublisher(name: "FAEL", isExpect: false, isCurrent: true)]
             );
 
@@ -88,7 +89,7 @@ namespace LimbooCards.UnitTests.Infra
             var result = await repository.GetSubjectByIdAsync(subjectId);
 
             Assert.NotNull(result);
-            Assert.Equal(expectedSubject, result);
+            result.Should().BeEquivalentTo(expectedSubject);
         }
 
         [Fact]
