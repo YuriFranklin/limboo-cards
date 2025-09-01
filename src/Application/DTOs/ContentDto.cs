@@ -6,6 +6,7 @@ namespace LimbooCards.Application.DTOs
     {
         public string Name { get; set; } = string.Empty;
         public string ChecklistItemTitle { get; set; } = string.Empty;
+        public int? Priority { get; private set; } = 0;
         public ContentStatus? ContentStatus { get; set; }
     }
 }

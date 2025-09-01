@@ -1,20 +1,20 @@
 namespace LimbooCards.Domain.Entities
 {
-    using OneOf;
-
     public class Content
     {
-        public Content(string name, string checklistItemTitle, ContentStatus? status = null)
+        public Content(string name, string checklistItemTitle, ContentStatus? status = null, int? priority = null)
         {
             this.Name = name;
             this.ChecklistItemTitle = checklistItemTitle;
             this.ContentStatus = status;
+            this.Priority = priority ?? 1;
             this.Validate();
         }
 
         public string Name { get; private set; }
         public string ChecklistItemTitle { get; private set; }
         public ContentStatus? ContentStatus { get; private set; }
+        public int Priority { get; private set; }
         private void Validate()
         {
             if (string.IsNullOrWhiteSpace(this.Name))

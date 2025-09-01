@@ -77,6 +77,7 @@ namespace LimbooCards.UnitTests.Infra
 
             var configuration = new MapperConfiguration(cfg =>
             {
+                cfg.AddProfile<ContentMappingProfile>();
                 cfg.AddProfile<SubjectMappingProfile>();
                 cfg.AddProfile<UserMappingProfile>();
                 cfg.AddProfile<SubjectPublisherMappingProfile>();

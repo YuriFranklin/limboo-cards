@@ -18,26 +18,7 @@ namespace LimbooCards.Infra.Mappings
             .ForCtorParam("status", opt => opt.MapFrom(dto => SubjectStatusMapper.FromAutomateString(dto.STATUS_DIG) ?? null))
             .ForCtorParam("oferts", opt => opt.MapFrom(dto => OfertMapper.FromAutomateString(dto.OFERTAS)))
             .ForCtorParam("equivalencies", opt => opt.MapFrom(dto => EquivalenciesMapper.FromAutomateString(dto.EQUIVALENCIA)))
-            .ForCtorParam("contents", opt => opt.MapFrom(dto =>
-                ContentMapper.FromAutomateStrings(new Dictionary<string, string?> {
-                    { "BANNER", dto.BANNER },
-                    { "DC", dto.DC },
-                    { "AC", dto.AC },
-                    { "VIDEOTECA_1", dto.VIDEOTECA_1 },
-                    { "VIDEOTECA_2", dto.VIDEOTECA_2 },
-                    { "VIDEOTECA_3", dto.VIDEOTECA_3 },
-                    { "VIDEOTECA_4", dto.VIDEOTECA_4 },
-                    { "E_BOOK", dto.E_BOOK },
-                    { "MATERIAL_1", dto.MATERIAL_1 },
-                    { "MATERIAL_2", dto.MATERIAL_2 },
-                    { "MATERIAL_3", dto.MATERIAL_3 },
-                    { "MATERIAL_4", dto.MATERIAL_4 },
-                    { "BQ_1", dto.BQ_1 },
-                    { "BQ_2", dto.BQ_2 },
-                    { "BQ_3", dto.BQ_3 },
-                    { "BQ_4", dto.BQ_4 }
-                    })
-            ))
+            .ForCtorParam("contents", opt => opt.MapFrom(dto => BuildContentsDictionary(dto)))
             .ForCtorParam("owner", opt => opt.MapFrom(dto => GetOwner(dto.OWNERS)))
             .ForCtorParam("coOwners", opt => opt.MapFrom(dto => GetCoOwners(dto.OWNERS)))
             .ForCtorParam("publishers", opt => opt.MapFrom(dto => dto.PUBLISHERS));
@@ -51,6 +32,33 @@ namespace LimbooCards.Infra.Mappings
         private static UserAutomateDto? GetOwner(List<UserAutomateDto>? owners)
         {
             return owners != null && owners.Count >= 1 ? owners[0] : null;
+        }
+
+        private static Dictionary<string, string?> BuildContentsDictionary(SubjectAutomateDto dto)
+        {
+            var pairs = new[]
+            {
+                new KeyValuePair<string,string?>("BANNER", dto.BANNER),
+                new KeyValuePair<string,string?>("DC", dto.DC),
+                new KeyValuePair<string,string?>("AC", dto.AC),
+                new KeyValuePair<string,string?>("VIDEOTECA_1", dto.VIDEOTECA_1),
+                new KeyValuePair<string,string?>("VIDEOTECA_2", dto.VIDEOTECA_2),
+                new KeyValuePair<string,string?>("VIDEOTECA_3", dto.VIDEOTECA_3),
+                new KeyValuePair<string,string?>("VIDEOTECA_4", dto.VIDEOTECA_4),
+                new KeyValuePair<string,string?>("E_BOOK", dto.E_BOOK),
+                new KeyValuePair<string,string?>("MATERIAL_1", dto.MATERIAL_1),
+                new KeyValuePair<string,string?>("MATERIAL_2", dto.MATERIAL_2),
+                new KeyValuePair<string,string?>("MATERIAL_3", dto.MATERIAL_3),
+                new KeyValuePair<string,string?>("MATERIAL_4", dto.MATERIAL_4),
+                new KeyValuePair<string,string?>("BQ_1", dto.BQ_1),
+                new KeyValuePair<string,string?>("BQ_2", dto.BQ_2),
+                new KeyValuePair<string,string?>("BQ_3", dto.BQ_3),
+                new KeyValuePair<string,string?>("BQ_4", dto.BQ_4),
+            };
+
+            return pairs
+                .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Value))
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
     }
 }
