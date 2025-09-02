@@ -41,7 +41,7 @@ namespace LimbooCards.UnitTests.Domain
         {
             var id = Guid.NewGuid();
 
-            var ex = Assert.Throws<ArgumentException>(() => new Planner(id, "Valid Name", null));
+            var ex = Assert.Throws<ArgumentException>(() => new Planner(id, "Valid Name", new List<PlannerBucket>()));
             Assert.Contains("Planner must contain at least one bucket.", ex.Message);
             Assert.Equal("Buckets", ex.ParamName);
         }

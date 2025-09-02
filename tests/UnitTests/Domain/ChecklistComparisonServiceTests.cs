@@ -2,13 +2,6 @@ namespace LimbooCards.UnitTests.Domain
 {
     public class ChecklistComparisonServiceTests
     {
-        private readonly ChecklistComparisonService _service;
-
-        public ChecklistComparisonServiceTests()
-        {
-            _service = new ChecklistComparisonService();
-        }
-
         [Fact]
         public void GetCompletedChecklistItems_ShouldReturnCompletedItems()
         {
@@ -41,7 +34,7 @@ namespace LimbooCards.UnitTests.Domain
                 oferts: new List<Ofert> { new Ofert("PRJ", "M1") }
             );
 
-            var result = _service.GetCompletedChecklistItems(card, subject);
+            var result = ChecklistComparisonService.GetCompletedChecklistItems(card, subject);
 
             Assert.Single(result);
             Assert.Equal(card.Id, result[0].CardId);
@@ -81,7 +74,7 @@ namespace LimbooCards.UnitTests.Domain
                 oferts: new List<Ofert> { new Ofert("PRJ", "M1") }
             );
 
-            var result = _service.GetCompletedChecklistItems(card, subject);
+            var result = ChecklistComparisonService.GetCompletedChecklistItems(card, subject);
 
             Assert.Empty(result);
         }
@@ -119,7 +112,7 @@ namespace LimbooCards.UnitTests.Domain
                 oferts: new List<Ofert> { new Ofert("PRJ", "M1") }
             );
 
-            var result = _service.GetNotFoundChecklistItems(card, subject);
+            var result = ChecklistComparisonService.GetNotFoundChecklistItems(card, subject);
 
             Assert.Single(result);
             Assert.Equal("Item2", result[0].ChecklistItemTitle);
@@ -159,7 +152,7 @@ namespace LimbooCards.UnitTests.Domain
                 oferts: new List<Ofert> { new Ofert("PRJ", "M1") }
             );
 
-            var result = _service.GetNotFoundChecklistItems(card, subject);
+            var result = ChecklistComparisonService.GetNotFoundChecklistItems(card, subject);
 
             Assert.Empty(result);
         }

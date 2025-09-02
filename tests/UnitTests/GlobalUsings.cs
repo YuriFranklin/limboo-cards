@@ -18,3 +18,5 @@ global using LimbooCards.Application.Services;
 global using LimbooCards.Infra.DTOs;
 global using LimbooCards.Infra.Repositories;
 global using LimbooCards.Infra.Mappings;
+
+global using LimbooCards.Domain.Shared;

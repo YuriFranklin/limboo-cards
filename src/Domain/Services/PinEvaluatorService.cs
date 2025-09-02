@@ -175,7 +175,7 @@ namespace LimbooCards.Domain.Services
                 if (current == null) yield break;
 
                 var prop = current.GetType().GetProperty(parts[i], BindingFlags.Public | BindingFlags.Instance);
-                if (prop == null) throw new InvalidOperationException($"Property {parts[i]} not found on {current.GetType().Name}");
+                if (prop == null) yield break;
 
                 current = prop.GetValue(current);
 
