@@ -1,11 +1,10 @@
-using LimbooCards.Domain.Entities;
-using LimbooCards.Domain.Events;
-
 namespace LimbooCards.Domain.Services
 {
+    using LimbooCards.Domain.Entities;
+    using LimbooCards.Domain.Events;
     public class ChecklistComparisonService
     {
-        public List<ChecklistItemCompleted> GetCompletedChecklistItems(Card card, Subject subject)
+        public static List<ChecklistItemCompleted> GetCompletedChecklistItems(Card card, Subject subject)
         {
             if (card.Checklist == null || subject.Contents == null)
             {
@@ -31,7 +30,7 @@ namespace LimbooCards.Domain.Services
             return completedItems;
         }
 
-        public List<ChecklistItemNotFounded> GetNotFoundChecklistItems(Card card, Subject subject)
+        public static List<ChecklistItemNotFounded> GetNotFoundChecklistItems(Card card, Subject subject)
         {
             if (subject.Contents == null || !subject.Contents.Any(c => c.ContentStatus == ContentStatus.Missing))
             {

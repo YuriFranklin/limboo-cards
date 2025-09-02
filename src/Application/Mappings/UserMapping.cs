@@ -3,7 +3,6 @@ namespace LimbooCards.Application.Mappings
     using AutoMapper;
     using LimbooCards.Application.DTOs;
     using LimbooCards.Domain.Entities;
-
     public class UserMappingProfile : Profile
     {
         public UserMappingProfile()
