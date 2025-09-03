@@ -2,6 +2,8 @@ namespace LimbooCards.Domain.Services
 {
     using LimbooCards.Domain.Entities;
     using LimbooCards.Domain.Events;
+    using LimbooCards.Domain.Shared;
+
     public class CardAllocationService
     {
         public static CardPlannerAllocated? AllocateCardToBucket(Card card, Subject subject, Planner planner)

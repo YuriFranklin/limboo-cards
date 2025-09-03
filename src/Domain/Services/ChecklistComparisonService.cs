@@ -2,6 +2,8 @@ namespace LimbooCards.Domain.Services
 {
     using LimbooCards.Domain.Entities;
     using LimbooCards.Domain.Events;
+    using LimbooCards.Domain.Shared;
+
     public class ChecklistComparisonService
     {
         public static List<ChecklistItemCompleted> GetCompletedChecklistItems(Card card, Subject subject)

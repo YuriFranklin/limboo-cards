@@ -1,4 +1,4 @@
-namespace LimbooCards.Domain.Entities
+namespace LimbooCards.Domain.Shared
 {
     using System.Text.Json.Serialization;
 

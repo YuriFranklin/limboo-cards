@@ -1,5 +1,6 @@
 namespace LimbooCards.Domain.Entities
 {
+    using LimbooCards.Domain.Shared;
     public class Content
     {
         public Content(string name, string checklistItemTitle, ContentStatus? status = null, int? priority = null)

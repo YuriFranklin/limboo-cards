@@ -1,6 +1,6 @@
 namespace LimbooCards.Application.DTOs
 {
-    using LimbooCards.Domain.Entities;
+    using LimbooCards.Domain.Shared;
 
     public class SubjectDto
     {

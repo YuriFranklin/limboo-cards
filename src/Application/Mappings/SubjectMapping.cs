@@ -3,7 +3,6 @@ namespace LimbooCards.Application.Mappings
     using AutoMapper;
     using LimbooCards.Application.DTOs;
     using LimbooCards.Domain.Entities;
-    using System.Linq;
 
     public class SubjectMappingProfile : Profile
     {

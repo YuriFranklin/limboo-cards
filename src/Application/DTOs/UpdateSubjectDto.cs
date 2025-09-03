@@ -1,9 +1,6 @@
 namespace LimbooCards.Application.DTOs
 {
-    using LimbooCards.Domain.Entities;
-    using System;
-    using System.Collections.Generic;
-
+    using LimbooCards.Domain.Shared;
     public class UpdateSubjectDto
     {
         public Guid Id { get; set; }

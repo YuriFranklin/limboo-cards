@@ -1,5 +1,6 @@
 namespace LimbooCards.Domain.Entities
 {
+    using LimbooCards.Domain.Shared;
     public class Subject
     {
         public Subject(

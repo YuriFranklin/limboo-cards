@@ -1,6 +1,8 @@
 namespace LimbooCards.Domain.Services
 {
     using LimbooCards.Domain.Entities;
+    using LimbooCards.Domain.Shared;
+
     public class SubjectCardOrchestratorService
     {
         public static Card? EnsureCardForSubject(Subject subject, Planner planner)

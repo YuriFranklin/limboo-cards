@@ -1,6 +1,5 @@
 namespace LimbooCards.Application.DTOs
 {
-    using LimbooCards.Domain.Entities;
     public class CreateCardDto
     {
         public string Title { get; set; } = string.Empty;

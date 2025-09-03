@@ -1,6 +1,5 @@
 namespace LimbooCards.Domain.Events
 {
-    using LimbooCards.Domain.Entities;
     using System;
     using System.Collections.Generic;
 

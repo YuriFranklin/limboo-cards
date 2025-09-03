@@ -1,12 +1,12 @@
-namespace LimbooCards.Application.DTOs
+namespace LimbooCards.Presentation.GraphQL.Models
 {
     using LimbooCards.Domain.Shared;
 
-    public class ContentDto
+    public class ContentModel
     {
         public string Name { get; set; } = string.Empty;
         public string ChecklistItemTitle { get; set; } = string.Empty;
-        public int? Priority { get; private set; } = 0;
         public ContentStatus? ContentStatus { get; set; }
+        public int Priority { get; set; }
     }
 }

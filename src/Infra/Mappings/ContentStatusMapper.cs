@@ -1,6 +1,6 @@
 namespace LimbooCards.Infra.Mappings
 {
-    using LimbooCards.Domain.Entities;
+    using LimbooCards.Domain.Shared;
 
     public static class ContentStatusMapper
     {
