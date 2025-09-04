@@ -8,12 +8,11 @@ namespace LimbooCards.Application.DTOs
         public bool HasDescription { get; set; }
         public Guid CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
-
         public Guid? BucketId { get; set; }
         public Guid? PlanId { get; set; }
         public DateTime? DueDateTime { get; set; }
         public Dictionary<string, bool>? AppliedCategories { get; set; }
-
+        public Guid? SubjectId { get; set; }
         public List<ChecklistItemDto>? Checklist { get; set; }
     }
 }

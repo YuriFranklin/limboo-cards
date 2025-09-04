@@ -1,6 +1,5 @@
 namespace LimbooCards.Infra.Repositories
 {
-    using System.Net.Http.Json;
     using AutoMapper;
     using LimbooCards.Domain.Entities;
     using LimbooCards.Domain.Repositories;

@@ -10,6 +10,7 @@ namespace LimbooCards.Domain.Entities
             Guid? id = null,
             Guid? bucketId = null,
             Guid? planId = null,
+            Guid? subjectId = null,
             DateTime? createdAt = null,
             DateTime? dueDateTime = null,
             Dictionary<string, bool>? appliedCategories = null,
@@ -22,7 +23,7 @@ namespace LimbooCards.Domain.Entities
             this.HasDescription = hasDescription;
             this.CreatedBy = createdBy;
             this.CreatedAt = createdAt ?? DateTime.UtcNow;
-
+            this.SubjectId = subjectId;
             this.BucketId = bucketId;
             this.PlanId = planId;
             this.DueDateTime = dueDateTime;
@@ -38,9 +39,9 @@ namespace LimbooCards.Domain.Entities
         public bool HasDescription { get; private set; }
         public Guid CreatedBy { get; private set; }
         public DateTime CreatedAt { get; private set; }
-
         public Guid? BucketId { get; private set; }
         public Guid? PlanId { get; private set; }
+        public Guid? SubjectId { get; private set; }
         public DateTime? DueDateTime { get; private set; }
         public Dictionary<string, bool>? AppliedCategories { get; private set; }
         public List<ChecklistItem>? Checklist { get; private set; }

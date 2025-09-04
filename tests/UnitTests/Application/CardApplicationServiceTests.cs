@@ -3,6 +3,7 @@ namespace LimbooCards.UnitTests.Application
     public class CardApplicationServiceTests
     {
         private readonly Mock<ICardRepository> cardRepositoryMock;
+        private readonly Mock<ISubjectRepository> subjectRepositoryMock = new();
         private readonly Mock<IMapper> mapperMock;
         private readonly CardApplicationService service;
 
@@ -10,7 +11,7 @@ namespace LimbooCards.UnitTests.Application
         {
             cardRepositoryMock = new Mock<ICardRepository>();
             mapperMock = new Mock<IMapper>();
-            service = new CardApplicationService(cardRepositoryMock.Object, mapperMock.Object);
+            service = new CardApplicationService(cardRepositoryMock.Object, subjectRepositoryMock.Object, mapperMock.Object);
         }
 
         [Fact]

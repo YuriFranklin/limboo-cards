@@ -24,7 +24,6 @@ builder.Services.AddScoped<SubjectApplicationService>();
 var gqlBuilder = builder.Services
     .AddGraphQLServer()
     .AddQueryType<Query>()
-    .AddType<SubjectType>()
     .AddApolloFederation()
     .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true);
 

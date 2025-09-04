@@ -9,7 +9,7 @@ namespace LimbooCards.Presentation.GraphQL.Queries
         private readonly SubjectApplicationService _subjectService = subjectService;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<SubjectModel?> GetSubjectById(Guid id)
+        public async Task<SubjectModel?> GetSubjectByIdAsync(Guid id)
         {
             var subject = await _subjectService.GetSubjectByIdAsync(id);
             if (subject == null) return null;
