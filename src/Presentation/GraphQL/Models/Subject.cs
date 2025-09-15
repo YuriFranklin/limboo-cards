@@ -1,9 +1,9 @@
 namespace LimbooCards.Presentation.GraphQL.Models
 {
-    using LimbooCards.Presentation.Graphql.Models;
     public class SubjectModel
     {
         public Guid Id { get; set; }
+        public string ModelId { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public UserModel? Owner { get; set; }
         public string Semester { get; set; } = string.Empty;

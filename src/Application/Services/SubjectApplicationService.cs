@@ -38,6 +38,7 @@ namespace LimbooCards.Application.Services
 
             var subject = new Subject(
                 id: null,
+                modelId: dto.ModelId,
                 name: dto.Name,
                 semester: dto.Semester,
                 status: dto.Status,
@@ -98,6 +99,7 @@ namespace LimbooCards.Application.Services
 
             var updatedSubject = new Subject(
                 id: subject.Id,
+                modelId: dto.ModelId,
                 name: dto.Name,
                 semester: dto.Semester,
                 status: dto.Status,

@@ -1,8 +1,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
 WORKDIR /app
-COPY *.csproj ./
+
+COPY src/*.csproj ./
+
 RUN dotnet restore
-COPY . ./
+
+COPY src/ ./
 
 EXPOSE 5000
 EXPOSE 5001

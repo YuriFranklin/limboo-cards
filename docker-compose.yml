@@ -7,10 +7,13 @@ services:
       - "5000:5000"
       - "5001:5001"
     volumes:
-      - .:/app
+      - ./src:/app
     environment:
       - DOTNET_USE_POLLING_FILE_WATCHER=1
       - DOTNET_HOST_PATH=/usr/share/dotnet/dotnet
       - ASPNETCORE_ENVIRONMENT=Development
       - DOTNET_RUNNING_IN_CONTAINER=true
+      - SUBJECT_GETBYID_URL=https://031cb4f312dfee4b918aa9feefe9fd.e8.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/f596f122f19b41e9ba64bc4900fd1413/triggers/manual/paths/invoke/subject?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=yffQm7RxLz7duL3NHk3ZWEW6eadPXeHcnuNCgwCfG4M
+
+
     command: ["dotnet", "watch", "run", "--urls", "http://0.0.0.0:5000"]

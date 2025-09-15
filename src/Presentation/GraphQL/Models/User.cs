@@ -1,4 +1,4 @@
-namespace LimbooCards.Presentation.Graphql.Models
+namespace LimbooCards.Presentation.GraphQL.Models
 {
     public class UserModel
     {

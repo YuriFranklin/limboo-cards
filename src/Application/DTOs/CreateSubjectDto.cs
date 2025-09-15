@@ -5,6 +5,8 @@ namespace LimbooCards.Application.DTOs
     public class CreateSubjectDto
     {
         public string Name { get; set; } = string.Empty;
+
+        public string? ModelId { get; set; }
         public string Semester { get; set; } = string.Empty;
         public SubjectStatus Status { get; set; }
 

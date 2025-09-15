@@ -5,6 +5,7 @@ namespace LimbooCards.Domain.Entities
     {
         public Subject(
             Guid? id,
+            string? modelId,
             string name,
             string semester,
             SubjectStatus? status,
@@ -17,6 +18,7 @@ namespace LimbooCards.Domain.Entities
         )
         {
             this.Id = id ?? Guid.NewGuid();
+            this.ModelId = modelId;
             this.Name = name;
             this.Semester = semester;
             this.Status = status;
@@ -30,6 +32,7 @@ namespace LimbooCards.Domain.Entities
         }
 
         public Guid Id { get; private set; }
+        public string? ModelId { get; private set; }
         public string Name { get; private set; }
         public User? Owner { get; private set; }
         public string Semester { get; private set; }

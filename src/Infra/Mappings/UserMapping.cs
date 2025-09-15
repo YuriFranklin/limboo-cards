@@ -12,7 +12,7 @@ namespace LimbooCards.Infra.Mappings
                 string.IsNullOrWhiteSpace(dto.ID) ? Guid.Empty : Guid.Parse(dto.ID)
             ))
             .ForCtorParam("fullName", opt => opt.MapFrom(dto => dto.FULLNAME ?? string.Empty))
-            .ForCtorParam("email", opt => opt.MapFrom(dto => dto.EMAIL ?? string.Empty));
+            .ForCtorParam("email", opt => opt.MapFrom(dto => dto.EMAIL));
         }
     }
 }

@@ -11,9 +11,9 @@ namespace LimbooCards.Domain.Entities
             this.Validate();
         }
 
-        public string Name { get; private set; }
-        public bool? IsCurrent { get; private set; }
-        public bool? IsExpect { get; private set; }
+        public string Name { get; set; }
+        public bool? IsCurrent { get; set; }
+        public bool? IsExpect { get; set; }
         private void Validate()
         {
             if (string.IsNullOrWhiteSpace(this.Name))

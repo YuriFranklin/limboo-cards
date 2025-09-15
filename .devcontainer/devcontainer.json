@@ -1,0 +1,16 @@
+{
+  "name": "LimbooCards Dev",
+  "build": {
+    "dockerfile": "Dockerfile.dev",
+    "context": ".."
+  },
+  "workspaceFolder": "/app",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "editorconfig.editorconfig"
+      ]
+    }
+  }
+}

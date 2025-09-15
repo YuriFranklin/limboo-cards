@@ -31,7 +31,10 @@ namespace LimbooCards.Infra.Repositories
 
         public async Task<Subject?> GetSubjectByIdAsync(Guid subjectId)
         {
-            var result = await this.httpClient.GetFromJsonAsync<SubjectAutomateDto>($"/subjects/{subjectId}");
+            var url = Environment.GetEnvironmentVariable("SUBJECT_GETBYID_URL")
+            ?? throw new InvalidOperationException("SUBJECT_GETALL_URL not set.");
+
+            var result = await this.httpClient.GetFromJsonAsync<SubjectAutomateDto>($"{url}&subject-id={subjectId}");
 
             if (result == null) { return null; }
 

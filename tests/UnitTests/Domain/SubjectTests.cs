@@ -23,6 +23,7 @@ namespace LimbooCards.UnitTests.Domain
 
             var subject = new Subject(
                 id: null,
+                modelId: null,
                 name: "Mathematics",
                 semester: "1st",
                 status: SubjectStatus.Incomplete,
@@ -48,6 +49,7 @@ namespace LimbooCards.UnitTests.Domain
             {
                 var subject = new Subject(
                     id: Guid.Empty,
+                    modelId: null,
                     name: "Math",
                     semester: "1st",
                     status: SubjectStatus.Complete
@@ -64,6 +66,7 @@ namespace LimbooCards.UnitTests.Domain
             {
                 var subject = new Subject(
                     id: Guid.NewGuid(),
+                    modelId: null,
                     name: "",
                     semester: "1st",
                     status: SubjectStatus.Complete
@@ -80,6 +83,7 @@ namespace LimbooCards.UnitTests.Domain
             {
                 var subject = new Subject(
                     id: Guid.NewGuid(),
+                    modelId: null,
                     name: "Math",
                     semester: "",
                     status: SubjectStatus.Complete
@@ -96,6 +100,7 @@ namespace LimbooCards.UnitTests.Domain
             {
                 var subject = new Subject(
                     id: Guid.NewGuid(),
+                    modelId: null,
                     name: "Math",
                     semester: "1st",
                     status: (SubjectStatus)999
@@ -114,6 +119,7 @@ namespace LimbooCards.UnitTests.Domain
 
                 var subject = new Subject(
                     id: Guid.NewGuid(),
+                    modelId: null,
                     name: "Math",
                     semester: "1st",
                     status: SubjectStatus.Incomplete,
@@ -134,6 +140,7 @@ namespace LimbooCards.UnitTests.Domain
 
                 var subject = new Subject(
                     id: Guid.NewGuid(),
+                    modelId: null,
                     name: "Math",
                     semester: "1st",
                     status: SubjectStatus.Incomplete,
@@ -161,6 +168,7 @@ namespace LimbooCards.UnitTests.Domain
             {
                 var subject = new Subject(
                     id: Guid.NewGuid(),
+                    modelId: null,
                     name: "Math",
                     semester: "1st",
                     status: SubjectStatus.Incomplete,
@@ -187,6 +195,7 @@ namespace LimbooCards.UnitTests.Domain
             {
                 var subject = new Subject(
                     id: Guid.NewGuid(),
+                    modelId: null,
                     name: "Math",
                     semester: "1st",
                     status: SubjectStatus.Incomplete,
@@ -213,6 +222,7 @@ namespace LimbooCards.UnitTests.Domain
             {
                 var subject = new Subject(
                     id: Guid.NewGuid(),
+                    modelId: null,
                     name: "Math",
                     semester: "1st",
                     status: SubjectStatus.Incomplete,

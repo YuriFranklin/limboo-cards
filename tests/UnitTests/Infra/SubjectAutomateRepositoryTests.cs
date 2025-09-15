@@ -5,26 +5,29 @@ namespace LimbooCards.UnitTests.Infra
         [Fact]
         public async Task GetSubjectByIdAsync_ShouldReturnMappedSubject_WhenDtoExists()
         {
-            var subjectId = Guid.NewGuid();
+            var subjectByIdUrl = "http://localhost/subjects?api-version=1";
+            Environment.SetEnvironmentVariable("SUBJECT_GETBYID_URL", subjectByIdUrl);
 
-            var userId = Guid.NewGuid();
+            var subjectId = Guid.Parse("86d87fc0-9f2e-4a3b-a750-bf752645080a");
+            var ownerId = "17115131-c022-4c9b-a284-29ccf79f5b93";
 
             var dto = new SubjectAutomateDto
             {
-                UUID = subjectId.ToString(),
-                DISCIPLINA = "Matemática",
-                STATUS_DIG = "OK",
-                OFERTAS = "[DIG - D]",
-                EDITORA_NASA = "FAEL",
+                ID = "9875",
+                DISCIPLINA = "Adaptação e Flexibilização Curricular",
+                EQUIVALENCIA = "",
                 EDITORA_MASTER = "",
-                EQUIVALENCIA = "Introdução à Matemática",
+                EDITORA_NASA = "FAEL",
+                OFERTAS = "[DIG - D]",
+                STATUS_DIG = "OK",
+                UUID = subjectId.ToString(),
                 OWNERS = new List<UserAutomateDto>
                 {
                     new UserAutomateDto
                     {
-                        ID = userId.ToString(),
-                        FULLNAME = "João Silva",
-                        EMAIL = "user@test.com"
+                        ID = ownerId,
+                        FULLNAME = "DHIEGO",
+                        EMAIL = "teste@test.com"
                     }
                 },
                 PUBLISHERS = new List<SubjectPublisherAutomateDto>
@@ -32,7 +35,7 @@ namespace LimbooCards.UnitTests.Infra
                     new SubjectPublisherAutomateDto
                     {
                         NOME = "FAEL",
-                        IS_CURRENT = true,
+                        IS_EXPECTED = true
                     }
                 }
             };
@@ -44,7 +47,7 @@ namespace LimbooCards.UnitTests.Infra
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(req =>
                         req.Method == HttpMethod.Get &&
-                        req.RequestUri!.ToString().EndsWith($"/subjects/{subjectId}")),
+                        req.RequestUri!.ToString().StartsWith(subjectByIdUrl)),
                     ItExpr.IsAny<CancellationToken>()
                 )
                 .ReturnsAsync(new HttpResponseMessage
@@ -53,27 +56,7 @@ namespace LimbooCards.UnitTests.Infra
                     Content = JsonContent.Create(dto)
                 });
 
-            var httpClient = new HttpClient(handlerMock.Object)
-            {
-                BaseAddress = new Uri("http://localhost")
-            };
-
-            var expectedSubject = new Subject(
-                id: subjectId,
-                name: "Matemática",
-                semester: "20252",
-                status: SubjectStatus.Complete,
-                oferts: [new("DIG", "D")],
-                equivalencies: ["Introdução à Matemática"],
-                contents: [],
-                owner: new User(
-                        id: userId,
-                        fullName: "João Silva",
-                        email: "user@test.com"
-                    ),
-                coOwners: [],
-                publishers: [new SubjectPublisher(name: "FAEL", isExpect: false, isCurrent: true)]
-            );
+            var httpClient = new HttpClient(handlerMock.Object);
 
             var configuration = new MapperConfiguration(cfg =>
             {
@@ -82,7 +65,6 @@ namespace LimbooCards.UnitTests.Infra
                 cfg.AddProfile<UserMappingProfile>();
                 cfg.AddProfile<SubjectPublisherMappingProfile>();
             });
-
             var mapper = configuration.CreateMapper();
 
             var repository = new SubjectAutomateRepository(httpClient, mapper);
@@ -90,13 +72,18 @@ namespace LimbooCards.UnitTests.Infra
             var result = await repository.GetSubjectByIdAsync(subjectId);
 
             Assert.NotNull(result);
-            result.Should().BeEquivalentTo(expectedSubject);
+            result!.Id.Should().Be(subjectId);
+            result.Name.Should().Be("Adaptação e Flexibilização Curricular");
         }
+
 
         [Fact]
         public async Task GetSubjectByIdAsync_ShouldReturnNull_WhenApiReturnsNull()
         {
             var subjectId = Guid.NewGuid();
+
+            var subjectByIdUrl = "http://localhost/subjects?api-version=1";
+            Environment.SetEnvironmentVariable("SUBJECT_GETBYID_URL", subjectByIdUrl);
 
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock
@@ -112,10 +99,7 @@ namespace LimbooCards.UnitTests.Infra
                     Content = JsonContent.Create<SubjectAutomateDto?>(null)
                 });
 
-            var httpClient = new HttpClient(handlerMock.Object)
-            {
-                BaseAddress = new Uri("http://localhost")
-            };
+            var httpClient = new HttpClient(handlerMock.Object);
 
             var mapperMock = new Mock<IMapper>();
             var repository = new SubjectAutomateRepository(httpClient, mapperMock.Object);

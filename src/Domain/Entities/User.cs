@@ -11,9 +11,9 @@ namespace LimbooCards.Domain.Entities
             this.Validate();
         }
 
-        public Guid Id { get; private set; }
-        public string FullName { get; private set; }
-        public string Email { get; private set; }
+        public Guid Id { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }
 
         private void Validate()
         {

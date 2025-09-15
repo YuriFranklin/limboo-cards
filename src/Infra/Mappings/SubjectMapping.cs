@@ -13,6 +13,9 @@ namespace LimbooCards.Infra.Mappings
             .ForCtorParam("id", opt => opt.MapFrom(dto =>
                 string.IsNullOrWhiteSpace(dto.UUID) ? (Guid?)null : Guid.Parse(dto.UUID)
             ))
+            .ForCtorParam("modelId", opt => opt.MapFrom(dto =>
+                string.IsNullOrWhiteSpace(dto.ID) ? null : dto.ID
+            ))
             .ForCtorParam("name", opt => opt.MapFrom(dto => dto.DISCIPLINA ?? string.Empty))
             .ForCtorParam("semester", opt => opt.MapFrom(_ => "20252"))
             .ForCtorParam("status", opt => opt.MapFrom(dto => SubjectStatusMapper.FromAutomateString(dto.STATUS_DIG) ?? null))

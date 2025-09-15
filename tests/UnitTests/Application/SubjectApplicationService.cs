@@ -60,7 +60,7 @@ namespace LimbooCards.UnitTests.Application
         public async Task GetSubjectByIdAsync_Should_Return_SubjectDto_When_Found()
         {
             var subjectId = Guid.NewGuid();
-            var subject = new Subject(subjectId, "Math", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P1", "M1") });
+            var subject = new Subject(subjectId, null, "Math", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P1", "M1") });
             var dto = new SubjectDto { Name = "Math" };
 
             subjectRepositoryMock.Setup(r => r.GetSubjectByIdAsync(subjectId)).ReturnsAsync(subject);
@@ -77,8 +77,8 @@ namespace LimbooCards.UnitTests.Application
         {
             var subjects = new List<Subject>
         {
-            new(Guid.NewGuid(), "Math", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P1","M1") }),
-            new(Guid.NewGuid(), "Physics", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P2","M2") })
+            new(Guid.NewGuid(), null, "Math", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P1","M1") }),
+            new(Guid.NewGuid(), null, "Physics", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P2","M2") })
         };
 
             var dtos = subjects.Select(s => new SubjectDto { Name = s.Name }).ToList();
@@ -107,7 +107,7 @@ namespace LimbooCards.UnitTests.Application
                 Oferts = new List<OfertDto> { new() { Project = "P1", Module = "M1" } }
             };
 
-            var existingSubject = new Subject(dto.Id, "Math", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P0", "M0") });
+            var existingSubject = new Subject(dto.Id, null, "Math", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P0", "M0") });
             var owner = new User(dto.OwnerId.Value, "Owner Name", "user@test.com");
             var coOwner = new User(dto.CoOwnerIds.First(), "CoOwner Name", "user@test.com");
 
