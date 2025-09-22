@@ -14,6 +14,28 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - DOTNET_RUNNING_IN_CONTAINER=true
       - SUBJECT_GETBYID_URL=https://031cb4f312dfee4b918aa9feefe9fd.e8.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/f596f122f19b41e9ba64bc4900fd1413/triggers/manual/paths/invoke/subject?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=yffQm7RxLz7duL3NHk3ZWEW6eadPXeHcnuNCgwCfG4M
-
-
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      - nats
+    networks:
+      - limboo-network
     command: ["dotnet", "watch", "run", "--urls", "http://0.0.0.0:5000"]
+
+  nats:
+    image: nats:latest
+    ports:
+      - "4222:4222"
+      - "6222:6222"
+      - "8222:8222"
+    command: -js
+    volumes:
+      - nats_data:/data
+    networks:
+      - limboo-network
+
+volumes:
+  nats_data:
+
+networks:
+  limboo-network:
+    driver: bridge

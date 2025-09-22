@@ -1,0 +1,20 @@
+services:
+  limboo-cards-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    volumes:
+      - .:/app
+      - /app/src/bin
+      - /app/src/obj
+    working_dir: /app/src
+    environment:
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - DOTNET_HOST_PATH=/usr/share/dotnet/dotnet
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      - SUBJECT_GETBYID_URL=
+    command: ["dotnet", "watch", "run", "--urls", "http://0.0.0.0:5000"]

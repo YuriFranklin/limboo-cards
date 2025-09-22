@@ -31,6 +31,7 @@ namespace LimbooCards.Infra.Repositories
 
         public async Task<Subject?> GetSubjectByIdAsync(Guid subjectId)
         {
+            Console.WriteLine("BBBBBBB");
             var url = Environment.GetEnvironmentVariable("SUBJECT_GETBYID_URL")
             ?? throw new InvalidOperationException("SUBJECT_GETALL_URL not set.");
 
@@ -38,7 +39,9 @@ namespace LimbooCards.Infra.Repositories
 
             if (result == null) { return null; }
 
-            return mapper.Map<Subject>(result);
+            var subject = mapper.Map<Subject>(result);
+
+            return subject;
         }
 
         public Task UpdateSubjectAsync(Subject subject)

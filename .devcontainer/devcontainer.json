@@ -1,5 +1,6 @@
 {
   "name": "LimbooCards Dev",
+  "dockerComposeFile": "docker-compose.yml",
   "build": {
     "dockerfile": "Dockerfile.dev",
     "context": ".."
@@ -9,7 +10,8 @@
     "vscode": {
       "extensions": [
         "ms-dotnettools.csharp",
-        "editorconfig.editorconfig"
+        "editorconfig.editorconfig",
+        "ms-dotnettools.csdevkit"
       ]
     }
   }
