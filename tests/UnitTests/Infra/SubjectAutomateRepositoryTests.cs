@@ -80,7 +80,7 @@ namespace LimbooCards.UnitTests.Infra
         [Fact]
         public async Task GetSubjectByIdAsync_ShouldReturnNull_WhenApiReturnsNull()
         {
-            var subjectId = Guid.NewGuid();
+            var subjectId = Guid.CreateVersion7();
 
             var subjectByIdUrl = "http://localhost/subjects?api-version=1";
             Environment.SetEnvironmentVariable("SUBJECT_GETBYID_URL", subjectByIdUrl);

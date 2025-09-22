@@ -69,6 +69,24 @@ namespace LimbooCards.Application.Services
             return mapper.Map<IEnumerable<SubjectDto>>(subjects);
         }
 
+        public async Task<PagedResult<SubjectDto>> GetSubjectsPagedAsync(int? first = 20, string? after = null)
+        {
+            var pageSize = first.GetValueOrDefault(20);
+            Guid? afterId = DecodeCursor(after);
+
+            var page = await subjectRepository.GetSubjectsPageAsync(afterId, pageSize);
+
+            bool hasNextPage = page.Count() > pageSize;
+            var items = page.Take(pageSize).ToList();
+
+            return new PagedResult<SubjectDto>
+            {
+                Items = mapper.Map<IReadOnlyList<SubjectDto>>(items),
+                HasNextPage = hasNextPage,
+                HasPreviousPage = afterId.HasValue
+            };
+        }
+
         public async Task UpdateSubjectAsync(UpdateSubjectDto dto)
         {
             var subject = await this.subjectRepository.GetSubjectByIdAsync(dto.Id)
@@ -117,6 +135,13 @@ namespace LimbooCards.Application.Services
         public async Task DeleteSubjectAsync(Guid subjectId)
         {
             await this.subjectRepository.DeleteSubjectAsync(subjectId);
+        }
+
+        private static Guid? DecodeCursor(string? cursor)
+        {
+            if (string.IsNullOrEmpty(cursor)) return null;
+            var decoded = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(cursor));
+            return Guid.TryParse(decoded, out var id) ? id : null;
         }
     }
 }

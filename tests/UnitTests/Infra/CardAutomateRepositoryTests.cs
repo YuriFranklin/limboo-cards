@@ -5,10 +5,10 @@ namespace LimbooCards.UnitTests.Infra
         [Fact]
         public async Task GetCardByIdAsync_ShouldReturnMappedCard_WhenDtoExists()
         {
-            var cardId = Guid.NewGuid();
-            var planId = Guid.NewGuid();
-            var bucketId = Guid.NewGuid();
-            var createdById = Guid.NewGuid();
+            var cardId = Guid.CreateVersion7();
+            var planId = Guid.CreateVersion7();
+            var bucketId = Guid.CreateVersion7();
+            var createdById = Guid.CreateVersion7();
 
             var dto = new CardAutomateDto
             {
@@ -18,7 +18,7 @@ namespace LimbooCards.UnitTests.Infra
                 title = "Matemática - Exercícios",
                 description = "Lista de exercícios de equações",
                 hasDescription = true,
-                subjectId = Guid.NewGuid(),
+                subjectId = Guid.CreateVersion7(),
                 orderHint = "A123",
                 createdDateTime = DateTime.UtcNow.AddDays(-1).ToString("O"),
                 dueDateTime = DateTime.UtcNow.AddDays(3).ToString("O"),
@@ -45,7 +45,7 @@ namespace LimbooCards.UnitTests.Infra
                             {
                                 user = new LastModifiedUser
                                 {
-                                    id = Guid.NewGuid(),
+                                    id = Guid.CreateVersion7(),
                                     displayName = "Professor"
                                 }
                             }
@@ -102,7 +102,7 @@ namespace LimbooCards.UnitTests.Infra
         public async Task GetCardByIdAsync_ShouldReturnNull_WhenApiReturnsNull()
         {
             // Arrange
-            var cardId = Guid.NewGuid();
+            var cardId = Guid.CreateVersion7();
 
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock

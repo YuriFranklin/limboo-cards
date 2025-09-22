@@ -20,8 +20,8 @@ namespace LimbooCards.UnitTests.Application
                 Name = "Math",
                 Semester = "2025.1",
                 Status = SubjectStatus.Complete,
-                OwnerId = Guid.NewGuid(),
-                CoOwnerIds = new List<Guid> { Guid.NewGuid() },
+                OwnerId = Guid.CreateVersion7(),
+                CoOwnerIds = new List<Guid> { Guid.CreateVersion7() },
                 Oferts = new List<OfertDto> { new() { Project = "P1", Module = "M1" } },
             };
 
@@ -59,7 +59,7 @@ namespace LimbooCards.UnitTests.Application
         [Fact]
         public async Task GetSubjectByIdAsync_Should_Return_SubjectDto_When_Found()
         {
-            var subjectId = Guid.NewGuid();
+            var subjectId = Guid.CreateVersion7();
             var subject = new Subject(subjectId, null, "Math", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P1", "M1") });
             var dto = new SubjectDto { Name = "Math" };
 
@@ -77,8 +77,8 @@ namespace LimbooCards.UnitTests.Application
         {
             var subjects = new List<Subject>
         {
-            new(Guid.NewGuid(), null, "Math", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P1","M1") }),
-            new(Guid.NewGuid(), null, "Physics", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P2","M2") })
+            new(Guid.CreateVersion7(), null, "Math", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P1","M1") }),
+            new(Guid.CreateVersion7(), null, "Physics", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P2","M2") })
         };
 
             var dtos = subjects.Select(s => new SubjectDto { Name = s.Name }).ToList();
@@ -98,12 +98,12 @@ namespace LimbooCards.UnitTests.Application
         {
             var dto = new UpdateSubjectDto
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.CreateVersion7(),
                 Name = "Math Updated",
                 Semester = "2025.1",
                 Status = SubjectStatus.Complete,
-                OwnerId = Guid.NewGuid(),
-                CoOwnerIds = new List<Guid> { Guid.NewGuid() },
+                OwnerId = Guid.CreateVersion7(),
+                CoOwnerIds = new List<Guid> { Guid.CreateVersion7() },
                 Oferts = new List<OfertDto> { new() { Project = "P1", Module = "M1" } }
             };
 
@@ -124,7 +124,7 @@ namespace LimbooCards.UnitTests.Application
         [Fact]
         public async Task DeleteSubjectAsync_Should_Call_Repository()
         {
-            var subjectId = Guid.NewGuid();
+            var subjectId = Guid.CreateVersion7();
 
             await service.DeleteSubjectAsync(subjectId);
 

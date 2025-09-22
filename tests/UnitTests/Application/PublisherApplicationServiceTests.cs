@@ -15,7 +15,7 @@ namespace LimbooCards.UnitTests.Application
         public async Task CreatePublisherAsync_Should_Create_And_Return_PublisherDto()
         {
             var dto = new CreatePublisherDto { Name = "Packt" };
-            var publisher = new Publisher(Guid.NewGuid(), dto.Name);
+            var publisher = new Publisher(Guid.CreateVersion7(), dto.Name);
             var publisherDto = new PublisherDto { Id = publisher.Id, Name = publisher.Name };
 
             mapperMock.Setup(m => m.Map<Publisher>(dto)).Returns(publisher);
@@ -31,7 +31,7 @@ namespace LimbooCards.UnitTests.Application
         [Fact]
         public async Task GetPublisherByIdAsync_Should_Return_PublisherDto_When_Found()
         {
-            var publisherId = Guid.NewGuid();
+            var publisherId = Guid.CreateVersion7();
             var publisher = new Publisher(publisherId, "Manning");
             var publisherDto = new PublisherDto { Id = publisherId, Name = publisher.Name };
 
@@ -47,7 +47,7 @@ namespace LimbooCards.UnitTests.Application
         [Fact]
         public async Task GetPublisherByIdAsync_Should_Return_Null_When_NotFound()
         {
-            var publisherId = Guid.NewGuid();
+            var publisherId = Guid.CreateVersion7();
 
             publisherRepositoryMock.Setup(r => r.GetPublisherByIdAsync(publisherId))
                 .ReturnsAsync((Publisher?)null);
@@ -60,7 +60,7 @@ namespace LimbooCards.UnitTests.Application
         [Fact]
         public async Task GetPublisherByNameAsync_Should_Return_PublisherDto_When_Found()
         {
-            var publisher = new Publisher(Guid.NewGuid(), "O’Reilly");
+            var publisher = new Publisher(Guid.CreateVersion7(), "O’Reilly");
             var publisherDto = new PublisherDto { Id = publisher.Id, Name = publisher.Name };
 
             publisherRepositoryMock.Setup(r => r.GetPublisherByNameAsync(publisher.Name)).ReturnsAsync(publisher);
@@ -88,8 +88,8 @@ namespace LimbooCards.UnitTests.Application
         {
             var publishers = new List<Publisher>
             {
-                new Publisher(Guid.NewGuid(), "Springer"),
-                new Publisher(Guid.NewGuid(), "Elsevier")
+                new Publisher(Guid.CreateVersion7(), "Springer"),
+                new Publisher(Guid.CreateVersion7(), "Elsevier")
             };
             var publisherDtos = publishers.Select(p => new PublisherDto { Id = p.Id, Name = p.Name }).ToList();
 
@@ -106,7 +106,7 @@ namespace LimbooCards.UnitTests.Application
         [Fact]
         public async Task UpdatePublisherAsync_Should_Call_Repository()
         {
-            var dto = new UpdatePublisherDto { Id = Guid.NewGuid(), Name = "Updated Publisher" };
+            var dto = new UpdatePublisherDto { Id = Guid.CreateVersion7(), Name = "Updated Publisher" };
             var publisher = new Publisher(dto.Id, dto.Name);
 
             mapperMock.Setup(m => m.Map<Publisher>(dto)).Returns(publisher);
@@ -119,7 +119,7 @@ namespace LimbooCards.UnitTests.Application
         [Fact]
         public async Task DeletePublisherAsync_Should_Call_Repository()
         {
-            var publisherId = Guid.NewGuid();
+            var publisherId = Guid.CreateVersion7();
 
             await service.DeletePublisherAsync(publisherId);
 

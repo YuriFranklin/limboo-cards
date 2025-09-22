@@ -19,7 +19,7 @@ namespace LimbooCards.Domain.Entities
             List<SubjectPublisher>? publishers = null
         )
         {
-            this.Id = id ?? Guid.NewGuid();
+            this.Id = id ?? Guid.CreateVersion7();
             this.ModelId = modelId;
             this.Name = name ?? throw new ArgumentNullException(nameof(name));
             this.Semester = semester ?? throw new ArgumentNullException(nameof(semester));

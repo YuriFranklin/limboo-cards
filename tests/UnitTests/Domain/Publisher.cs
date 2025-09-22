@@ -7,7 +7,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void Publisher_ShouldInitializeProperties()
         {
-            var id = Guid.NewGuid();
+            var id = Guid.CreateVersion7();
             var publisher = new Publisher(id, "OReilly");
 
             Assert.Equal(id, publisher.Id);
@@ -30,7 +30,7 @@ namespace LimbooCards.UnitTests.Domain
         {
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                var publisher = new Publisher(Guid.NewGuid(), "");
+                var publisher = new Publisher(Guid.CreateVersion7(), "");
             });
 
             Assert.Contains("Name cannot be empty.", ex.Message.Split(Environment.NewLine)[0]);
@@ -41,7 +41,7 @@ namespace LimbooCards.UnitTests.Domain
         {
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                var publisher = new Publisher(Guid.NewGuid(), "   ");
+                var publisher = new Publisher(Guid.CreateVersion7(), "   ");
             });
 
             Assert.Contains("Name cannot be empty.", ex.Message.Split(Environment.NewLine)[0]);
@@ -52,7 +52,7 @@ namespace LimbooCards.UnitTests.Domain
         {
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                var publisher = new Publisher(Guid.NewGuid(), null!);
+                var publisher = new Publisher(Guid.CreateVersion7(), null!);
             });
 
             Assert.Contains("Name cannot be empty.", ex.Message.Split(Environment.NewLine)[0]);

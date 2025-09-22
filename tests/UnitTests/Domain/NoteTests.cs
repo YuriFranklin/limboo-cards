@@ -6,7 +6,7 @@ namespace LimbooCards.UnitTests.Domain
         public void Constructor_WithValidParameters_ShouldCreateNote()
         {
             var text = "My first note";
-            var createdBy = Guid.NewGuid();
+            var createdBy = Guid.CreateVersion7();
             var createdAt = DateTime.UtcNow;
 
             var note = new Note(text, createdBy, createdAt);
@@ -20,7 +20,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void Constructor_EmptyText_ShouldThrowArgumentException()
         {
-            var createdBy = Guid.NewGuid();
+            var createdBy = Guid.CreateVersion7();
 
             var exception = Assert.Throws<ArgumentException>(() => new Note("", createdBy));
             Assert.Contains("Text cannot be empty", exception.Message);
@@ -38,7 +38,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void Edit_WithValidText_ShouldUpdateTextAndEditedAt()
         {
-            var note = new Note("Original text", Guid.NewGuid());
+            var note = new Note("Original text", Guid.CreateVersion7());
 
             note.Edit("Updated text");
 
@@ -49,7 +49,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void Edit_WithEmptyText_ShouldThrowArgumentException()
         {
-            var note = new Note("Original text", Guid.NewGuid());
+            var note = new Note("Original text", Guid.CreateVersion7());
 
             var exception = Assert.Throws<ArgumentException>(() => note.Edit(""));
             Assert.Contains("Text cannot be empty", exception.Message);

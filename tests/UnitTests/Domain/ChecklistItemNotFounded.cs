@@ -7,8 +7,8 @@ namespace LimbooCards.UnitTests.Domain
         {
             var checklistItemId = "1";
             var checklistItemTitle = "Checklist Item X";
-            var cardId = Guid.NewGuid();
-            var subjectId = Guid.NewGuid();
+            var cardId = Guid.CreateVersion7();
+            var subjectId = Guid.CreateVersion7();
 
             var evt = new ChecklistItemNotFounded(checklistItemId, checklistItemTitle, cardId, subjectId);
 
@@ -20,8 +20,8 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void Constructor_EmptyTitle_ShouldThrowArgumentException()
         {
-            var cardId = Guid.NewGuid();
-            var subjectId = Guid.NewGuid();
+            var cardId = Guid.CreateVersion7();
+            var subjectId = Guid.CreateVersion7();
 
             Assert.Throws<ArgumentException>(() =>
                 new ChecklistItemNotFounded("1", "", cardId, subjectId));
@@ -30,7 +30,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void Constructor_EmptyCardId_ShouldThrowArgumentException()
         {
-            var subjectId = Guid.NewGuid();
+            var subjectId = Guid.CreateVersion7();
 
             Assert.Throws<ArgumentException>(() =>
                 new ChecklistItemNotFounded("1,", "Valid Title", Guid.Empty, subjectId));
@@ -39,7 +39,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void Constructor_EmptySubjectId_ShouldThrowArgumentException()
         {
-            var cardId = Guid.NewGuid();
+            var cardId = Guid.CreateVersion7();
 
             Assert.Throws<ArgumentException>(() =>
                 new ChecklistItemNotFounded("1,", "Valid Title", cardId, Guid.Empty));

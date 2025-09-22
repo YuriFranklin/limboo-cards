@@ -65,7 +65,7 @@ namespace LimbooCards.UnitTests.Domain
             var ex = Assert.Throws<ArgumentException>(() =>
             {
                 var subject = new Subject(
-                    id: Guid.NewGuid(),
+                    id: Guid.CreateVersion7(),
                     modelId: null,
                     name: "",
                     semester: "1st",
@@ -82,7 +82,7 @@ namespace LimbooCards.UnitTests.Domain
             var ex = Assert.Throws<ArgumentException>(() =>
             {
                 var subject = new Subject(
-                    id: Guid.NewGuid(),
+                    id: Guid.CreateVersion7(),
                     modelId: null,
                     name: "Math",
                     semester: "",
@@ -98,8 +98,11 @@ namespace LimbooCards.UnitTests.Domain
         {
             var ex = Assert.Throws<ArgumentException>(() =>
             {
+                var ofert = new Ofert("DIG", "AE");
+
                 var subject = new Subject(
-                    id: Guid.NewGuid(),
+                    id: Guid.CreateVersion7(),
+                    oferts: new List<Ofert> { ofert },
                     modelId: null,
                     name: "Math",
                     semester: "1st",
@@ -118,7 +121,7 @@ namespace LimbooCards.UnitTests.Domain
                 var ofert = new Ofert("DIG", "AE");
 
                 var subject = new Subject(
-                    id: Guid.NewGuid(),
+                    id: Guid.CreateVersion7(),
                     modelId: null,
                     name: "Math",
                     semester: "1st",
@@ -139,7 +142,7 @@ namespace LimbooCards.UnitTests.Domain
                 var ofert = new Ofert("DIG", "AE");
 
                 var subject = new Subject(
-                    id: Guid.NewGuid(),
+                    id: Guid.CreateVersion7(),
                     modelId: null,
                     name: "Math",
                     semester: "1st",
@@ -167,7 +170,7 @@ namespace LimbooCards.UnitTests.Domain
             var ex = Assert.Throws<ArgumentException>(() =>
             {
                 var subject = new Subject(
-                    id: Guid.NewGuid(),
+                    id: Guid.CreateVersion7(),
                     modelId: null,
                     name: "Math",
                     semester: "1st",
@@ -194,7 +197,7 @@ namespace LimbooCards.UnitTests.Domain
             var ex = Assert.Throws<ArgumentException>(() =>
             {
                 var subject = new Subject(
-                    id: Guid.NewGuid(),
+                    id: Guid.CreateVersion7(),
                     modelId: null,
                     name: "Math",
                     semester: "1st",
@@ -221,7 +224,7 @@ namespace LimbooCards.UnitTests.Domain
             var ex = Assert.Throws<ArgumentException>(() =>
             {
                 var subject = new Subject(
-                    id: Guid.NewGuid(),
+                    id: Guid.CreateVersion7(),
                     modelId: null,
                     name: "Math",
                     semester: "1st",

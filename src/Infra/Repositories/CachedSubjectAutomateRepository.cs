@@ -14,7 +14,6 @@ namespace LimbooCards.Infra.Repositories
 
         public async Task<Subject?> GetSubjectByIdAsync(Guid subjectId)
         {
-            Console.WriteLine("AAAAAAA");
             var cached = await _cache.GetAsync<Subject>(_bucket, subjectId.ToString());
             if (cached != null) return cached;
 
@@ -41,6 +40,27 @@ namespace LimbooCards.Infra.Repositories
             _ = _cache.PutAsync(_bucket, "all", subjects, _ttl);
 
             return subjects;
+        }
+
+        public async Task<IReadOnlyList<Subject>> GetSubjectsPageAsync(Guid? afterId, int pageSize)
+        {
+            var cachedList = await _cache.GetAsync<List<Subject>>(_bucket, "all");
+
+            if (cachedList != null)
+            {
+                var query = cachedList.OrderBy(s => s.Id);
+
+                if (afterId.HasValue)
+                    query = (IOrderedEnumerable<Subject>)query.Where(s => s.Id.CompareTo(afterId.Value) > 0);
+
+                return [.. query.Take(pageSize + 1)];
+            }
+            var page = await _inner.GetSubjectsPageAsync(afterId, pageSize + 1);
+
+            foreach (var subject in page)
+                _ = _cache.PutAsync(_bucket, subject.Id.ToString(), subject, _ttl);
+
+            return page;
         }
 
         public Task AddSubjectAsync(Subject subject)

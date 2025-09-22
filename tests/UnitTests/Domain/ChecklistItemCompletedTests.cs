@@ -7,10 +7,10 @@ namespace LimbooCards.UnitTests.Domain
         {
             // Arrange
             var checklistItemId = "1";
-            var completedBy = Guid.NewGuid();
+            var completedBy = Guid.CreateVersion7();
             var completedAt = DateTime.UtcNow;
-            var cardId = Guid.NewGuid();
-            var subjectId = Guid.NewGuid();
+            var cardId = Guid.CreateVersion7();
+            var subjectId = Guid.CreateVersion7();
 
             // Act
             var evt = new ChecklistItemCompleted(
@@ -35,10 +35,10 @@ namespace LimbooCards.UnitTests.Domain
             {
                 new ChecklistItemCompleted(
                     null!,
-                    Guid.NewGuid(),
+                    Guid.CreateVersion7(),
                     DateTime.UtcNow,
-                    Guid.NewGuid(),
-                    Guid.NewGuid());
+                    Guid.CreateVersion7(),
+                    Guid.CreateVersion7());
             });
 
             Assert.Contains("ChecklistItemId must be set.", ex.Message);
@@ -53,8 +53,8 @@ namespace LimbooCards.UnitTests.Domain
                     "1",
                     Guid.Empty,
                     DateTime.UtcNow,
-                    Guid.NewGuid(),
-                    Guid.NewGuid());
+                    Guid.CreateVersion7(),
+                    Guid.CreateVersion7());
             });
 
             Assert.Contains("CompletedBy must be set.", ex.Message);
@@ -67,10 +67,10 @@ namespace LimbooCards.UnitTests.Domain
             {
                 new ChecklistItemCompleted(
                     "1",
-                    Guid.NewGuid(),
+                    Guid.CreateVersion7(),
                     default,
-                    Guid.NewGuid(),
-                    Guid.NewGuid());
+                    Guid.CreateVersion7(),
+                    Guid.CreateVersion7());
             });
 
             Assert.Contains("CompletedAt must be set.", ex.Message);
@@ -83,10 +83,10 @@ namespace LimbooCards.UnitTests.Domain
             {
                 new ChecklistItemCompleted(
                     "1",
-                    Guid.NewGuid(),
+                    Guid.CreateVersion7(),
                     DateTime.UtcNow,
                     Guid.Empty,
-                    Guid.NewGuid());
+                    Guid.CreateVersion7());
             });
 
             Assert.Contains("CardId must be set.", ex.Message);
@@ -99,9 +99,9 @@ namespace LimbooCards.UnitTests.Domain
             {
                 new ChecklistItemCompleted(
                     "1",
-                    Guid.NewGuid(),
+                    Guid.CreateVersion7(),
                     DateTime.UtcNow,
-                    Guid.NewGuid(),
+                    Guid.CreateVersion7(),
                     Guid.Empty);
             });
 

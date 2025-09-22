@@ -6,7 +6,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void User_ShouldInitializeProperties_WhenValidParametersProvided()
         {
-            var id = Guid.NewGuid();
+            var id = Guid.CreateVersion7();
             var fullName = "Test User";
             var email = "test@user.com";
 
@@ -27,7 +27,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void User_ShouldThrowException_WhenEmailIsEmpty()
         {
-            var exception = Assert.Throws<ArgumentException>(() => new User(Guid.NewGuid(), "Test User", null));
+            var exception = Assert.Throws<ArgumentException>(() => new User(Guid.CreateVersion7(), "Test User", null));
             Assert.Contains("Email cannot be empty.", exception.Message);
         }
 
@@ -37,7 +37,7 @@ namespace LimbooCards.UnitTests.Domain
         [InlineData("   ")]
         public void User_ShouldThrowException_WhenUsernameIsInvalid(string invalidFullName)
         {
-            var exception = Assert.Throws<ArgumentException>(() => new User(Guid.NewGuid(), invalidFullName, "test@user.com"));
+            var exception = Assert.Throws<ArgumentException>(() => new User(Guid.CreateVersion7(), invalidFullName, "test@user.com"));
             Assert.Equal("FullName cannot be empty. (Parameter 'FullName')", exception.Message);
         }
     }

@@ -17,7 +17,7 @@ namespace LimbooCards.Domain.Entities
             List<ChecklistItem>? checklist = null
         )
         {
-            this.Id = id ?? Guid.NewGuid();
+            this.Id = id ?? Guid.CreateVersion7();
             this.Title = title;
             this.Description = description;
             this.HasDescription = hasDescription;

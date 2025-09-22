@@ -11,19 +11,19 @@ namespace LimbooCards.UnitTests.Domain
                 isChecked: false,
                 orderHint: "1",
                 updatedAt: DateTime.UtcNow,
-                updatedBy: Guid.NewGuid()
+                updatedBy: Guid.CreateVersion7()
             );
 
             var card = new Card(
                 title: "Card1",
                 description: "Description",
                 hasDescription: true,
-                createdBy: Guid.NewGuid(),
+                createdBy: Guid.CreateVersion7(),
                 checklist: new List<ChecklistItem> { checklistItem1 }
             );
 
             var subject = new Subject(
-                id: Guid.NewGuid(),
+                id: Guid.CreateVersion7(),
                 modelId: null,
                 name: "Subject1",
                 semester: "1st",
@@ -52,19 +52,19 @@ namespace LimbooCards.UnitTests.Domain
                 isChecked: false,
                 orderHint: "1",
                 updatedAt: DateTime.UtcNow,
-                updatedBy: Guid.NewGuid()
+                updatedBy: Guid.CreateVersion7()
             );
 
             var card = new Card(
                 title: "Card1",
                 description: "Description",
                 hasDescription: true,
-                createdBy: Guid.NewGuid(),
+                createdBy: Guid.CreateVersion7(),
                 checklist: new List<ChecklistItem> { checklistItem1 }
             );
 
             var subject = new Subject(
-                id: Guid.NewGuid(),
+                id: Guid.CreateVersion7(),
                 modelId: null,
                 name: "Subject1",
                 semester: "1st",
@@ -90,19 +90,19 @@ namespace LimbooCards.UnitTests.Domain
                 isChecked: false,
                 orderHint: "1",
                 updatedAt: DateTime.UtcNow,
-                updatedBy: Guid.NewGuid()
+                updatedBy: Guid.CreateVersion7()
             );
 
             var card = new Card(
                 title: "Card1",
                 description: "Description",
                 hasDescription: true,
-                createdBy: Guid.NewGuid(),
+                createdBy: Guid.CreateVersion7(),
                 checklist: new List<ChecklistItem> { checklistItem1 }
             );
 
             var subject = new Subject(
-                id: Guid.NewGuid(),
+                id: Guid.CreateVersion7(),
                 modelId: null,
                 name: "Subject1",
                 semester: "1st",
@@ -132,19 +132,19 @@ namespace LimbooCards.UnitTests.Domain
                 isChecked: false,
                 orderHint: "1",
                 updatedAt: DateTime.UtcNow,
-                updatedBy: Guid.NewGuid()
+                updatedBy: Guid.CreateVersion7()
             );
 
             var card = new Card(
                 title: "Card1",
                 description: "Description",
                 hasDescription: true,
-                createdBy: Guid.NewGuid(),
+                createdBy: Guid.CreateVersion7(),
                 checklist: new List<ChecklistItem> { checklistItem1 }
             );
 
             var subject = new Subject(
-                id: Guid.NewGuid(),
+                id: Guid.CreateVersion7(),
                 modelId: null,
                 name: "Subject1",
                 semester: "1st",

@@ -20,18 +20,18 @@ namespace LimbooCards.Infra.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Subject>> GetAllSubjectsAsync()
+        public Task<IReadOnlyList<Subject>> GetAllSubjectsAsync(Guid? afterId, int pageSize)
         {
-            var result = await this.httpClient.GetFromJsonAsync<IEnumerable<SubjectAutomateDto>>("/subjects");
+            throw new NotImplementedException();
+        }
 
-            if (result == null || !result.Any()) { return []; }
-
-            return mapper.Map<IEnumerable<Subject>>(result);
+        public Task<IEnumerable<Subject>> GetAllSubjectsAsync()
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Subject?> GetSubjectByIdAsync(Guid subjectId)
         {
-            Console.WriteLine("BBBBBBB");
             var url = Environment.GetEnvironmentVariable("SUBJECT_GETBYID_URL")
             ?? throw new InvalidOperationException("SUBJECT_GETALL_URL not set.");
 
@@ -42,6 +42,11 @@ namespace LimbooCards.Infra.Repositories
             var subject = mapper.Map<Subject>(result);
 
             return subject;
+        }
+
+        public Task<IReadOnlyList<Subject>> GetSubjectsPageAsync(Guid? afterId, int pageSize)
+        {
+            throw new NotImplementedException();
         }
 
         public Task UpdateSubjectAsync(Subject subject)
