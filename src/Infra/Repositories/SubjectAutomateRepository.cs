@@ -20,20 +20,21 @@ namespace LimbooCards.Infra.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IReadOnlyList<Subject>> GetAllSubjectsAsync(Guid? afterId, int pageSize)
+        public async Task<IEnumerable<Subject>> GetAllSubjectsAsync()
         {
-            throw new NotImplementedException();
-        }
+            var url = Environment.GetEnvironmentVariable("SUBJECT_GETALL_URL")
+                ?? throw new InvalidOperationException("SUBJECT_GETALL_URL not set.");
 
-        public Task<IEnumerable<Subject>> GetAllSubjectsAsync()
-        {
-            throw new NotImplementedException();
+            var result = await httpClient.GetFromJsonAsync<SubjectAutomateDto[]>(url);
+
+            return result?.Select(dto => mapper.Map<Subject>(dto))
+                   ?? [];
         }
 
         public async Task<Subject?> GetSubjectByIdAsync(Guid subjectId)
         {
             var url = Environment.GetEnvironmentVariable("SUBJECT_GETBYID_URL")
-            ?? throw new InvalidOperationException("SUBJECT_GETALL_URL not set.");
+            ?? throw new InvalidOperationException("SUBJECT_GETBYID_URL not set.");
 
             var result = await this.httpClient.GetFromJsonAsync<SubjectAutomateDto>($"{url}&subject-id={subjectId}");
 
@@ -44,9 +45,20 @@ namespace LimbooCards.Infra.Repositories
             return subject;
         }
 
-        public Task<IReadOnlyList<Subject>> GetSubjectsPageAsync(Guid? afterId, int pageSize)
+        public async Task<IReadOnlyList<Subject>> GetSubjectsPageAsync(Guid? afterId, int pageSize)
         {
-            throw new NotImplementedException();
+            var url = Environment.GetEnvironmentVariable("SUBJECT_GETPAGED_URL")
+                ?? throw new InvalidOperationException("SUBJECT_GETPAGED_URL not set.");
+
+            var result = await httpClient.GetFromJsonAsync<SubjectsPageAutomateResponseDto>(
+                $"{url}&after={afterId}&first={pageSize}");
+
+            var subjects = result?.Items?
+                .Select(dto => mapper.Map<Subject>(dto))
+                .ToList()
+                ?? new List<Subject>();
+
+            return subjects;
         }
 
         public Task UpdateSubjectAsync(Subject subject)

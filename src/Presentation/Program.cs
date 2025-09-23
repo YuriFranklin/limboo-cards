@@ -9,34 +9,47 @@ using Microsoft.Extensions.DependencyInjection;
 using LimbooCards.Infra.KeyValues;
 using NATS.Client;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
 
+// Create builder
 var builder = WebApplication.CreateBuilder(args);
 var assembly = Assembly.GetExecutingAssembly();
 
-// Discover all ObjectType classes for GraphQL
-var objectTypeClasses = assembly.GetTypes()
-    .Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(typeof(ObjectType)))
-    .ToList();
+// Detect environment
+var isDev = builder.Environment.IsDevelopment();
 
-// Generic HttpClient
+// -------------------
+// Logging
+// -------------------
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(isDev ? LogLevel.Debug : LogLevel.Information);
+
+// -------------------
+// HttpClient
+// -------------------
 builder.Services.AddHttpClient("generic");
 
+// -------------------
 // AutoMapper
+// -------------------
 builder.Services.AddAutoMapper(typeof(Program));
 
-// Create NATS connection
+// -------------------
+// NATS connection
+// -------------------
 var natsUrl = Environment.GetEnvironmentVariable("NATS_URL")
     ?? throw new InvalidOperationException("Environment variable NATS_URL is not set.");
+
 var opts = ConnectionFactory.GetDefaultOptions();
 opts.Url = natsUrl;
 opts.Timeout = 5000;
+
 var cf = new ConnectionFactory();
 IConnection natsConnection = cf.CreateConnection(opts);
-
-// Register NATS connection in DI
 builder.Services.AddSingleton(natsConnection);
 
-// Register KeyValueStore using NATS connection
+// KeyValueStore using NATS
 builder.Services.AddSingleton<IKeyValueStore>(sp =>
 {
     var connection = sp.GetRequiredService<IConnection>();
@@ -44,12 +57,13 @@ builder.Services.AddSingleton<IKeyValueStore>(sp =>
     return new NatsKeyValueStore(connection, logger);
 });
 
-// Original repositories
+// -------------------
+// Repositories and services
+// -------------------
 builder.Services.AddScoped<SubjectAutomateRepository>();
 builder.Services.AddScoped<IUserRepository, UserAutomateRepository>();
 builder.Services.AddScoped<ICardRepository, CardAutomateRepository>();
 
-// Decorated repository with caching
 builder.Services.AddScoped<ISubjectRepository>(sp =>
 {
     var inner = sp.GetRequiredService<SubjectAutomateRepository>();
@@ -57,28 +71,42 @@ builder.Services.AddScoped<ISubjectRepository>(sp =>
     return new CachedSubjectAutomateRepository(inner, cache);
 });
 
-// Application Services
 builder.Services.AddScoped<SubjectApplicationService>();
 builder.Services.AddScoped<CardApplicationService>();
 
-// GraphQL Queries
 builder.Services.AddScoped<SubjectQueries>();
 builder.Services.AddScoped<CardQueries>();
 
-// Configure GraphQL server
+// -------------------
+// GraphQL
+// -------------------
+// Discover all ObjectType classes
+var objectTypeClasses = assembly.GetTypes()
+    .Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(typeof(ObjectType)))
+    .ToList();
+
 var gqlBuilder = builder.Services
     .AddScoped<Query>()
     .AddGraphQLServer()
     .AddQueryType<Query>()
     .AddApolloFederation()
-    .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true);
+    // Dev/prod configuration
+    .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = isDev)
+    .ModifyOptions(opt =>
+    {
+        opt.StrictValidation = !isDev;
+        opt.EnableDirectiveIntrospection = isDev;
+    });
 
-// Add all discovered ObjectType classes to GraphQL
+// Add all discovered ObjectTypes
 foreach (var type in objectTypeClasses)
 {
     gqlBuilder.AddType(type);
 }
 
+// -------------------
+// Application
+// -------------------
 var app = builder.Build();
 
 // Map GraphQL endpoint

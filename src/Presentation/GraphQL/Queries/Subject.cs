@@ -17,17 +17,17 @@ namespace LimbooCards.Presentation.GraphQL.Queries
             return _mapper.Map<SubjectModel>(subject);
         }
 
-        public async Task<SubjectConnection> GetSubjectsAsync(int? first = null, string? after = null)
+        public async Task<SubjectConnectionModel> GetSubjectsAsync(int? first = null, string? after = null)
         {
             var result = await _subjectService.GetSubjectsPagedAsync(first, after);
 
-            var edges = result.Items.Select(s => new SubjectEdge
+            var edges = result.Items.Select(s => new SubjectEdgeModel
             {
                 Node = _mapper.Map<SubjectModel>(s),
                 Cursor = EncodeCursor(s.Id)
             }).ToList();
 
-            var pageInfo = new PageInfo
+            var pageInfor = new PageInforModel
             {
                 StartCursor = edges.FirstOrDefault()?.Cursor,
                 EndCursor = edges.LastOrDefault()?.Cursor,
@@ -35,10 +35,10 @@ namespace LimbooCards.Presentation.GraphQL.Queries
                 HasPreviousPage = result.HasPreviousPage
             };
 
-            return new SubjectConnection
+            return new SubjectConnectionModel
             {
                 Edges = edges,
-                PageInfo = pageInfo
+                PageInfor = pageInfor
             };
         }
 

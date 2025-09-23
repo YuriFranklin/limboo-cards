@@ -17,4 +17,6 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - DOTNET_RUNNING_IN_CONTAINER=true
       - SUBJECT_GETBYID_URL=
+      - SUBJECT_GETALL_URL=
+      - SUBJECT_GETPAGED_URL=
     command: ["dotnet", "watch", "run", "--urls", "http://0.0.0.0:5000"]

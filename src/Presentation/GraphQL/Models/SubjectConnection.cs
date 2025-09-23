@@ -1,8 +1,8 @@
 namespace LimbooCards.Presentation.GraphQL.Models
 {
-    public class SubjectConnection
+    public class SubjectConnectionModel
     {
-        public List<SubjectEdge> Edges { get; set; } = [];
-        public PageInfo PageInfo { get; set; } = new();
+        public List<SubjectEdgeModel> Edges { get; set; } = new();
+        public PageInforModel PageInfor { get; set; } = new();
     }
 }
