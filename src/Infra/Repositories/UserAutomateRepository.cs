@@ -14,7 +14,7 @@ namespace LimbooCards.Infra.Repositories
             throw new NotImplementedException();
         }
 
-        public Task DeleteUserAsync(Guid userId)
+        public Task DeleteUserAsync(string userId)
         {
             throw new NotImplementedException();
         }
@@ -24,7 +24,7 @@ namespace LimbooCards.Infra.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<User?> GetUserByIdAsync(Guid userId)
+        public Task<User?> GetUserByIdAsync(string userId)
         {
             throw new NotImplementedException();
         }

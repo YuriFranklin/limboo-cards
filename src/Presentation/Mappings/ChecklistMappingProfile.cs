@@ -4,13 +4,14 @@ namespace LimbooCards.Presentation.Mappings
     using LimbooCards.Application.DTOs;
     using LimbooCards.Domain.Events;
     using LimbooCards.Presentation.GraphQL.Models;
-    public class ChecklistResultMappingProfile : Profile
+    public class ChecklistMappingProfile : Profile
     {
-        public ChecklistResultMappingProfile()
+        public ChecklistMappingProfile()
         {
             CreateMap<ChecklistResultDto, ChecklistResultModel>();
             CreateMap<ChecklistItemCompleted, ChecklistItemCompletedModel>();
             CreateMap<ChecklistItemNotFounded, ChecklistItemNotFoundedModel>();
+            CreateMap<ChecklistItemDto, ChecklistItemModel>();
         }
     }
 }

@@ -2,10 +2,9 @@ namespace LimbooCards.Domain.Events
 {
     using System;
     using System.Collections.Generic;
-
     public class CardCategoryApplied
     {
-        public CardCategoryApplied(Guid cardId, Dictionary<string, bool>? appliedCategories = null)
+        public CardCategoryApplied(string cardId, Dictionary<string, bool>? appliedCategories = null)
         {
             CardId = cardId;
             AppliedCategories = appliedCategories ?? new Dictionary<string, bool>();
@@ -13,13 +12,13 @@ namespace LimbooCards.Domain.Events
             Validate();
         }
 
-        public Guid CardId { get; }
+        public string CardId { get; }
         public Dictionary<string, bool>? AppliedCategories { get; private set; }
 
         private void Validate()
         {
-            if (CardId == Guid.Empty)
-                throw new ArgumentException("CardId cannot be empty.", nameof(CardId));
+            if (CardId == null || CardId == string.Empty)
+                throw new ArgumentException("CardId cannot be empty or null.", nameof(CardId));
 
             if (AppliedCategories == null)
                 throw new ArgumentNullException(nameof(AppliedCategories));

@@ -8,6 +8,9 @@ namespace LimbooCards.Domain.Services
     {
         public static List<ChecklistItemCompleted> GetCompletedChecklistItems(Card card, Subject subject)
         {
+            if (card.Id == null || card.Id == string.Empty)
+                throw new ArgumentException("CardId cannot be null or empty.", nameof(card));
+
             if (card.Checklist == null || subject.Contents == null)
             {
                 return new List<ChecklistItemCompleted>();
@@ -34,6 +37,9 @@ namespace LimbooCards.Domain.Services
 
         public static List<ChecklistItemNotFounded> GetNotFoundChecklistItems(Card card, Subject subject)
         {
+            if (card.Id == null || card.Id == string.Empty)
+                throw new ArgumentException("CardId cannot be null or empty.", nameof(card));
+
             if (subject.Contents == null || !subject.Contents.Any(c => c.ContentStatus == ContentStatus.Missing))
             {
                 return new List<ChecklistItemNotFounded>();
@@ -42,7 +48,7 @@ namespace LimbooCards.Domain.Services
             var notFoundItems = new List<ChecklistItemNotFounded>();
 
             int maxId = 0;
-            if (card.Checklist != null && card.Checklist.Any())
+            if (card.Checklist != null && card.Checklist.Count != 0)
             {
                 maxId = card.Checklist
                     .Select(ci => int.TryParse(ci.Id, out var n) ? n : 0)

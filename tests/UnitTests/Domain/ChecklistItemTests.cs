@@ -5,7 +5,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void ChecklistItem_ShouldInitializeProperties()
         {
-            var updatedBy = Guid.CreateVersion7();
+            var updatedBy = Guid.CreateVersion7().ToString();
             var updatedAt = DateTime.UtcNow;
 
             var item = new ChecklistItem(
@@ -28,7 +28,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void ChecklistItem_ShouldThrow_WhenTitleIsEmpty()
         {
-            var updatedBy = Guid.CreateVersion7();
+            var updatedBy = Guid.CreateVersion7().ToString();
             var updatedAt = DateTime.UtcNow;
 
             var ex = Assert.Throws<ArgumentException>(() =>
@@ -49,7 +49,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void ChecklistItem_ShouldThrow_WhenOrderHintIsEmpty()
         {
-            var updatedBy = Guid.CreateVersion7();
+            var updatedBy = Guid.CreateVersion7().ToString();
             var updatedAt = DateTime.UtcNow;
 
             var ex = Assert.Throws<ArgumentException>(() =>
@@ -70,7 +70,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void ChecklistItem_ShouldThrow_WhenUpdatedAtIsDefault()
         {
-            var updatedBy = Guid.CreateVersion7();
+            var updatedBy = Guid.CreateVersion7().ToString();
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
@@ -100,7 +100,7 @@ namespace LimbooCards.UnitTests.Domain
                     isChecked: false,
                     orderHint: "A",
                     updatedAt: updatedAt,
-                    updatedBy: Guid.Empty
+                    updatedBy: string.Empty
                 );
             });
 

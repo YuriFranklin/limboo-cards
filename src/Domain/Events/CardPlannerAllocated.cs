@@ -2,7 +2,7 @@ namespace LimbooCards.Domain.Events
 {
     public class CardPlannerAllocated
     {
-        public CardPlannerAllocated(Guid cardId, Guid plannerId, Guid bucketId)
+        public CardPlannerAllocated(string cardId, string plannerId, string bucketId)
         {
             CardId = cardId;
             PlannerId = plannerId;
@@ -10,19 +10,19 @@ namespace LimbooCards.Domain.Events
 
             Validate();
         }
-        public Guid CardId { get; }
-        public Guid PlannerId { get; }
-        public Guid BucketId { get; }
+        public string CardId { get; }
+        public string PlannerId { get; }
+        public string BucketId { get; }
         private void Validate()
         {
-            if (CardId == Guid.Empty)
-                throw new ArgumentException("CardId cannot be empty.", nameof(CardId));
+            if (CardId == null || CardId == string.Empty)
+                throw new ArgumentException("CardId cannot be null or empty.", nameof(CardId));
 
-            if (PlannerId == Guid.Empty)
-                throw new ArgumentException("PlannerId cannot be empty.", nameof(PlannerId));
+            if (PlannerId == null || PlannerId == string.Empty)
+                throw new ArgumentException("PlannerId cannot be null or empty.", nameof(PlannerId));
 
-            if (BucketId == Guid.Empty)
-                throw new ArgumentException("BucketId cannot be empty.", nameof(BucketId));
+            if (BucketId == null || BucketId == string.Empty)
+                throw new ArgumentException("BucketId cannot be null or empty.", nameof(BucketId));
         }
     }
 }

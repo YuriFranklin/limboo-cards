@@ -7,9 +7,9 @@ namespace LimbooCards.UnitTests.Domain
         {
             // Arrange
             var checklistItemId = "1";
-            var completedBy = Guid.CreateVersion7();
+            var completedBy = Guid.CreateVersion7().ToString();
             var completedAt = DateTime.UtcNow;
-            var cardId = Guid.CreateVersion7();
+            var cardId = Guid.CreateVersion7().ToString();
             var subjectId = Guid.CreateVersion7();
 
             // Act
@@ -35,10 +35,10 @@ namespace LimbooCards.UnitTests.Domain
             {
                 new ChecklistItemCompleted(
                     null!,
-                    Guid.CreateVersion7(),
+                    Guid.CreateVersion7().ToString(),
                     DateTime.UtcNow,
-                    Guid.CreateVersion7(),
-                    Guid.CreateVersion7());
+                    Guid.CreateVersion7().ToString(),
+                        Guid.CreateVersion7());
             });
 
             Assert.Contains("ChecklistItemId must be set.", ex.Message);
@@ -51,9 +51,9 @@ namespace LimbooCards.UnitTests.Domain
             {
                 new ChecklistItemCompleted(
                     "1",
-                    Guid.Empty,
+                    string.Empty,
                     DateTime.UtcNow,
-                    Guid.CreateVersion7(),
+                    Guid.CreateVersion7().ToString(),
                     Guid.CreateVersion7());
             });
 
@@ -67,9 +67,9 @@ namespace LimbooCards.UnitTests.Domain
             {
                 new ChecklistItemCompleted(
                     "1",
-                    Guid.CreateVersion7(),
+                    Guid.CreateVersion7().ToString(),
                     default,
-                    Guid.CreateVersion7(),
+                    Guid.CreateVersion7().ToString(),
                     Guid.CreateVersion7());
             });
 
@@ -83,9 +83,9 @@ namespace LimbooCards.UnitTests.Domain
             {
                 new ChecklistItemCompleted(
                     "1",
-                    Guid.CreateVersion7(),
+                    Guid.CreateVersion7().ToString(),
                     DateTime.UtcNow,
-                    Guid.Empty,
+                    string.Empty,
                     Guid.CreateVersion7());
             });
 
@@ -99,9 +99,9 @@ namespace LimbooCards.UnitTests.Domain
             {
                 new ChecklistItemCompleted(
                     "1",
-                    Guid.CreateVersion7(),
+                    Guid.CreateVersion7().ToString(),
                     DateTime.UtcNow,
-                    Guid.CreateVersion7(),
+                    Guid.CreateVersion7().ToString(),
                     Guid.Empty);
             });
 

@@ -13,8 +13,8 @@ namespace LimbooCards.Application.DTOs
         public List<string>? Equivalencies { get; set; }
         public List<ContentDto>? Contents { get; set; }
 
-        public Guid? OwnerId { get; set; }
-        public List<Guid>? CoOwnerIds { get; set; }
+        public string? OwnerId { get; set; }
+        public List<string>? CoOwnerIds { get; set; }
 
         public List<SubjectPublisherDto>? Publishers { get; set; }
 

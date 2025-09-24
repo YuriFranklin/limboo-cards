@@ -11,14 +11,15 @@ namespace LimbooCards.UnitTests.Domain
                 isChecked: false,
                 orderHint: "1",
                 updatedAt: DateTime.UtcNow,
-                updatedBy: Guid.CreateVersion7()
+                updatedBy: Guid.CreateVersion7().ToString()
             );
 
             var card = new Card(
+                id: Guid.CreateVersion7().ToString(),
                 title: "Card1",
                 description: "Description",
                 hasDescription: true,
-                createdBy: Guid.CreateVersion7(),
+                createdBy: Guid.CreateVersion7().ToString(),
                 checklist: new List<ChecklistItem> { checklistItem1 }
             );
 
@@ -52,14 +53,15 @@ namespace LimbooCards.UnitTests.Domain
                 isChecked: false,
                 orderHint: "1",
                 updatedAt: DateTime.UtcNow,
-                updatedBy: Guid.CreateVersion7()
+                updatedBy: Guid.CreateVersion7().ToString()
             );
 
             var card = new Card(
+                id: Guid.CreateVersion7().ToString(),
                 title: "Card1",
                 description: "Description",
                 hasDescription: true,
-                createdBy: Guid.CreateVersion7(),
+                createdBy: Guid.CreateVersion7().ToString(),
                 checklist: new List<ChecklistItem> { checklistItem1 }
             );
 
@@ -90,14 +92,15 @@ namespace LimbooCards.UnitTests.Domain
                 isChecked: false,
                 orderHint: "1",
                 updatedAt: DateTime.UtcNow,
-                updatedBy: Guid.CreateVersion7()
+                updatedBy: Guid.CreateVersion7().ToString()
             );
 
             var card = new Card(
+                id: Guid.CreateVersion7().ToString(),
                 title: "Card1",
                 description: "Description",
                 hasDescription: true,
-                createdBy: Guid.CreateVersion7(),
+                createdBy: Guid.CreateVersion7().ToString(),
                 checklist: new List<ChecklistItem> { checklistItem1 }
             );
 
@@ -132,14 +135,15 @@ namespace LimbooCards.UnitTests.Domain
                 isChecked: false,
                 orderHint: "1",
                 updatedAt: DateTime.UtcNow,
-                updatedBy: Guid.CreateVersion7()
+                updatedBy: Guid.CreateVersion7().ToString()
             );
 
             var card = new Card(
+                id: Guid.CreateVersion7().ToString(),
                 title: "Card1",
                 description: "Description",
                 hasDescription: true,
-                createdBy: Guid.CreateVersion7(),
+                createdBy: Guid.CreateVersion7().ToString(),
                 checklist: new List<ChecklistItem> { checklistItem1 }
             );
 

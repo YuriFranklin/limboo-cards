@@ -18,9 +18,9 @@ namespace LimbooCards.Application.Services
             var publishers = dto.Publishers?.Select(p => mapper.Map<SubjectPublisher>(p)).ToList();
 
             User? owner = null;
-            if (dto.OwnerId.HasValue)
+            if (!string.IsNullOrWhiteSpace(dto.OwnerId))
             {
-                owner = await userRepository.GetUserByIdAsync(dto.OwnerId.Value)
+                owner = await userRepository.GetUserByIdAsync(dto.OwnerId)
                         ?? throw new ArgumentException("Owner not found");
             }
 
@@ -93,10 +93,10 @@ namespace LimbooCards.Application.Services
               ?? throw new ArgumentException($"Subject with Id {dto.Id} not found.");
 
             User? owner = null;
-            if (dto.OwnerId.HasValue)
+            if (!string.IsNullOrWhiteSpace(dto.OwnerId))
             {
-                owner = await userRepository.GetUserByIdAsync(dto.OwnerId.Value)
-                         ?? throw new ArgumentException($"Owner {dto.OwnerId.Value} not found");
+                owner = await userRepository.GetUserByIdAsync(dto.OwnerId)
+                         ?? throw new ArgumentException($"Owner {dto.OwnerId} not found");
             }
 
             List<User>? coOwners = null;
@@ -139,7 +139,7 @@ namespace LimbooCards.Application.Services
 
         private static Guid? DecodeCursor(string? cursor)
         {
-            if (string.IsNullOrEmpty(cursor)) return null;
+            if (string.IsNullOrWhiteSpace(cursor)) return null;
             var decoded = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(cursor));
             return Guid.TryParse(decoded, out var id) ? id : null;
         }

@@ -19,4 +19,6 @@ services:
       - SUBJECT_GETBYID_URL=
       - SUBJECT_GETALL_URL=
       - SUBJECT_GETPAGED_URL=
+      - CARD_GETALL_URL=
+      - CARD_GETBYID_URL=
     command: ["dotnet", "watch", "run", "--urls", "http://0.0.0.0:5000"]

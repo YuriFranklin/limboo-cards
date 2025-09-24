@@ -6,7 +6,7 @@ namespace LimbooCards.Domain.Services
     using LimbooCards.Domain.Events;
     public class PinEvaluatorService
     {
-        public static CardCategoryApplied? EvaluateCardPins(Subject subject, Planner planner, Guid cardId)
+        public static CardCategoryApplied? EvaluateCardPins(Subject subject, Planner planner, string cardId)
         {
             if (planner.PinRules == null || planner.PinRules.Count == 0)
                 return null;
@@ -59,7 +59,7 @@ namespace LimbooCards.Domain.Services
             {
                 if (IsOperator(token))
                 {
-                    while (operators.Any() && IsOperator(operators.Peek()) &&
+                    while (operators.Count != 0 && IsOperator(operators.Peek()) &&
                            OperatorPrecedence[operators.Peek().ToUpper()] >= OperatorPrecedence[token.ToUpper()])
                         output.Add(operators.Pop());
                     operators.Push(token);
@@ -74,7 +74,7 @@ namespace LimbooCards.Domain.Services
                 else output.Add(token);
             }
 
-            while (operators.Any())
+            while (operators.Count != 0)
             {
                 var op = operators.Pop();
                 if (op == "(" || op == ")") throw new InvalidOperationException("Mismatched parentheses");

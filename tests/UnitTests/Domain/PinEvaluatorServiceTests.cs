@@ -5,7 +5,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void EvaluateCardPins_ShouldReturnNull_WhenNoRules()
         {
-            var planner = new Planner(Guid.CreateVersion7(), "Planner 1", new List<PlannerBucket> { new PlannerBucket(Guid.CreateVersion7(), "Default", true) }, null);
+            var planner = new Planner(Guid.CreateVersion7().ToString(), "Planner 1", new List<PlannerBucket> { new PlannerBucket(Guid.CreateVersion7().ToString(), "Default", true) }, null);
             var contents = new List<Content>
             {
                 new("Content1", "Checklist1", ContentStatus.OK),
@@ -33,7 +33,7 @@ namespace LimbooCards.UnitTests.Domain
                 oferts: new List<Ofert> { ofert }
             );
 
-            var result = PinEvaluatorService.EvaluateCardPins(subject, planner, Guid.CreateVersion7());
+            var result = PinEvaluatorService.EvaluateCardPins(subject, planner, Guid.CreateVersion7().ToString());
 
             result.Should().BeNull();
         }
@@ -70,9 +70,9 @@ namespace LimbooCards.UnitTests.Domain
             );
 
             var rule = new PinRule("Subject.Contents.Name contains 'Unity 1'", PinColor.Blue);
-            var planner = new Planner(Guid.CreateVersion7(), "Planner 1", new List<PlannerBucket> { new PlannerBucket(Guid.CreateVersion7(), "Default", true) }, new List<PinRule> { rule });
+            var planner = new Planner(Guid.CreateVersion7().ToString(), "Planner 1", new List<PlannerBucket> { new PlannerBucket(Guid.CreateVersion7().ToString(), "Default", true) }, new List<PinRule> { rule });
 
-            var cardId = Guid.CreateVersion7();
+            var cardId = Guid.CreateVersion7().ToString();
             var result = PinEvaluatorService.EvaluateCardPins(subject, planner, cardId);
 
             result.Should().NotBeNull();
@@ -112,9 +112,9 @@ namespace LimbooCards.UnitTests.Domain
             );
 
             var rule = new PinRule("Subject.Contents.Name contains 'Algebra'", PinColor.Blue);
-            var planner = new Planner(Guid.CreateVersion7(), "Planner 1", new List<PlannerBucket> { new PlannerBucket(Guid.CreateVersion7(), "Default", true) }, new List<PinRule> { rule });
+            var planner = new Planner(Guid.CreateVersion7().ToString(), "Planner 1", new List<PlannerBucket> { new PlannerBucket(Guid.CreateVersion7().ToString(), "Default", true) }, new List<PinRule> { rule });
 
-            var cardId = Guid.CreateVersion7();
+            var cardId = Guid.CreateVersion7().ToString();
             var result = PinEvaluatorService.EvaluateCardPins(subject, planner, cardId);
 
             result.Should().BeNull();
@@ -158,9 +158,9 @@ namespace LimbooCards.UnitTests.Domain
                             new PinRule("Subject.Name contains 'Math'", PinColor.Green)
                         };
 
-            var planner = new Planner(Guid.CreateVersion7(), "Planner 1", new List<PlannerBucket> { new PlannerBucket(Guid.CreateVersion7(), "Default", true) }, rules);
+            var planner = new Planner(Guid.CreateVersion7().ToString(), "Planner 1", new List<PlannerBucket> { new PlannerBucket(Guid.CreateVersion7().ToString(), "Default", true) }, rules);
 
-            var cardId = Guid.CreateVersion7();
+            var cardId = Guid.CreateVersion7().ToString();
             var result = PinEvaluatorService.EvaluateCardPins(subject, planner, cardId);
 
             result.Should().NotBeNull();
@@ -193,12 +193,12 @@ namespace LimbooCards.UnitTests.Domain
             var rule = new PinRule("Subject.Contents.Name contains 'Unity 1' AND Subject.Name contains 'Math'", PinColor.Red);
 
             var planner = new Planner(
-                Guid.CreateVersion7(), "Planner 1",
-                new List<PlannerBucket> { new(Guid.CreateVersion7(), "Default", true) },
+                Guid.CreateVersion7().ToString(), "Planner 1",
+                new List<PlannerBucket> { new(Guid.CreateVersion7().ToString(), "Default", true) },
                 new List<PinRule> { rule }
             );
 
-            var cardId = Guid.CreateVersion7();
+            var cardId = Guid.CreateVersion7().ToString();
             var result = PinEvaluatorService.EvaluateCardPins(subject, planner, cardId);
 
             result.Should().NotBeNull();
@@ -230,12 +230,12 @@ namespace LimbooCards.UnitTests.Domain
             var rule = new PinRule("Subject.Contents.Name contains 'Unity 1' AND Subject.Name contains 'Math'", PinColor.Red);
 
             var planner = new Planner(
-                Guid.CreateVersion7(), "Planner 1",
-                new List<PlannerBucket> { new PlannerBucket(Guid.CreateVersion7(), "Default", true) },
+                Guid.CreateVersion7().ToString(), "Planner 1",
+                new List<PlannerBucket> { new PlannerBucket(Guid.CreateVersion7().ToString(), "Default", true) },
                 new List<PinRule> { rule }
             );
 
-            var result = PinEvaluatorService.EvaluateCardPins(subject, planner, Guid.CreateVersion7());
+            var result = PinEvaluatorService.EvaluateCardPins(subject, planner, Guid.CreateVersion7().ToString());
 
             result.Should().BeNull();
         }
@@ -265,12 +265,12 @@ namespace LimbooCards.UnitTests.Domain
             var rule = new PinRule("Subject.Contents.Name contains 'Unity 1' OR Subject.Name contains 'History'", PinColor.Yellow);
 
             var planner = new Planner(
-                Guid.CreateVersion7(), "Planner 1",
-                new List<PlannerBucket> { new PlannerBucket(Guid.CreateVersion7(), "Default", true) },
+                Guid.CreateVersion7().ToString(), "Planner 1",
+                new List<PlannerBucket> { new PlannerBucket(Guid.CreateVersion7().ToString(), "Default", true) },
                 new List<PinRule> { rule }
             );
 
-            var result = PinEvaluatorService.EvaluateCardPins(subject, planner, Guid.CreateVersion7());
+            var result = PinEvaluatorService.EvaluateCardPins(subject, planner, Guid.CreateVersion7().ToString());
 
             result.Should().NotBeNull();
             result!.AppliedCategories.Should().ContainKey(PinColor.Yellow.ToString());
@@ -301,12 +301,12 @@ namespace LimbooCards.UnitTests.Domain
             var rule = new PinRule("Subject.Contents.Name contains 'Unity 1' OR Subject.Name contains 'Math'", PinColor.Purple);
 
             var planner = new Planner(
-                Guid.CreateVersion7(), "Planner 1",
-                new List<PlannerBucket> { new PlannerBucket(Guid.CreateVersion7(), "Default", true) },
+                Guid.CreateVersion7().ToString(), "Planner 1",
+                new List<PlannerBucket> { new PlannerBucket(Guid.CreateVersion7().ToString(), "Default", true) },
                 new List<PinRule> { rule }
             );
 
-            var result = PinEvaluatorService.EvaluateCardPins(subject, planner, Guid.CreateVersion7());
+            var result = PinEvaluatorService.EvaluateCardPins(subject, planner, Guid.CreateVersion7().ToString());
 
             result.Should().BeNull();
         }

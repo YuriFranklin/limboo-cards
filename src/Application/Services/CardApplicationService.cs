@@ -25,8 +25,7 @@ namespace LimbooCards.Application.Services
 
             return mapper.Map<CardDto>(card);
         }
-
-        public async Task<CardDto?> GetCardByIdAsync(Guid cardId)
+        public async Task<CardDto?> GetCardByIdAsync(string cardId)
         {
             var card = await this.cardRepository.GetCardByIdAsync(cardId);
             if (card == null) return null;
@@ -47,12 +46,12 @@ namespace LimbooCards.Application.Services
             await this.cardRepository.UpdateCardAsync(card);
         }
 
-        public async Task DeleteCardAsync(Guid cardId)
+        public async Task DeleteCardAsync(string cardId)
         {
             await this.cardRepository.DeleteCardAsync(cardId);
         }
 
-        public async Task<ChecklistResultDto?> VerifyChecklistItemsAsync(Guid cardId)
+        public async Task<ChecklistResultDto?> VerifyChecklistItemsAsync(string cardId)
         {
             var card = await this.cardRepository.GetCardByIdAsync(cardId);
             if (card == null)

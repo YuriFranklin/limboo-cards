@@ -16,23 +16,28 @@ namespace LimbooCards.Infra.Repositories
             throw new NotImplementedException();
         }
 
-        public Task DeleteCardAsync(Guid cardId)
+        public Task DeleteCardAsync(string cardId)
         {
             throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<Card>> GetAllCardsAsync()
         {
-            var result = await this.httpClient.GetFromJsonAsync<IEnumerable<CardAutomateDto>>("/cards");
+            var url = Environment.GetEnvironmentVariable("CARD_GETALL_URL")
+                ?? throw new InvalidOperationException("CARD_GETALL_URL not set.");
 
-            if (result == null || !result.Any()) { return []; }
+            var result = await httpClient.GetFromJsonAsync<IEnumerable<CardAutomateDto>>(url);
 
-            return mapper.Map<IEnumerable<Card>>(result);
+            return result?.Select(dto => mapper.Map<Card>(dto))
+                   ?? [];
         }
 
-        public async Task<Card?> GetCardByIdAsync(Guid cardId)
+        public async Task<Card?> GetCardByIdAsync(string cardId)
         {
-            var result = await this.httpClient.GetFromJsonAsync<CardAutomateDto>($"/cards/{cardId}");
+            var url = Environment.GetEnvironmentVariable("CARD_GETBYID_URL")
+            ?? throw new InvalidOperationException("CARD_GETBYID_URL not set.");
+
+            var result = await this.httpClient.GetFromJsonAsync<CardAutomateDto>($"{url}&card-id={cardId}");
 
             if (result == null) { return null; }
 

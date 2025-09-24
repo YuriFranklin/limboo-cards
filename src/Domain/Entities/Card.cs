@@ -5,11 +5,11 @@ namespace LimbooCards.Domain.Entities
         public Card(
             string title,
             bool hasDescription,
-            Guid createdBy,
+            string createdBy,
             string? description = null,
-            Guid? id = null,
-            Guid? bucketId = null,
-            Guid? planId = null,
+            string? id = null,
+            string? bucketId = null,
+            string? planId = null,
             Guid? subjectId = null,
             DateTime? createdAt = null,
             DateTime? dueDateTime = null,
@@ -17,7 +17,7 @@ namespace LimbooCards.Domain.Entities
             List<ChecklistItem>? checklist = null
         )
         {
-            this.Id = id ?? Guid.CreateVersion7();
+            this.Id = id;
             this.Title = title;
             this.Description = description;
             this.HasDescription = hasDescription;
@@ -33,14 +33,14 @@ namespace LimbooCards.Domain.Entities
             this.Validate();
         }
 
-        public Guid Id { get; private set; }
+        public string? Id { get; private set; }
         public string Title { get; private set; }
         public string? Description { get; private set; }
         public bool HasDescription { get; private set; }
-        public Guid CreatedBy { get; private set; }
+        public string CreatedBy { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public Guid? BucketId { get; private set; }
-        public Guid? PlanId { get; private set; }
+        public string? BucketId { get; private set; }
+        public string? PlanId { get; private set; }
         public Guid? SubjectId { get; private set; }
         public DateTime? DueDateTime { get; private set; }
         public Dictionary<string, bool>? AppliedCategories { get; private set; }
@@ -53,7 +53,7 @@ namespace LimbooCards.Domain.Entities
                 throw new ArgumentException("Title cannot be empty.", nameof(this.Title));
             }
 
-            if (this.DueDateTime.HasValue && this.DueDateTime.Value < this.CreatedAt)
+            if (string.IsNullOrWhiteSpace(this.Id) && this.DueDateTime.HasValue && this.DueDateTime.Value < this.CreatedAt)
             {
                 throw new ArgumentException("Due date cannot be earlier than the creation date.", nameof(this.DueDateTime));
             }

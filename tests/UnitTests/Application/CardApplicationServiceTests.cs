@@ -20,7 +20,7 @@ namespace LimbooCards.UnitTests.Application
             var dto = new CreateCardDto
             {
                 Title = "Card 1",
-                CreatedBy = Guid.CreateVersion7(),
+                CreatedBy = Guid.CreateVersion7().ToString(),
                 Description = "Description"
             };
             var card = new Card(title: dto.Title, description: dto.Description, hasDescription: false, createdBy: dto.CreatedBy);
@@ -46,8 +46,8 @@ namespace LimbooCards.UnitTests.Application
         [Fact]
         public async Task GetCardByIdAsync_ShouldReturnMappedCardDto()
         {
-            var cardId = Guid.CreateVersion7();
-            var card = new Card(title: "Title", description: "Desc", hasDescription: true, createdBy: Guid.CreateVersion7());
+            var cardId = Guid.CreateVersion7().ToString();
+            var card = new Card(title: "Title", description: "Desc", hasDescription: true, createdBy: Guid.CreateVersion7().ToString());
             var cardDto = new CardDto { Id = card.Id, Title = card.Title };
 
             cardRepositoryMock.Setup(r => r.GetCardByIdAsync(cardId)).ReturnsAsync(card);
@@ -61,7 +61,7 @@ namespace LimbooCards.UnitTests.Application
         [Fact]
         public async Task GetCardByIdAsync_ShouldReturnNull_WhenCardNotFound()
         {
-            var cardId = Guid.CreateVersion7();
+            var cardId = Guid.CreateVersion7().ToString();
             cardRepositoryMock.Setup(r => r.GetCardByIdAsync(cardId)).ReturnsAsync((Card?)null!);
 
             var result = await service.GetCardByIdAsync(cardId);
@@ -74,8 +74,8 @@ namespace LimbooCards.UnitTests.Application
         {
             var cards = new List<Card>
             {
-                new Card(title: "Title1", description: "Desc", hasDescription: true, createdBy: Guid.CreateVersion7()),
-                new Card(title: "Title2", description: "Desc", hasDescription: true, createdBy: Guid.CreateVersion7()),
+                new Card(title: "Title1", description: "Desc", hasDescription: true, createdBy: Guid.CreateVersion7().ToString()),
+                new Card(title: "Title2", description: "Desc", hasDescription: true, createdBy: Guid.CreateVersion7().ToString()),
             };
             var cardsDto = new List<CardDto>
             {
@@ -94,8 +94,8 @@ namespace LimbooCards.UnitTests.Application
         [Fact]
         public async Task UpdateCardAsync_ShouldMapDtoAndCallRepository()
         {
-            var dto = new UpdateCardDto { Id = Guid.CreateVersion7(), Title = "Updated" };
-            var card = new Card(title: dto.Title, description: string.Empty, hasDescription: false, createdBy: Guid.CreateVersion7());
+            var dto = new UpdateCardDto { Id = Guid.CreateVersion7().ToString(), Title = "Updated" };
+            var card = new Card(title: dto.Title, description: string.Empty, hasDescription: false, createdBy: Guid.CreateVersion7().ToString());
 
             mapperMock.Setup(m => m.Map<Card>(dto)).Returns(card);
 
@@ -107,7 +107,7 @@ namespace LimbooCards.UnitTests.Application
         [Fact]
         public async Task DeleteCardAsync_ShouldCallRepositoryWithCorrectId()
         {
-            var cardId = Guid.CreateVersion7();
+            var cardId = Guid.CreateVersion7().ToString();
 
             await service.DeleteCardAsync(cardId);
 

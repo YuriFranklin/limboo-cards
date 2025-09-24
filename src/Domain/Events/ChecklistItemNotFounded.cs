@@ -2,7 +2,7 @@ namespace LimbooCards.Domain.Events
 {
     public class ChecklistItemNotFounded
     {
-        public ChecklistItemNotFounded(string checklistItemId, string checklistItemTitle, Guid cardId, Guid subjectId)
+        public ChecklistItemNotFounded(string checklistItemId, string checklistItemTitle, string cardId, Guid subjectId)
         {
             this.ChecklistItemId = checklistItemId;
             this.ChecklistItemTitle = checklistItemTitle;
@@ -11,7 +11,7 @@ namespace LimbooCards.Domain.Events
             this.Validate();
         }
 
-        public Guid CardId { get; private set; }
+        public string CardId { get; private set; }
         public Guid SubjectId { get; private set; }
         public string ChecklistItemId { get; private set; }
         public string ChecklistItemTitle { get; private set; }
@@ -27,7 +27,7 @@ namespace LimbooCards.Domain.Events
                 throw new ArgumentException("ChecklistItemTitle cannot be empty.", nameof(this.ChecklistItemTitle));
             }
 
-            if (this.CardId == Guid.Empty)
+            if (this.CardId == null || this.CardId == string.Empty)
             {
                 throw new ArgumentException("CardId must be set.", nameof(this.CardId));
             }

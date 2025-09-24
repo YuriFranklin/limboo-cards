@@ -8,7 +8,7 @@ namespace LimbooCards.Domain.Entities
             bool isChecked,
             string orderHint,
             DateTime updatedAt,
-            Guid updatedBy)
+            string updatedBy)
         {
             this.Id = id;
             this.Title = title;
@@ -25,7 +25,7 @@ namespace LimbooCards.Domain.Entities
         public bool IsChecked { get; private set; }
         public string OrderHint { get; private set; }
         public DateTime UpdatedAt { get; private set; }
-        public Guid UpdatedBy { get; private set; }
+        public string UpdatedBy { get; private set; }
 
         private void Validate()
         {
@@ -48,7 +48,7 @@ namespace LimbooCards.Domain.Entities
                 throw new ArgumentException("UpdatedAt must be set.", nameof(this.UpdatedAt));
             }
 
-            if (this.UpdatedBy == Guid.Empty)
+            if (string.IsNullOrWhiteSpace(UpdatedBy))
             {
                 throw new ArgumentException("UpdatedBy must be set.", nameof(this.UpdatedBy));
             }

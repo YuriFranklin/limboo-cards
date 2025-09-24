@@ -8,6 +8,9 @@ namespace LimbooCards.Domain.Services
     {
         public static CardPlannerAllocated? AllocateCardToBucket(Card card, Subject subject, Planner planner)
         {
+            if (card.Id == null || card.Id == string.Empty)
+                throw new ArgumentException("CardId cannot be null or empty.", nameof(card));
+
             if (card.Checklist == null || card.Checklist.Count == 0)
                 throw new ArgumentException("Card must have a checklist to be allocated.", nameof(card));
 

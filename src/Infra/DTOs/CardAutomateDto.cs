@@ -3,14 +3,14 @@ namespace LimbooCards.Infra.DTOs
 #pragma warning disable IDE1006
     public class CardAutomateDto
     {
-        public Guid id { get; set; }
-        public Guid planId { get; set; }
-        public Guid bucketId { get; set; }
+        public string id { get; set; } = null!;
+        public string planId { get; set; } = null!;
+        public string bucketId { get; set; } = null!;
         public string orderHint { get; set; } = null!;
         public string? title { get; set; }
         public string? description { get; set; }
         public bool hasDescription { get; set; } = false;
-        public Guid subjectId { get; set; }
+        public string subjectId { get; set; } = string.Empty;
         public Dictionary<string, bool> appliedCategories { get; set; } = new();
         public string createdDateTime { get; set; } = null!;
         public string? dueDateTime { get; set; }
@@ -26,6 +26,6 @@ namespace LimbooCards.Infra.DTOs
 
     public class CreatedByUser
     {
-        public Guid id { get; set; }
+        public string id { get; set; } = string.Empty;
     }
 }

@@ -5,10 +5,13 @@ namespace LimbooCards.UnitTests.Infra
         [Fact]
         public async Task GetCardByIdAsync_ShouldReturnMappedCard_WhenDtoExists()
         {
-            var cardId = Guid.CreateVersion7();
-            var planId = Guid.CreateVersion7();
-            var bucketId = Guid.CreateVersion7();
-            var createdById = Guid.CreateVersion7();
+            var cardByIdUrl = "http://localhost/cards?api-version=1";
+            Environment.SetEnvironmentVariable("CARD_GETBYID_URL", cardByIdUrl);
+
+            var cardId = Guid.CreateVersion7().ToString();
+            var planId = Guid.CreateVersion7().ToString();
+            var bucketId = Guid.CreateVersion7().ToString();
+            var createdById = Guid.CreateVersion7().ToString();
 
             var dto = new CardAutomateDto
             {
@@ -59,9 +62,7 @@ namespace LimbooCards.UnitTests.Infra
                 .Protected()
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(req =>
-                        req.Method == HttpMethod.Get &&
-                        req.RequestUri!.ToString().EndsWith($"/cards/{cardId}")),
+                    ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get && req.RequestUri!.ToString() == $"{cardByIdUrl}&card-id={cardId}"),
                     ItExpr.IsAny<CancellationToken>()
                 )
                 .ReturnsAsync(new HttpResponseMessage
@@ -70,10 +71,7 @@ namespace LimbooCards.UnitTests.Infra
                     Content = JsonContent.Create(dto)
                 });
 
-            var httpClient = new HttpClient(handlerMock.Object)
-            {
-                BaseAddress = new Uri("http://localhost")
-            };
+            var httpClient = new HttpClient(handlerMock.Object);
 
             var configuration = new MapperConfiguration(cfg =>
             {
@@ -102,7 +100,10 @@ namespace LimbooCards.UnitTests.Infra
         public async Task GetCardByIdAsync_ShouldReturnNull_WhenApiReturnsNull()
         {
             // Arrange
-            var cardId = Guid.CreateVersion7();
+            var cardByIdUrl = "http://localhost/cards?api-version=1";
+            Environment.SetEnvironmentVariable("CARD_GETBYID_URL", cardByIdUrl);
+
+            var cardId = Guid.CreateVersion7().ToString();
 
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock
@@ -118,10 +119,7 @@ namespace LimbooCards.UnitTests.Infra
                     Content = JsonContent.Create<CardAutomateDto?>(null)
                 });
 
-            var httpClient = new HttpClient(handlerMock.Object)
-            {
-                BaseAddress = new Uri("http://localhost")
-            };
+            var httpClient = new HttpClient(handlerMock.Object);
 
             var mapperMock = new Mock<IMapper>();
             var repository = new CardAutomateRepository(httpClient, mapperMock.Object);

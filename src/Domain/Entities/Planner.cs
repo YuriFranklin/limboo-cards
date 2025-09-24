@@ -2,11 +2,11 @@ namespace LimbooCards.Domain.Entities
 {
     public class Planner
     {
-        public Guid Id { get; private set; }
+        public string Id { get; private set; }
         public string Name { get; private set; }
         public List<PlannerBucket> Buckets { get; private set; }
         public List<PinRule>? PinRules { get; private set; }
-        public Planner(Guid id, string name, List<PlannerBucket> buckets, List<PinRule>? pinRules = null)
+        public Planner(string id, string name, List<PlannerBucket> buckets, List<PinRule>? pinRules = null)
         {
             this.Id = id;
             this.Name = name;
@@ -18,7 +18,7 @@ namespace LimbooCards.Domain.Entities
 
         private void Validate()
         {
-            if (Id == Guid.Empty)
+            if (string.IsNullOrWhiteSpace(Id))
                 throw new ArgumentException("Planner Id cannot be empty.", nameof(Id));
 
             if (string.IsNullOrWhiteSpace(Name))

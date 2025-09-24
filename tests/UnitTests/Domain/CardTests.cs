@@ -5,7 +5,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void Card_ShouldInitializeProperties()
         {
-            var createdBy = Guid.CreateVersion7();
+            var createdBy = Guid.CreateVersion7().ToString();
             var card = new Card(
                 title: "Test Card",
                 description: "Some description",
@@ -18,14 +18,14 @@ namespace LimbooCards.UnitTests.Domain
             Assert.Equal("Some description", card.Description);
             Assert.True(card.HasDescription);
             Assert.Equal(createdBy, card.CreatedBy);
-            Assert.NotEqual(Guid.Empty, card.Id);
+            Assert.NotEqual(string.Empty, card.Id);
             Assert.True(card.CreatedAt <= DateTime.UtcNow);
         }
 
         [Fact]
         public void Card_ShouldThrow_WhenTitleIsEmpty()
         {
-            var createdBy = Guid.CreateVersion7();
+            var createdBy = Guid.CreateVersion7().ToString();
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
@@ -43,7 +43,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void Card_ShouldThrow_WhenDueDateBeforeCreatedAt()
         {
-            var createdBy = Guid.CreateVersion7();
+            var createdBy = Guid.CreateVersion7().ToString();
             var createdAt = DateTime.UtcNow;
             var dueDate = createdAt.AddMinutes(-5);
 

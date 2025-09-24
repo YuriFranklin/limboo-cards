@@ -5,10 +5,10 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void Constructor_ShouldCreatePlanner_WhenValidData()
         {
-            var id = Guid.CreateVersion7();
+            var id = Guid.CreateVersion7().ToString();
             var buckets = new List<PlannerBucket>
             {
-                new PlannerBucket(Guid.CreateVersion7(), "Default Bucket", true)
+                new PlannerBucket(Guid.CreateVersion7().ToString(), "Default Bucket", true)
             };
 
             var planner = new Planner(id, "My Planner", buckets);
@@ -25,10 +25,10 @@ namespace LimbooCards.UnitTests.Domain
         [InlineData("   ")]
         public void Constructor_ShouldThrow_WhenNameIsInvalid(string? invalidName)
         {
-            var id = Guid.CreateVersion7();
+            var id = Guid.CreateVersion7().ToString();
             var buckets = new List<PlannerBucket>
             {
-                new PlannerBucket(Guid.CreateVersion7(), "Default Bucket", true)
+                new PlannerBucket(Guid.CreateVersion7().ToString(), "Default Bucket", true)
             };
 
             var ex = Assert.Throws<ArgumentException>(() => new Planner(id, invalidName!, buckets));
@@ -39,7 +39,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void Constructor_ShouldThrow_WhenBucketsIsNull()
         {
-            var id = Guid.CreateVersion7();
+            var id = Guid.CreateVersion7().ToString();
 
             var ex = Assert.Throws<ArgumentException>(() => new Planner(id, "Valid Name", new List<PlannerBucket>()));
             Assert.Contains("Planner must contain at least one bucket.", ex.Message);
@@ -49,7 +49,7 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void Constructor_ShouldThrow_WhenBucketsIsEmpty()
         {
-            var id = Guid.CreateVersion7();
+            var id = Guid.CreateVersion7().ToString();
 
             var ex = Assert.Throws<ArgumentException>(() => new Planner(id, "Valid Name", new List<PlannerBucket>()));
             Assert.Contains("Planner must contain at least one bucket.", ex.Message);
@@ -59,10 +59,10 @@ namespace LimbooCards.UnitTests.Domain
         [Fact]
         public void Constructor_ShouldThrow_WhenNoDefaultBucketExists()
         {
-            var id = Guid.CreateVersion7();
+            var id = Guid.CreateVersion7().ToString();
             var buckets = new List<PlannerBucket>
             {
-                new PlannerBucket(Guid.CreateVersion7(), "Non Default", false)
+                new PlannerBucket(Guid.CreateVersion7().ToString(), "Non Default", false)
             };
 
             var ex = Assert.Throws<ArgumentException>(() => new Planner(id, "Valid Name", buckets));

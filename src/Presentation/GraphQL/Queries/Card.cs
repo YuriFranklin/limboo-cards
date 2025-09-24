@@ -12,7 +12,7 @@ namespace LimbooCards.Presentation.GraphQL.Queries
         private readonly CardApplicationService _cardService = cardService;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<ChecklistResultModel> VerifyChecklistForCardsAsync(List<Guid> ids)
+        public async Task<ChecklistResultModel> VerifyChecklistForCardsAsync(List<string> ids)
         {
             var flatResult = new ChecklistResultModel();
 
@@ -32,6 +32,17 @@ namespace LimbooCards.Presentation.GraphQL.Queries
             }
 
             return flatResult;
+        }
+
+        public async Task<CardModel?> GetCardAsync(String id)
+        {
+            var cardDto = await _cardService.GetCardByIdAsync(id);
+            if (cardDto == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<CardModel>(cardDto);
         }
     }
 }

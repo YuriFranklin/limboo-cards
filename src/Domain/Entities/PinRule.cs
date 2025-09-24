@@ -18,7 +18,7 @@ namespace LimbooCards.Domain.Entities
             if (string.IsNullOrWhiteSpace(Expression))
                 throw new ArgumentException("Expression cannot be null or empty.", nameof(Expression));
 
-            if (!Enum.IsDefined(typeof(PinColor), PinColor))
+            if (!Enum.IsDefined(PinColor))
                 throw new ArgumentException("Invalid PinColor value.", nameof(PinColor));
         }
     }

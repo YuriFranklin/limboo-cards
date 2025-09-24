@@ -7,6 +7,6 @@ namespace LimbooCards.Application.DTOs
         public bool IsChecked { get; set; }
         public string OrderHint { get; set; } = string.Empty;
         public DateTime UpdatedAt { get; set; }
-        public Guid UpdatedBy { get; set; }
+        public string UpdatedBy { get; set; } = string.Empty;
     }
 }

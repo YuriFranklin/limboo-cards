@@ -21,14 +21,14 @@ namespace LimbooCards.Domain.Services
                 isChecked: false,
                 orderHint: "0000000000",
                 updatedAt: DateTime.UtcNow,
-                updatedBy: subject.Owner?.Id ?? Guid.Empty
+                updatedBy: subject.Owner?.Id ?? string.Empty
             ))
             .ToList();
 
             var card = new Card(
                 title: $"[PENDÊNCIA] {subject.Name}",
                 hasDescription: false,
-                createdBy: subject.Owner?.Id ?? Guid.Empty,
+                createdBy: subject.Owner?.Id ?? string.Empty,
                 createdAt: DateTime.UtcNow,
                 checklist: checklist
             );

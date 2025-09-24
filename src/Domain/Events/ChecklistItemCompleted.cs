@@ -4,9 +4,9 @@ namespace LimbooCards.Domain.Events
     {
         public ChecklistItemCompleted(
             string checklistItemId,
-            Guid completedBy,
+            string completedBy,
             DateTime completedAt,
-            Guid cardId,
+            string cardId,
             Guid subjectId)
         {
             this.ChecklistItemId = checklistItemId;
@@ -19,9 +19,9 @@ namespace LimbooCards.Domain.Events
         }
 
         public string ChecklistItemId { get; private set; }
-        public Guid CompletedBy { get; private set; }
+        public string CompletedBy { get; private set; }
         public DateTime CompletedAt { get; private set; }
-        public Guid CardId { get; private set; }
+        public string CardId { get; private set; }
         public Guid SubjectId { get; private set; }
 
         private void Validate()
@@ -29,13 +29,13 @@ namespace LimbooCards.Domain.Events
             if (string.IsNullOrWhiteSpace(this.ChecklistItemId))
                 throw new ArgumentException("ChecklistItemId must be set.", nameof(this.ChecklistItemId));
 
-            if (this.CompletedBy == Guid.Empty)
+            if (string.IsNullOrWhiteSpace(this.CompletedBy))
                 throw new ArgumentException("CompletedBy must be set.", nameof(this.CompletedBy));
 
             if (this.CompletedAt == default)
                 throw new ArgumentException("CompletedAt must be set.", nameof(this.CompletedAt));
 
-            if (this.CardId == Guid.Empty)
+            if (CardId == null || this.CardId == string.Empty)
                 throw new ArgumentException("CardId must be set.", nameof(this.CardId));
 
             if (this.SubjectId == Guid.Empty)

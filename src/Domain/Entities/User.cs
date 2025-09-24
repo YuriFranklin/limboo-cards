@@ -2,7 +2,7 @@ namespace LimbooCards.Domain.Entities
 {
     public class User
     {
-        public User(Guid id, string fullName, string email)
+        public User(string id, string fullName, string email)
         {
             this.Id = id;
             this.FullName = fullName;
@@ -11,13 +11,13 @@ namespace LimbooCards.Domain.Entities
             this.Validate();
         }
 
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
 
         private void Validate()
         {
-            if (this.Id == Guid.Empty)
+            if (this.Id == null || this.Id == string.Empty)
             {
                 throw new ArgumentException("Id must be set.", nameof(this.Id));
             }

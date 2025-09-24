@@ -17,7 +17,7 @@ namespace LimbooCards.Application.Services
             return mapper.Map<UserDto>(user);
         }
 
-        public async Task<UserDto?> GetUserByIdAsync(Guid userId)
+        public async Task<UserDto?> GetUserByIdAsync(string userId)
         {
             var user = await userRepository.GetUserByIdAsync(userId);
             if (user == null) return null;
@@ -49,7 +49,7 @@ namespace LimbooCards.Application.Services
             return mapper.Map<UserDto>(updatedUser);
         }
 
-        public async Task DeleteUserAsync(Guid userId)
+        public async Task DeleteUserAsync(string userId)
         {
             await userRepository.DeleteUserAsync(userId);
         }
