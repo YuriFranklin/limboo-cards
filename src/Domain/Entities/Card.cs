@@ -1,5 +1,7 @@
 namespace LimbooCards.Domain.Entities
 {
+    using System.Text.Json.Serialization;
+
     public class Card
     {
         public Card(
@@ -33,18 +35,21 @@ namespace LimbooCards.Domain.Entities
             this.Validate();
         }
 
-        public string? Id { get; private set; }
-        public string Title { get; private set; }
-        public string? Description { get; private set; }
-        public bool HasDescription { get; private set; }
-        public string CreatedBy { get; private set; }
-        public DateTime CreatedAt { get; private set; }
-        public string? BucketId { get; private set; }
-        public string? PlanId { get; private set; }
-        public Guid? SubjectId { get; private set; }
-        public DateTime? DueDateTime { get; private set; }
-        public Dictionary<string, bool>? AppliedCategories { get; private set; }
-        public List<ChecklistItem>? Checklist { get; private set; }
+        [JsonConstructor]
+        internal Card() { }
+
+        [JsonInclude] public string? Id { get; private set; }
+        [JsonInclude] public string Title { get; private set; } = null!;
+        [JsonInclude] public string? Description { get; private set; }
+        [JsonInclude] public bool HasDescription { get; private set; }
+        [JsonInclude] public string CreatedBy { get; private set; } = null!;
+        [JsonInclude] public DateTime CreatedAt { get; private set; }
+        [JsonInclude] public string? BucketId { get; private set; }
+        [JsonInclude] public string? PlanId { get; private set; }
+        [JsonInclude] public Guid? SubjectId { get; private set; }
+        [JsonInclude] public DateTime? DueDateTime { get; private set; }
+        [JsonInclude] public Dictionary<string, bool>? AppliedCategories { get; private set; }
+        [JsonInclude] public List<ChecklistItem>? Checklist { get; private set; }
 
         private void Validate()
         {

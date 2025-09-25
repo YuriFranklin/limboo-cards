@@ -2,9 +2,10 @@ using System.Text;
 using System.Text.Json;
 using NATS.Client;
 using NATS.Client.KeyValue;
+using NATS.Client.JetStream;
 using Microsoft.Extensions.Logging;
 using LimbooCards.Application.Ports;
-using NATS.Client.JetStream;
+using NATS.Client.Internals;
 
 namespace LimbooCards.Infra.KeyValues
 {
@@ -18,7 +19,7 @@ namespace LimbooCards.Infra.KeyValues
             IncludeFields = true,
         };
 
-        private IKeyValue GetOrCreateBucket(string bucket)
+        private IKeyValue GetOrCreateBucket(string bucket, TimeSpan? ttl = null)
         {
             try
             {
@@ -29,39 +30,33 @@ namespace LimbooCards.Infra.KeyValues
                 try
                 {
                     var kvm = _connection.CreateKeyValueManagementContext();
-                    var kvc = KeyValueConfiguration.Builder()
-                        .WithName(bucket)
-                        .Build();
-                    kvm.Create(kvc);
+                    var builder = KeyValueConfiguration.Builder().WithName(bucket);
+
+                    var effectiveTtl = ttl ?? TimeSpan.FromHours(1);
+                    builder.WithTtl(Duration.OfMillis((long)effectiveTtl.TotalMilliseconds));
+
+                    var cfg = builder.Build();
+                    kvm.Create(cfg);
+
+                    _logger.LogInformation("Bucket {Bucket} criado com TTL de {TTL}.", bucket, effectiveTtl);
                     return _connection.CreateKeyValueContext(bucket);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error creating or accessing the bucket {Bucket}", bucket);
+                    _logger.LogError(ex, "Erro ao criar/acessar bucket {Bucket}", bucket);
                     throw;
                 }
             }
         }
+
         public async Task PutAsync<T>(string bucket, string key, T value, TimeSpan? ttl = null, CancellationToken ct = default)
         {
-            var kv = GetOrCreateBucket(bucket);
+            var kv = GetOrCreateBucket(bucket, ttl);
             var bytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(value, _serializerOptions));
 
             await Task.Run(() =>
             {
-                if (ttl.HasValue)
-                {
-                    var existing = kv.Get(key);
-                    if (existing != null)
-                    {
-                        kv.Delete(key);
-                    }
-                    kv.Create(key, bytes);
-                }
-                else
-                {
-                    kv.Put(key, bytes);
-                }
+                kv.Put(key, bytes);
             }, ct);
         }
 

@@ -21,8 +21,6 @@ namespace LimbooCards.Infra.Repositories
             if (subject != null)
                 _ = _cache.PutAsync(_bucket, subjectId.ToString(), subject, _ttl);
 
-            Console.WriteLine(subject?.ToString());
-
             return subject;
         }
 

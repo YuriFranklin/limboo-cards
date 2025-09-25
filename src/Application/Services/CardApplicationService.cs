@@ -81,5 +81,18 @@ namespace LimbooCards.Application.Services
                 NotFound = notFound
             };
         }
+
+        public async Task<IEnumerable<ChecklistItemNormalizedDto>?> NormalizeCardChecklistAsync(string cardId)
+        {
+            var card = await this.cardRepository.GetCardByIdAsync(cardId);
+            if (card == null)
+            {
+                return null;
+            }
+
+            var normalizedItems = CardChecklistNormalizeService.NormalizeChecklist(card);
+
+            return mapper.Map<IEnumerable<ChecklistItemNormalizedDto>>(normalizedItems);
+        }
     }
 }

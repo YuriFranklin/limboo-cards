@@ -34,7 +34,7 @@ namespace LimbooCards.Presentation.GraphQL.Queries
             return flatResult;
         }
 
-        public async Task<CardModel?> GetCardAsync(String id)
+        public async Task<CardModel?> GetCardAsync(string id)
         {
             var cardDto = await _cardService.GetCardByIdAsync(id);
             if (cardDto == null)
@@ -43,6 +43,12 @@ namespace LimbooCards.Presentation.GraphQL.Queries
             }
 
             return _mapper.Map<CardModel>(cardDto);
+        }
+
+        public async Task<List<CardModel>> GetCardsAsync()
+        {
+            var cardsDto = await _cardService.GetAllCardsAsync();
+            return cardsDto.Select(c => _mapper.Map<CardModel>(c)).ToList();
         }
     }
 }

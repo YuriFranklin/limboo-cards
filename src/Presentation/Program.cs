@@ -61,6 +61,7 @@ builder.Services.AddSingleton<IKeyValueStore>(sp =>
 // Repositories and services
 // -------------------
 builder.Services.AddScoped<SubjectAutomateRepository>();
+builder.Services.AddScoped<CardAutomateRepository>();
 builder.Services.AddScoped<IUserRepository, UserAutomateRepository>();
 builder.Services.AddScoped<ICardRepository, CardAutomateRepository>();
 
@@ -69,6 +70,13 @@ builder.Services.AddScoped<ISubjectRepository>(sp =>
     var inner = sp.GetRequiredService<SubjectAutomateRepository>();
     var cache = sp.GetRequiredService<IKeyValueStore>();
     return new CachedSubjectAutomateRepository(inner, cache);
+});
+
+builder.Services.AddScoped<ICardRepository>(sp =>
+{
+    var inner = sp.GetRequiredService<CardAutomateRepository>();
+    var cache = sp.GetRequiredService<IKeyValueStore>();
+    return new CachedCardAuomateRepository(inner, cache);
 });
 
 builder.Services.AddScoped<SubjectApplicationService>();

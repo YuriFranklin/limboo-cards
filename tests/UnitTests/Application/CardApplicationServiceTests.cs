@@ -113,5 +113,73 @@ namespace LimbooCards.UnitTests.Application
 
             cardRepositoryMock.Verify(r => r.DeleteCardAsync(cardId), Times.Once);
         }
+
+        [Fact]
+        public async Task NormalizeCardChecklistAsync_WhenCardExists_ShouldReturnNormalizedItems()
+        {
+            // Arrange
+            var cardId = "card1";
+            var checklistItem = new ChecklistItem(
+                id: "item1",
+                title: "Material da Unidade I",
+                isChecked: false,
+                orderHint: "a",
+                updatedAt: DateTime.UtcNow,
+                updatedBy: "user1"
+            );
+
+            var card = new Card(
+                id: cardId,
+                title: "Test Card",
+                hasDescription: false,
+                createdBy: "user1",
+                checklist: new List<ChecklistItem> { checklistItem }
+            );
+
+            var expectedDtos = new List<ChecklistItemNormalizedDto>
+            {
+                new() { ChecklistItemId = "item1", NormalizedTitle = "[MATERIAL_1] Material Didático da Unidade 1" }
+            };
+
+            cardRepositoryMock.Setup(r => r.GetCardByIdAsync(cardId)).ReturnsAsync(card);
+
+            mapperMock.Setup(m => m.Map<IEnumerable<ChecklistItemNormalizedDto>>(It.IsAny<IEnumerable<ChecklistItemNormalized>>()))
+                       .Returns(expectedDtos);
+
+            // Act
+            var result = await service.NormalizeCardChecklistAsync(cardId);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeEquivalentTo(expectedDtos);
+            cardRepositoryMock.Verify(r => r.GetCardByIdAsync(cardId), Times.Once);
+        }
+
+        [Fact]
+        public async Task NormalizeCardChecklistAsync_WhenCardNotFound_ShouldReturnNull()
+        {
+            var cardId = "non-existent-card";
+            cardRepositoryMock.Setup(r => r.GetCardByIdAsync(cardId)).ReturnsAsync((Card?)null);
+
+            // Act
+            var result = await service.NormalizeCardChecklistAsync(cardId);
+
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task NormalizeCardChecklistAsync_WhenNormalizationFails_ShouldThrowException()
+        {
+            // Arrange
+            var cardId = "card1";
+            var checklistItem = new ChecklistItem("item1", "Non-matchable gibberish", false, "a", DateTime.UtcNow, "user1");
+            var card = new Card("Test Card", false, "user1", null, cardId, checklist: new List<ChecklistItem> { checklistItem });
+
+            cardRepositoryMock.Setup(r => r.GetCardByIdAsync(cardId)).ReturnsAsync(card);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<InvalidOperationException>(() => service.NormalizeCardChecklistAsync(cardId));
+        }
     }
 }

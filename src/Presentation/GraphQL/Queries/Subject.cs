@@ -29,8 +29,8 @@ namespace LimbooCards.Presentation.GraphQL.Queries
 
             var pageInfor = new PageInforModel
             {
-                StartCursor = edges.FirstOrDefault()?.Cursor,
-                EndCursor = edges.LastOrDefault()?.Cursor,
+                StartCursor = edges.FirstOrDefault()?.Cursor ?? string.Empty,
+                EndCursor = edges.LastOrDefault()?.Cursor ?? string.Empty,
                 HasNextPage = result.HasNextPage,
                 HasPreviousPage = result.HasPreviousPage
             };

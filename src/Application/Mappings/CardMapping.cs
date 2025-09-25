@@ -12,6 +12,7 @@ namespace LimbooCards.Application.Mappings
             CreateMap<Card, CardDto>();
             CreateMap<CardDto, Card>();
             CreateMap<ChecklistItem, ChecklistItemDto>();
+            CreateMap<ChecklistItemDto, ChecklistItem>();
         }
     }
 }

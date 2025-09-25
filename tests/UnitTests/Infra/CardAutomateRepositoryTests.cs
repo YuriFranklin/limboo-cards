@@ -21,7 +21,7 @@ namespace LimbooCards.UnitTests.Infra
                 title = "Matemática - Exercícios",
                 description = "Lista de exercícios de equações",
                 hasDescription = true,
-                subjectId = Guid.CreateVersion7(),
+                subjectId = Guid.CreateVersion7().ToString(),
                 orderHint = "A123",
                 createdDateTime = DateTime.UtcNow.AddDays(-1).ToString("O"),
                 dueDateTime = DateTime.UtcNow.AddDays(3).ToString("O"),

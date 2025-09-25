@@ -19,7 +19,9 @@ namespace LimbooCards.Infra.Constants
             { "BQ_1", "Questionário da Unidade 1" },
             { "BQ_2", "Questionário da Unidade 2" },
             { "BQ_3", "Questionário da Unidade 3" },
-            { "BQ_4", "Questionário da Unidade 4" }
+            { "BQ_4", "Questionário da Unidade 4" },
+            { "PLANO_AULA", "Plano de Aula"},
+            { "CONTROLE_VIDEO", "Controle de Vídeo" }
         };
     }
 }
