@@ -1,4 +1,4 @@
-namespace LimbooCards.UnitTests.Domain
+namespace LimbooCards.UnitTests.Domain.Services
 {
     public class PinEvaluatorServiceTests
     {

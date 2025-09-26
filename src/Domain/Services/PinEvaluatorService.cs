@@ -42,7 +42,7 @@ namespace LimbooCards.Domain.Services
         {
             var pattern = @"(\()|(\))|(\bAND\b|\bOR\b|&&|\|\|)|('[^']*')|([^\s()]+)";
             var matches = Regex.Matches(expression, pattern, RegexOptions.IgnoreCase);
-            return matches.Cast<Match>().Select(m => m.Value).Where(v => !string.IsNullOrWhiteSpace(v)).ToList();
+            return [.. matches.Cast<Match>().Select(m => m.Value).Where(v => !string.IsNullOrWhiteSpace(v))];
         }
 
         private static readonly Dictionary<string, int> OperatorPrecedence = new()

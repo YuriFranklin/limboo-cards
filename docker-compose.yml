@@ -19,8 +19,10 @@ services:
       - CARD_GETALL_URL=https://031cb4f312dfee4b918aa9feefe9fd.e8.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/54549f481cfd47d79921cd35cd64c535/triggers/manual/paths/invoke/cards?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=pCIspK-GHVLDYGXDKSOy0vR878wy4118NNc8yiumHoA
       - CARD_GETBYID_URL=https://031cb4f312dfee4b918aa9feefe9fd.e8.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/386951f4a1514b76aa151b4b1145f7a6/triggers/manual/paths/invoke/cards?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=EAH0B2bkfjj36e4e1J4b1-vJANCqauZ1eca-kpOg0lk
       - NATS_URL=nats://nats:4222
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=limboocardsdb;Username=postgres;Password=postgres
     depends_on:
       - nats
+      - postgres
     networks:
       - limboo-network
     command: ["dotnet", "watch", "run", "--urls", "http://0.0.0.0:5000"]
@@ -37,8 +39,38 @@ services:
     networks:
       - limboo-network
 
+  postgres:
+    image: postgres:15
+    container_name: limboo-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: limboocardsdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - limboo-network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: limboo-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - limboo-network
+
 volumes:
   nats_data:
+  postgres_data:
 
 networks:
   limboo-network:

@@ -1,4 +1,4 @@
-namespace LimbooCards.UnitTests.Domain
+namespace LimbooCards.UnitTests.Domain.Entities
 {
     using LimbooCards.Domain.Entities;
     public class SubjectTests

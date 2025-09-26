@@ -8,10 +8,10 @@ namespace LimbooCards.Domain.Entities
             string title,
             bool hasDescription,
             string createdBy,
+            string planId,
             string? description = null,
             string? id = null,
             string? bucketId = null,
-            string? planId = null,
             Guid? subjectId = null,
             DateTime? createdAt = null,
             DateTime? dueDateTime = null,
@@ -45,11 +45,41 @@ namespace LimbooCards.Domain.Entities
         [JsonInclude] public string CreatedBy { get; private set; } = null!;
         [JsonInclude] public DateTime CreatedAt { get; private set; }
         [JsonInclude] public string? BucketId { get; private set; }
-        [JsonInclude] public string? PlanId { get; private set; }
+        [JsonInclude] public string PlanId { get; private set; } = null!;
         [JsonInclude] public Guid? SubjectId { get; private set; }
         [JsonInclude] public DateTime? DueDateTime { get; private set; }
         [JsonInclude] public Dictionary<string, bool>? AppliedCategories { get; private set; }
         [JsonInclude] public List<ChecklistItem>? Checklist { get; private set; }
+
+        public Card With(
+            string? title = null,
+            bool? hasDescription = null,
+            string? createdBy = null,
+            string? description = null,
+            string? id = null,
+            string? bucketId = null,
+            string? planId = null,
+            Guid? subjectId = null,
+            DateTime? createdAt = null,
+            DateTime? dueDateTime = null,
+            Dictionary<string, bool>? appliedCategories = null,
+            List<ChecklistItem>? checklist = null)
+        {
+            return new Card(
+                title ?? this.Title,
+                hasDescription ?? this.HasDescription,
+                createdBy ?? this.CreatedBy,
+                planId ?? this.PlanId,
+                description ?? this.Description,
+                id ?? this.Id,
+                bucketId ?? this.BucketId,
+                subjectId ?? this.SubjectId,
+                createdAt ?? this.CreatedAt,
+                dueDateTime ?? this.DueDateTime,
+                appliedCategories ?? this.AppliedCategories,
+                checklist ?? this.Checklist
+            );
+        }
 
         private void Validate()
         {

@@ -2,16 +2,24 @@ namespace LimbooCards.UnitTests.Application
 {
     public class CardApplicationServiceTests
     {
-        private readonly Mock<ICardRepository> cardRepositoryMock;
+        private readonly Mock<ICardRepository> cardRepositoryMock = new();
         private readonly Mock<ISubjectRepository> subjectRepositoryMock = new();
-        private readonly Mock<IMapper> mapperMock;
-        private readonly CardApplicationService service;
 
+        private readonly Mock<IPlannerRepository> plannerRepositoryMock = new();
+        private readonly Mock<IMapper> mapperMock = new();
+        private readonly Mock<CardSubjectMatcherService> matcherMock;
+        private readonly CardApplicationService service;
         public CardApplicationServiceTests()
         {
-            cardRepositoryMock = new Mock<ICardRepository>();
-            mapperMock = new Mock<IMapper>();
-            service = new CardApplicationService(cardRepositoryMock.Object, subjectRepositoryMock.Object, mapperMock.Object);
+            matcherMock = new Mock<CardSubjectMatcherService>(MockBehavior.Strict, Mock.Of<ISynonymProvider>());
+
+            service = new CardApplicationService(
+                cardRepositoryMock.Object,
+                subjectRepositoryMock.Object,
+                plannerRepositoryMock.Object,
+                matcherMock.Object,
+                mapperMock.Object
+            );
         }
 
         [Fact]
@@ -23,7 +31,8 @@ namespace LimbooCards.UnitTests.Application
                 CreatedBy = Guid.CreateVersion7().ToString(),
                 Description = "Description"
             };
-            var card = new Card(title: dto.Title, description: dto.Description, hasDescription: false, createdBy: dto.CreatedBy);
+            var card = new Card(title: dto.Title, description: dto.Description, hasDescription: false, createdBy: dto.CreatedBy, planId: null!);
+
             var cardDto = new CardDto
             {
                 Title = card.Title,
@@ -47,7 +56,7 @@ namespace LimbooCards.UnitTests.Application
         public async Task GetCardByIdAsync_ShouldReturnMappedCardDto()
         {
             var cardId = Guid.CreateVersion7().ToString();
-            var card = new Card(title: "Title", description: "Desc", hasDescription: true, createdBy: Guid.CreateVersion7().ToString());
+            var card = new Card(title: "Title", description: "Desc", hasDescription: true, createdBy: Guid.CreateVersion7().ToString(), planId: null!);
             var cardDto = new CardDto { Id = card.Id, Title = card.Title };
 
             cardRepositoryMock.Setup(r => r.GetCardByIdAsync(cardId)).ReturnsAsync(card);
@@ -74,8 +83,8 @@ namespace LimbooCards.UnitTests.Application
         {
             var cards = new List<Card>
             {
-                new Card(title: "Title1", description: "Desc", hasDescription: true, createdBy: Guid.CreateVersion7().ToString()),
-                new Card(title: "Title2", description: "Desc", hasDescription: true, createdBy: Guid.CreateVersion7().ToString()),
+                new Card(title: "Title1", description: "Desc", hasDescription: true, createdBy: Guid.CreateVersion7().ToString(), planId: null!),
+                new Card(title: "Title2", description: "Desc", hasDescription: true, createdBy: Guid.CreateVersion7().ToString(), planId: null!),
             };
             var cardsDto = new List<CardDto>
             {
@@ -95,7 +104,7 @@ namespace LimbooCards.UnitTests.Application
         public async Task UpdateCardAsync_ShouldMapDtoAndCallRepository()
         {
             var dto = new UpdateCardDto { Id = Guid.CreateVersion7().ToString(), Title = "Updated" };
-            var card = new Card(title: dto.Title, description: string.Empty, hasDescription: false, createdBy: Guid.CreateVersion7().ToString());
+            var card = new Card(title: dto.Title, description: string.Empty, hasDescription: false, createdBy: Guid.CreateVersion7().ToString(), planId: null!);
 
             mapperMock.Setup(m => m.Map<Card>(dto)).Returns(card);
 
@@ -130,6 +139,7 @@ namespace LimbooCards.UnitTests.Application
 
             var card = new Card(
                 id: cardId,
+                planId: null!,
                 title: "Test Card",
                 hasDescription: false,
                 createdBy: "user1",
@@ -169,17 +179,37 @@ namespace LimbooCards.UnitTests.Application
         }
 
         [Fact]
-        public async Task NormalizeCardChecklistAsync_WhenNormalizationFails_ShouldThrowException()
+        public async Task NormalizeCardChecklistAsync_WhenNormalizationFails_ShouldBeNull()
         {
             // Arrange
             var cardId = "card1";
-            var checklistItem = new ChecklistItem("item1", "Non-matchable gibberish", false, "a", DateTime.UtcNow, "user1");
-            var card = new Card("Test Card", false, "user1", null, cardId, checklist: new List<ChecklistItem> { checklistItem });
+            var checklistItem = new ChecklistItem(
+                "item1",
+                "Non-matchable gibberish",
+                false,
+                "a",
+                DateTime.UtcNow,
+                "user1"
+            );
+            var card = new Card(
+                "Test Card",
+                false,
+                "user1",
+                null!,
+                cardId,
+                checklist: new List<ChecklistItem> { checklistItem }
+            );
 
-            cardRepositoryMock.Setup(r => r.GetCardByIdAsync(cardId)).ReturnsAsync(card);
+            cardRepositoryMock
+                .Setup(r => r.GetCardByIdAsync(cardId))
+                .ReturnsAsync(card);
 
-            // Act & Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(() => service.NormalizeCardChecklistAsync(cardId));
+            // Act
+            var result = await service.NormalizeCardChecklistAsync(cardId);
+
+            // Assert
+            Assert.Null(result);
         }
+
     }
 }

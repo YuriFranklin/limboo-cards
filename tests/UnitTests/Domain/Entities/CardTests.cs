@@ -1,4 +1,4 @@
-namespace LimbooCards.UnitTests.Domain
+namespace LimbooCards.UnitTests.Domain.Entities
 {
     public class CardTests
     {
@@ -7,6 +7,7 @@ namespace LimbooCards.UnitTests.Domain
         {
             var createdBy = Guid.CreateVersion7().ToString();
             var card = new Card(
+                planId: null!,
                 title: "Test Card",
                 description: "Some description",
                 hasDescription: true,
@@ -30,6 +31,7 @@ namespace LimbooCards.UnitTests.Domain
             var ex = Assert.Throws<ArgumentException>(() =>
             {
                 var card = new Card(
+                    planId: null!,
                     title: "",
                     description: "desc",
                     hasDescription: true,
@@ -50,6 +52,7 @@ namespace LimbooCards.UnitTests.Domain
             var ex = Assert.Throws<ArgumentException>(() =>
             {
                 var card = new Card(
+                    planId: null!,
                     title: "Title",
                     description: "Desc",
                     hasDescription: true,

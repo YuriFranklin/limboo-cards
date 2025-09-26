@@ -11,12 +11,12 @@ namespace LimbooCards.Domain.Services
         private const double WeightTokenJaccard = 0.5;
         private const double WeightJaro = 0.3;
         private const double WeightLevenshtein = 0.2;
-        private const double MatchThreshold = 0.7;
+        private const double MatchThreshold = 0.5;
 
         public static List<ChecklistItemNormalized> NormalizeChecklist(Card card)
         {
             var normalizedItems = new List<ChecklistItemNormalized>();
-            if (card.Checklist == null) return normalizedItems;
+            if (card.Checklist == null || card.Checklist.Count == 0) return normalizedItems;
 
             var contentTitles = ContentTitles.Map;
 
@@ -43,9 +43,10 @@ namespace LimbooCards.Domain.Services
 
                 if (bestMatch.Score < MatchThreshold)
                 {
-                    throw new InvalidOperationException(
+                    /* throw new InvalidOperationException(
                         $"No reliable match found for '{item.Title}'. " +
-                        $"Best score: {bestMatch.Score:F2}");
+                        $"Best score: {bestMatch.Score:F2}"); */
+                    continue;
                 }
 
                 normalizedItems.Add(

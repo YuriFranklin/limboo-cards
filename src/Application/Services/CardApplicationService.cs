@@ -10,12 +10,16 @@ namespace LimbooCards.Application.Services
     (
         ICardRepository cardRepository,
         ISubjectRepository subjectRepository,
+        IPlannerRepository plannerRepository,
+        CardSubjectMatcherService matcher,
         IMapper mapper
     )
     {
         private readonly ICardRepository cardRepository = cardRepository;
         private readonly ISubjectRepository subjectRepository = subjectRepository;
+        private readonly IPlannerRepository plannerRepository = plannerRepository;
         private readonly IMapper mapper = mapper;
+        private readonly CardSubjectMatcherService matcher = matcher;
 
         public async Task<CardDto> CreateCardAsync(CreateCardDto dto)
         {
@@ -62,7 +66,7 @@ namespace LimbooCards.Application.Services
             if (!card.SubjectId.HasValue)
             {
                 var subjects = await this.subjectRepository.GetAllSubjectsAsync();
-                subject = SubjectMatcherService.MatchSubjectForCard(card, subjects);
+                subject = await matcher.MatchSubjectForCardAsync(card, subjects);
             }
             else
             {
@@ -84,7 +88,7 @@ namespace LimbooCards.Application.Services
 
         public async Task<IEnumerable<ChecklistItemNormalizedDto>?> NormalizeCardChecklistAsync(string cardId)
         {
-            var card = await this.cardRepository.GetCardByIdAsync(cardId);
+            var card = await cardRepository.GetCardByIdAsync(cardId);
             if (card == null)
             {
                 return null;
@@ -92,7 +96,94 @@ namespace LimbooCards.Application.Services
 
             var normalizedItems = CardChecklistNormalizeService.NormalizeChecklist(card);
 
+            if (normalizedItems.Count == 0)
+            {
+                return null;
+            }
+
             return mapper.Map<IEnumerable<ChecklistItemNormalizedDto>>(normalizedItems);
+        }
+
+        public async Task<NormalizeCardsResultDto> NormalizeCardsAsync(List<string> cardIds)
+        {
+            var allSubjects = await subjectRepository.GetAllSubjectsAsync();
+
+            var results = await Task.WhenAll(cardIds.Select(async id =>
+            {
+                try
+                {
+                    var card = await cardRepository.GetCardByIdAsync(id);
+                    if (card == null) return (Success: (CardDto?)null, Failed: id);
+
+                    var subject = await matcher.MatchSubjectForCardAsync(card, allSubjects);
+                    if (subject == null) return (Success: (CardDto?)null, Failed: id);
+
+                    var planner = await plannerRepository.GetPlannerByIdAsync(card.PlanId);
+                    if (planner == null) return (Success: (CardDto?)null, Failed: id);
+
+                    var normalizedItems = CardChecklistNormalizeService.NormalizeChecklist(card);
+
+                    var newChecklist = normalizedItems
+                        .Select(n =>
+                            card.Checklist!
+                                .First(orig => orig.Id == n.ChecklistItemId)
+                                .With(title: n.NormalizedTitle)
+                        )
+                        .ToList();
+
+                    var normalizedCard = card.With(checklist: newChecklist);
+
+                    var notFoundedChecklistItems = ChecklistComparisonService.GetNotFoundChecklistItems(normalizedCard, subject);
+
+                    var notFoundedItems = ChecklistComparisonService
+                        .GetNotFoundChecklistItems(normalizedCard, subject)
+                        .Select(nf => new ChecklistItem(
+                            id: nf.ChecklistItemId,
+                            title: nf.ChecklistItemTitle,
+                            isChecked: false,
+                            orderHint: string.Empty,
+                            updatedAt: DateTime.UtcNow,
+                            updatedBy: "system"
+                        ));
+
+                    var finalChecklist = newChecklist
+                        .Concat(notFoundedItems)
+                        .ToList();
+
+                    var cardWithFinalChecklist = card.With(checklist: finalChecklist);
+
+                    if (string.IsNullOrWhiteSpace(card.Id)) return (Success: (CardDto?)null, Failed: id);
+
+#pragma warning disable CS8602
+                    var appliedCategories = PinEvaluatorService
+                        .EvaluateCardPins(subject, planner, card.Id)
+                        .AppliedCategories ?? new Dictionary<string, bool>();
+
+                    var cardPlannerAllocated = CardAllocationService
+                        .AllocateCardToBucket(cardWithFinalChecklist, subject, planner);
+
+                    var finalCard = card.With(
+                        checklist: finalChecklist,
+                        title: CardTitleNormalizeService.Normalize(subject),
+                        subjectId: subject.Id,
+                        appliedCategories: appliedCategories,
+                        bucketId: cardPlannerAllocated.BucketId,
+                        planId: cardPlannerAllocated.PlannerId
+                        );
+
+                    return (Success: mapper.Map<CardDto>(finalCard), Failed: (string?)null);
+                }
+                catch
+                {
+                    return (Success: (CardDto?)null, Failed: id);
+                }
+            }));
+
+            return new NormalizeCardsResultDto
+            {
+                Success = [.. results.Where(r => r.Success != null).Select(r => r.Success!)],
+                Failed = [.. results.Where(r => r.Failed != null).Select(r => r.Failed!)]
+            };
         }
     }
 }

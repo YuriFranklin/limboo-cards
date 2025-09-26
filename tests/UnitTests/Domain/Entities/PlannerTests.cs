@@ -1,4 +1,4 @@
-namespace LimbooCards.UnitTests.Domain
+namespace LimbooCards.UnitTests.Domain.Entities
 {
     public class PlannerTests
     {

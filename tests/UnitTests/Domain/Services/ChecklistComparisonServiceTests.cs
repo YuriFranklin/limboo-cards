@@ -1,4 +1,4 @@
-namespace LimbooCards.UnitTests.Domain
+namespace LimbooCards.UnitTests.Domain.Services
 {
     public class ChecklistComparisonServiceTests
     {
@@ -17,6 +17,7 @@ namespace LimbooCards.UnitTests.Domain
             var card = new Card(
                 id: Guid.CreateVersion7().ToString(),
                 title: "Card1",
+                planId: null!,
                 description: "Description",
                 hasDescription: true,
                 createdBy: Guid.CreateVersion7().ToString(),
@@ -59,6 +60,7 @@ namespace LimbooCards.UnitTests.Domain
             var card = new Card(
                 id: Guid.CreateVersion7().ToString(),
                 title: "Card1",
+                planId: null!,
                 description: "Description",
                 hasDescription: true,
                 createdBy: Guid.CreateVersion7().ToString(),
@@ -98,6 +100,7 @@ namespace LimbooCards.UnitTests.Domain
             var card = new Card(
                 id: Guid.CreateVersion7().ToString(),
                 title: "Card1",
+                planId: null!,
                 description: "Description",
                 hasDescription: true,
                 createdBy: Guid.CreateVersion7().ToString(),
@@ -141,6 +144,7 @@ namespace LimbooCards.UnitTests.Domain
             var card = new Card(
                 id: Guid.CreateVersion7().ToString(),
                 title: "Card1",
+                planId: null!,
                 description: "Description",
                 hasDescription: true,
                 createdBy: Guid.CreateVersion7().ToString(),

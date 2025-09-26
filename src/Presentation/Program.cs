@@ -10,6 +10,11 @@ using LimbooCards.Infra.KeyValues;
 using NATS.Client;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
+using LimbooCards.Domain.Services;
+using LimbooCards.Infra.Services;
+using LimbooCards.Infra.Persistence;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 // Create builder
 var builder = WebApplication.CreateBuilder(args);
@@ -60,10 +65,17 @@ builder.Services.AddSingleton<IKeyValueStore>(sp =>
 // -------------------
 // Repositories and services
 // -------------------
+builder.Services.AddMemoryCache();
+
 builder.Services.AddScoped<SubjectAutomateRepository>();
 builder.Services.AddScoped<CardAutomateRepository>();
 builder.Services.AddScoped<IUserRepository, UserAutomateRepository>();
 builder.Services.AddScoped<ICardRepository, CardAutomateRepository>();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IPlannerRepository, PlannerDbRepository>();
 
 builder.Services.AddScoped<ISubjectRepository>(sp =>
 {
@@ -79,8 +91,12 @@ builder.Services.AddScoped<ICardRepository>(sp =>
     return new CachedCardAuomateRepository(inner, cache);
 });
 
+builder.Services.AddHttpClient<ISynonymProvider, ConceptNetSynonymProvider>();
+builder.Services.AddScoped<CardSubjectMatcherService>();
+
 builder.Services.AddScoped<SubjectApplicationService>();
 builder.Services.AddScoped<CardApplicationService>();
+
 
 builder.Services.AddScoped<SubjectQueries>();
 builder.Services.AddScoped<CardQueries>();

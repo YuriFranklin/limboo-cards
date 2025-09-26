@@ -13,7 +13,7 @@ namespace LimbooCards.Domain.Events
         }
 
         public string CardId { get; }
-        public Dictionary<string, bool>? AppliedCategories { get; private set; }
+        public Dictionary<string, bool> AppliedCategories { get; private set; }
 
         private void Validate()
         {

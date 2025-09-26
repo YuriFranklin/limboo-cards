@@ -27,6 +27,25 @@ namespace LimbooCards.Domain.Entities
         public DateTime UpdatedAt { get; private set; }
         public string UpdatedBy { get; private set; }
 
+        public ChecklistItem With(
+            string? id = null,
+            string? title = null,
+            bool? isChecked = null,
+            string? orderHint = null,
+            DateTime? updatedAt = null,
+            string? updatedBy = null
+        )
+        {
+            return new ChecklistItem(
+                id ?? this.Id,
+                title ?? this.Title,
+                isChecked ?? this.IsChecked,
+                orderHint ?? this.OrderHint,
+                updatedAt ?? this.UpdatedAt,
+                updatedBy ?? this.UpdatedBy
+            );
+        }
+
         private void Validate()
         {
             if (string.IsNullOrWhiteSpace(this.Id))

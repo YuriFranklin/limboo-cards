@@ -2,9 +2,9 @@ namespace LimbooCards.Domain.Entities
 {
     public class Planner
     {
-        public string Id { get; private set; }
-        public string Name { get; private set; }
-        public List<PlannerBucket> Buckets { get; private set; }
+        public string Id { get; private set; } = null!;
+        public string Name { get; private set; } = null!;
+        public List<PlannerBucket> Buckets { get; private set; } = new();
         public List<PinRule>? PinRules { get; private set; }
         public Planner(string id, string name, List<PlannerBucket> buckets, List<PinRule>? pinRules = null)
         {
@@ -15,6 +15,8 @@ namespace LimbooCards.Domain.Entities
 
             Validate();
         }
+
+        internal Planner() { }
 
         private void Validate()
         {

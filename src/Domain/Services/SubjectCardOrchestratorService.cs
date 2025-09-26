@@ -26,8 +26,9 @@ namespace LimbooCards.Domain.Services
             .ToList();
 
             var card = new Card(
-                title: $"[PENDÊNCIA] {subject.Name}",
+                title: CardTitleNormalizeService.Normalize(subject),
                 hasDescription: false,
+                planId: planner.Id,
                 createdBy: subject.Owner?.Id ?? string.Empty,
                 createdAt: DateTime.UtcNow,
                 checklist: checklist
