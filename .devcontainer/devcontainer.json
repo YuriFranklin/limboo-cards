@@ -1,8 +1,7 @@
 {
   "name": "LimbooCards Dev",
-  "dockerComposeFile": "docker-compose.yml",
   "build": {
-    "dockerfile": "Dockerfile.dev",
+    "dockerfile": "../Dockerfile.dev",
     "context": ".."
   },
   "workspaceFolder": "/app",

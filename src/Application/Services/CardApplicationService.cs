@@ -116,10 +116,10 @@ namespace LimbooCards.Application.Services
                     if (card == null) return (Success: (CardDto?)null, Failed: id);
 
                     var subject = await matcher.MatchSubjectForCardAsync(card, allSubjects);
-                    if (subject == null) return (Success: (CardDto?)null, Failed: id);
+                    if (subject == null) return (Success: null, Failed: id);
 
                     var planner = await plannerRepository.GetPlannerByIdAsync(card.PlanId);
-                    if (planner == null) return (Success: (CardDto?)null, Failed: id);
+                    if (planner == null) return (Success: null, Failed: id);
 
                     var normalizedItems = CardChecklistNormalizeService.NormalizeChecklist(card);
 
@@ -152,7 +152,7 @@ namespace LimbooCards.Application.Services
 
                     var cardWithFinalChecklist = card.With(checklist: finalChecklist);
 
-                    if (string.IsNullOrWhiteSpace(card.Id)) return (Success: (CardDto?)null, Failed: id);
+                    if (string.IsNullOrWhiteSpace(card.Id)) return (Success: null, Failed: id);
 
 #pragma warning disable CS8602
                     var appliedCategories = PinEvaluatorService
@@ -171,11 +171,11 @@ namespace LimbooCards.Application.Services
                         planId: cardPlannerAllocated.PlannerId
                         );
 
-                    return (Success: mapper.Map<CardDto>(finalCard), Failed: (string?)null);
+                    return (Success: mapper.Map<CardDto>(finalCard), Failed: null!);
                 }
                 catch
                 {
-                    return (Success: (CardDto?)null, Failed: id);
+                    return (Success: null, Failed: id);
                 }
             }));
 

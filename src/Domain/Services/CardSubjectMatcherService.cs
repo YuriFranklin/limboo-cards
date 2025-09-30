@@ -21,6 +21,16 @@ namespace LimbooCards.Domain.Services
 
             }
 
+            var directMatch = subjects.FirstOrDefault(s =>
+            {
+                var un = CardTitleNormalizeService.Unnormalize(card.Title);
+                return un is { } u &&
+                    string.Equals(u.Name, s.Name, StringComparison.OrdinalIgnoreCase);
+            });
+
+            if (directMatch != null)
+                return directMatch;
+
             var cardTokens = await NormalizeTokensAsync(card.Title);
             if (cardTokens.Count == 0)
                 return null;
@@ -137,7 +147,7 @@ namespace LimbooCards.Domain.Services
                     outTokens.Add(syn);
             }
 
-            return outTokens.ToList();
+            return [.. outTokens];
         }
     }
 }

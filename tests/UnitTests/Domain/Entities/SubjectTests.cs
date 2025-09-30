@@ -49,6 +49,7 @@ namespace LimbooCards.UnitTests.Domain.Entities
             {
                 var subject = new Subject(
                     id: Guid.Empty,
+                    oferts: new List<Ofert>(),
                     modelId: null,
                     name: "Math",
                     semester: "1st",
@@ -66,6 +67,7 @@ namespace LimbooCards.UnitTests.Domain.Entities
             {
                 var subject = new Subject(
                     id: Guid.CreateVersion7(),
+                    oferts: new List<Ofert>(),
                     modelId: null,
                     name: "",
                     semester: "1st",
@@ -83,6 +85,7 @@ namespace LimbooCards.UnitTests.Domain.Entities
             {
                 var subject = new Subject(
                     id: Guid.CreateVersion7(),
+                    oferts: new List<Ofert>(),
                     modelId: null,
                     name: "Math",
                     semester: "",

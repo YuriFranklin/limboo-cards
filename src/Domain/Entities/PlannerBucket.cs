@@ -6,11 +6,11 @@ namespace LimbooCards.Domain.Entities
         public string Name { get; private set; }
         public bool IsDefault { get; private set; }
 
-        public PlannerBucket(string id, string name, bool? isDefault = false)
+        public PlannerBucket(string id, string name, bool isDefault = false)
         {
             Id = id;
             Name = name;
-            IsDefault = isDefault ?? false;
+            IsDefault = isDefault;
 
             Validate();
         }

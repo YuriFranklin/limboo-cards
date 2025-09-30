@@ -3,6 +3,7 @@ namespace LimbooCards.Presentation.GraphQL.Queries
     using LimbooCards.Application.Services;
     using AutoMapper;
     using LimbooCards.Presentation.GraphQL.Models;
+    using LimbooCards.Application.DTOs;
 
     public class CardQueries(
         CardApplicationService cardService,
@@ -48,7 +49,18 @@ namespace LimbooCards.Presentation.GraphQL.Queries
         public async Task<List<CardModel>> GetCardsAsync()
         {
             var cardsDto = await _cardService.GetAllCardsAsync();
-            return cardsDto.Select(c => _mapper.Map<CardModel>(c)).ToList();
+            return [.. cardsDto.Select(c => _mapper.Map<CardModel>(c))];
+        }
+
+        public async Task<NormalizeCardsResultModel> NormalizeCardsAsync(List<string> cardIds)
+        {
+            var dto = await _cardService.NormalizeCardsAsync(cardIds);
+
+            return new NormalizeCardsResultModel
+            {
+                Success = [.. (dto.Success ?? Enumerable.Empty<CardDto>()).Select(c => _mapper.Map<CardModel>(c))],
+                Failed = [.. dto.Failed ?? Enumerable.Empty<string>()]
+            };
         }
     }
 }

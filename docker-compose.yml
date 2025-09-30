@@ -61,16 +61,21 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "True"
+      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "False"
     ports:
       - "5050:80"
     depends_on:
       - postgres
     networks:
       - limboo-network
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
 
 volumes:
   nats_data:
   postgres_data:
+  pgadmin_data:
 
 networks:
   limboo-network:

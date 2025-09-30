@@ -11,7 +11,7 @@ namespace LimbooCards.Domain.Entities
             string name,
             string semester,
             SubjectStatus? status,
-            List<Ofert>? oferts = null,
+            List<Ofert> oferts,
             List<string>? equivalencies = null,
             List<Content>? contents = null,
             User? owner = null,
@@ -60,7 +60,7 @@ namespace LimbooCards.Domain.Entities
             if (string.IsNullOrWhiteSpace(Semester))
                 throw new ArgumentException("Semester cannot be empty.", nameof(Semester));
 
-            if (Oferts == null || !Oferts.Any())
+            if (Oferts == null || Oferts.Count == 0)
                 throw new ArgumentException("At least one ofert must be provided.", nameof(Oferts));
 
             if (Status != null && !Enum.IsDefined(typeof(SubjectStatus), Status))
