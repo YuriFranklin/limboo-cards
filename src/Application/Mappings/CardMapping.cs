@@ -9,10 +9,8 @@ namespace LimbooCards.Application.Mappings
     {
         public CardMappingProfile()
         {
-            CreateMap<Card, CardDto>();
-            CreateMap<CardDto, Card>();
-            CreateMap<ChecklistItem, ChecklistItemDto>();
-            CreateMap<ChecklistItemDto, ChecklistItem>();
+            CreateMap<Card, CardDto>().ReverseMap();
+            CreateMap<ChecklistItem, ChecklistItemDto>().ReverseMap();
         }
     }
 }

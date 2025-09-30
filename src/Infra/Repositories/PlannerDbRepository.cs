@@ -1,34 +1,53 @@
 namespace LimbooCards.Infra.Repositories
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using AutoMapper;
     using LimbooCards.Domain.Entities;
     using LimbooCards.Domain.Repositories;
     using LimbooCards.Infra.Persistence;
+    using Microsoft.EntityFrameworkCore;
 
     public class PlannerDbRepository(AppDbContext _context, IMapper _mapper) : IPlannerRepository
     {
         private readonly IMapper mapper = _mapper;
-        private readonly Microsoft.EntityFrameworkCore.DbSet<Planner> db = _context.Planners;
+        private readonly AppDbContext context = _context;
+        private readonly DbSet<Planner> db = _context.Planners;
 
-        public Task AddPlannerAsync(Planner planner)
+        public async Task AddPlannerAsync(Planner planner)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await db.AddAsync(planner);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException?.Message ?? ex.Message);
+                throw;
+            }
         }
 
-        public Task<List<Planner>> GetAllPlannersAsync()
+        public async Task<List<Planner>> GetAllPlannersAsync()
         {
-            throw new NotImplementedException();
+            return await db
+            .Include(p => p.Buckets)
+            .Include(p => p.PinRules)
+            .ToListAsync();
         }
 
-        public Task<Planner?> GetPlannerByIdAsync(string id)
+        public async Task<Planner?> GetPlannerByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            return await db
+            .Include(p => p.Buckets)
+            .Include(p => p.PinRules)
+            .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public Task UpdateAsync(Planner planner)
+        public async Task UpdateAsync(Planner planner)
         {
-            throw new NotImplementedException();
+            db.Update(planner);
+            await context.SaveChangesAsync();
         }
     }
 }

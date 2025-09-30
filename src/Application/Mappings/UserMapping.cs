@@ -7,10 +7,9 @@ namespace LimbooCards.Application.Mappings
     {
         public UserMappingProfile()
         {
-            CreateMap<User, UserDto>();
-            CreateMap<UserDto, User>();
+            CreateMap<User, UserDto>().ReverseMap();
             CreateMap<CreateUserDto, User>()
-        .ConstructUsing(dto => new User(dto.Id ?? Guid.CreateVersion7().ToString(), dto.FullName, dto.Email));
+            .ConstructUsing(dto => new User(dto.Id ?? Guid.CreateVersion7().ToString(), dto.FullName, dto.Email));
         }
     }
 

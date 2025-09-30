@@ -15,6 +15,7 @@ using LimbooCards.Infra.Services;
 using LimbooCards.Infra.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using LimbooCards.Presentation.GraphQL.Mutations;
 
 // Create builder
 var builder = WebApplication.CreateBuilder(args);
@@ -94,13 +95,15 @@ builder.Services.AddScoped<ICardRepository>(sp =>
 builder.Services.AddHttpClient<ISynonymProvider, ConceptNetSynonymProvider>();
 builder.Services.AddScoped<CardSubjectMatcherService>();
 
+builder.Services.AddScoped<PlannerApplicationService>();
 builder.Services.AddScoped<SubjectApplicationService>();
 builder.Services.AddScoped<CardApplicationService>();
 
-
+builder.Services.AddScoped<PlannerQueries>();
 builder.Services.AddScoped<SubjectQueries>();
 builder.Services.AddScoped<CardQueries>();
 
+builder.Services.AddScoped<PlannerMutations>();
 // -------------------
 // GraphQL
 // -------------------
@@ -111,8 +114,10 @@ var objectTypeClasses = assembly.GetTypes()
 
 var gqlBuilder = builder.Services
     .AddScoped<Query>()
+    .AddScoped<Mutation>()
     .AddGraphQLServer()
     .AddQueryType<Query>()
+    .AddMutationType<Mutation>()
     .AddApolloFederation()
     // Dev/prod configuration
     .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = isDev)

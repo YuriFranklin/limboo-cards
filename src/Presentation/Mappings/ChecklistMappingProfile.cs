@@ -8,7 +8,6 @@ namespace LimbooCards.Presentation.Mappings
     {
         public ChecklistMappingProfile()
         {
-            CreateMap<ChecklistResultDto, ChecklistResultModel>();
             CreateMap<ChecklistItemCompleted, ChecklistItemCompletedModel>();
             CreateMap<ChecklistItemNotFounded, ChecklistItemNotFoundedModel>();
             CreateMap<ChecklistItemDto, ChecklistItemModel>();

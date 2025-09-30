@@ -1,4 +1,5 @@
-namespace LimbooCards.Application.Mappings {
+namespace LimbooCards.Application.Mappings
+{
     using AutoMapper;
     using LimbooCards.Domain.Entities;
     using LimbooCards.Application.DTOs;
@@ -7,8 +8,7 @@ namespace LimbooCards.Application.Mappings {
     {
         public PublisherMappingProfile()
         {
-            CreateMap<Publisher, PublisherDto>();
-            CreateMap<PublisherDto, Publisher>();
+            CreateMap<Publisher, PublisherDto>().ReverseMap();
         }
     }
 }

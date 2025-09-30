@@ -4,6 +4,7 @@ namespace LimbooCards.Presentation.GraphQL.Queries
     using AutoMapper;
     using LimbooCards.Presentation.GraphQL.Models;
     using LimbooCards.Application.DTOs;
+    using LimbooCards.Presentation.GraphQL.Contracts;
 
     public class CardQueries(
         CardApplicationService cardService,
@@ -13,9 +14,9 @@ namespace LimbooCards.Presentation.GraphQL.Queries
         private readonly CardApplicationService _cardService = cardService;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<ChecklistResultModel> VerifyChecklistForCardsAsync(List<string> ids)
+        public async Task<VerifyChecklistForCardsOutput> VerifyChecklistForCardsAsync(List<string> ids)
         {
-            var flatResult = new ChecklistResultModel();
+            var flatResult = new VerifyChecklistForCardsOutput();
 
             foreach (var id in ids)
             {
@@ -52,11 +53,11 @@ namespace LimbooCards.Presentation.GraphQL.Queries
             return [.. cardsDto.Select(c => _mapper.Map<CardModel>(c))];
         }
 
-        public async Task<NormalizeCardsResultModel> NormalizeCardsAsync(List<string> cardIds)
+        public async Task<NormalizeCardsOutput> NormalizeCardsAsync(List<string> cardIds)
         {
             var dto = await _cardService.NormalizeCardsAsync(cardIds);
 
-            return new NormalizeCardsResultModel
+            return new NormalizeCardsOutput
             {
                 Success = [.. (dto.Success ?? Enumerable.Empty<CardDto>()).Select(c => _mapper.Map<CardModel>(c))],
                 Failed = [.. dto.Failed ?? Enumerable.Empty<string>()]
