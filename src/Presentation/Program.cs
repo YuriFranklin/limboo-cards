@@ -16,6 +16,7 @@ using LimbooCards.Infra.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using LimbooCards.Presentation.GraphQL.Mutations;
+using LimbooCards.Infra.Settings;
 
 // Create builder
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,18 @@ var assembly = Assembly.GetExecutingAssembly();
 
 // Detect environment
 var isDev = builder.Environment.IsDevelopment();
+
+// -------------------
+// Settings
+// -------------------
+builder.Services.Configure<NatsSettings>(
+    builder.Configuration.GetSection("Nats"));
+
+builder.Services.Configure<CardSettings>(
+    builder.Configuration.GetSection("Services:Card"));
+
+builder.Services.Configure<SubjectSettings>(
+    builder.Configuration.GetSection("Services:Subject"));
 
 // -------------------
 // Logging
@@ -44,16 +57,15 @@ builder.Services.AddAutoMapper(typeof(Program));
 // -------------------
 // NATS connection
 // -------------------
-var natsUrl = Environment.GetEnvironmentVariable("NATS_URL")
-    ?? throw new InvalidOperationException("Environment variable NATS_URL is not set.");
-
-var opts = ConnectionFactory.GetDefaultOptions();
-opts.Url = natsUrl;
-opts.Timeout = 5000;
-
-var cf = new ConnectionFactory();
-IConnection natsConnection = cf.CreateConnection(opts);
-builder.Services.AddSingleton(natsConnection);
+builder.Services.AddSingleton<IConnection>(sp =>
+{
+    var settings = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<NatsSettings>>().Value;
+    var opts = ConnectionFactory.GetDefaultOptions();
+    opts.Url = settings.Url;
+    opts.Timeout = 5000;
+    var cf = new ConnectionFactory();
+    return cf.CreateConnection(opts);
+});
 
 // KeyValueStore using NATS
 builder.Services.AddSingleton<IKeyValueStore>(sp =>
@@ -73,8 +85,11 @@ builder.Services.AddScoped<CardAutomateRepository>();
 builder.Services.AddScoped<IUserRepository, UserAutomateRepository>();
 builder.Services.AddScoped<ICardRepository, CardAutomateRepository>();
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+        ?? throw new InvalidOperationException("DefaultConnection not configured.");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddScoped<IPlannerRepository, PlannerDbRepository>();
 

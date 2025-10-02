@@ -28,6 +28,13 @@ namespace LimbooCards.Infra.Repositories
             }
         }
 
+        public async Task DeletePlannerAsync(string plannerId)
+        {
+            await context.Planners
+            .Where(p => p.Id == plannerId)
+            .ExecuteDeleteAsync();
+        }
+
         public async Task<List<Planner>> GetAllPlannersAsync()
         {
             return await db

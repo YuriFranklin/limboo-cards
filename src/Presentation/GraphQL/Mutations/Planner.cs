@@ -20,5 +20,11 @@ namespace LimbooCards.Presentation.GraphQL.Mutations
             var dtoOut = await _plannerService.CreatePlannerAsync(dtoIn);
             return _mapper.Map<PlannerModel>(dtoOut);
         }
+
+        public async Task<bool> DeletePlannerAsync(string id)
+        {
+            await _plannerService.DeletePlannerAsync(id);
+            return true;
+        }
     }
 }

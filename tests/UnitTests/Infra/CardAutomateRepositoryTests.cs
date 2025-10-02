@@ -2,6 +2,28 @@ namespace LimbooCards.UnitTests.Infra
 {
     public class CardAutomateRepositoryTests
     {
+        private readonly IMapper _mapper;
+        private readonly IOptions<CardSettings> _options;
+        public CardAutomateRepositoryTests()
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<CardMappingProfile>();
+                cfg.AddProfile<ChecklistItemMappingProfile>();
+            });
+
+            _mapper = config.CreateMapper();
+
+            var settings = new CardSettings
+            {
+                GetByIdUrl = "http://localhost/cards?api-version=1",
+                GetAllUrl = "http://localhost/cards/all?api-version=1"
+            };
+
+            _options = Options.Create(settings);
+        }
+
+
         [Fact]
         public async Task GetCardByIdAsync_ShouldReturnMappedCard_WhenDtoExists()
         {
@@ -59,28 +81,23 @@ namespace LimbooCards.UnitTests.Infra
 
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get && req.RequestUri!.ToString() == $"{cardByIdUrl}&card-id={cardId}"),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync(new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = JsonContent.Create(dto)
-                });
+            .Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.Is<HttpRequestMessage>(req =>
+                    req.Method == HttpMethod.Get &&
+                    req.RequestUri!.ToString().StartsWith(cardByIdUrl)),
+                ItExpr.IsAny<CancellationToken>()
+            )
+            .ReturnsAsync(new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = JsonContent.Create(dto)
+            });
 
             var httpClient = new HttpClient(handlerMock.Object);
 
-            var configuration = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<CardMappingProfile>();
-                cfg.AddProfile<ChecklistItemMappingProfile>();
-            });
-            var mapper = configuration.CreateMapper();
-
-            var repository = new CardAutomateRepository(httpClient, mapper);
+            var repository = new CardAutomateRepository(httpClient, _mapper, _options);
 
             var result = await repository.GetCardByIdAsync(cardId);
 
@@ -122,7 +139,7 @@ namespace LimbooCards.UnitTests.Infra
             var httpClient = new HttpClient(handlerMock.Object);
 
             var mapperMock = new Mock<IMapper>();
-            var repository = new CardAutomateRepository(httpClient, mapperMock.Object);
+            var repository = new CardAutomateRepository(httpClient, mapperMock.Object, _options);
 
             // Act
             var result = await repository.GetCardByIdAsync(cardId);

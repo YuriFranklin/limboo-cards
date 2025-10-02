@@ -35,5 +35,10 @@ namespace LimbooCards.Application.Services
             var planners = await this.plannerRepository.GetAllPlannersAsync();
             return mapper.Map<IEnumerable<PlannerDto>>(planners);
         }
+
+        public async Task DeletePlannerAsync(string plannerId)
+        {
+            await this.plannerRepository.DeletePlannerAsync(plannerId);
+        }
     }
 }

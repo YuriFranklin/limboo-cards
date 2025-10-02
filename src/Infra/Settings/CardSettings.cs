@@ -1,0 +1,8 @@
+namespace LimbooCards.Infra.Settings
+{
+    public class CardSettings
+    {
+        public string GetAllUrl { get; set; } = string.Empty;
+        public string GetByIdUrl { get; set; } = string.Empty;
+    }
+}

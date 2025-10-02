@@ -6,6 +6,7 @@ global using Moq;
 global using Moq.Protected;
 global using AutoMapper;
 global using FluentAssertions;
+global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.Options;
 
 global using LimbooCards.Domain.Entities;

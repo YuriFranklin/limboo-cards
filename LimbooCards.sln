@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{1406FA97
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "tests\UnitTests\LimbooCards.UnitTests.csproj", "{C17FD411-C53D-48BD-BF56-2C2A21BB0906}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "tests\IntegrationTests\LimbooCards.IntegrationTests.csproj", "{3A5DF697-4B20-415D-90F5-A6CF9AE0E4C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,9 +30,14 @@ Global
 		{C17FD411-C53D-48BD-BF56-2C2A21BB0906}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C17FD411-C53D-48BD-BF56-2C2A21BB0906}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C17FD411-C53D-48BD-BF56-2C2A21BB0906}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A5DF697-4B20-415D-90F5-A6CF9AE0E4C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A5DF697-4B20-415D-90F5-A6CF9AE0E4C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A5DF697-4B20-415D-90F5-A6CF9AE0E4C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A5DF697-4B20-415D-90F5-A6CF9AE0E4C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{848D470F-9344-4D5F-B753-3998DF6A01D0} = {09B8905C-6EEB-4084-8A9B-94740EDACEC8}
 		{C17FD411-C53D-48BD-BF56-2C2A21BB0906} = {1406FA97-D625-4C02-AE81-C89A4946E6A4}
+		{3A5DF697-4B20-415D-90F5-A6CF9AE0E4C8} = {1406FA97-D625-4C02-AE81-C89A4946E6A4}
 	EndGlobalSection
 EndGlobal

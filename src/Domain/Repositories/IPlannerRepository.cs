@@ -8,5 +8,6 @@ namespace LimbooCards.Domain.Repositories
         public Task AddPlannerAsync(Planner planner);
         public Task UpdateAsync(Planner planner);
         public Task<List<Planner>> GetAllPlannersAsync();
+        public Task DeletePlannerAsync(string plannerId);
     }
 }

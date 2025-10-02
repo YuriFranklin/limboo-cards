@@ -2,15 +2,35 @@ namespace LimbooCards.UnitTests.Infra
 {
     public class SubjectAutomateRepositoryTests
     {
+        private readonly IMapper _mapper;
+        private readonly IOptions<SubjectSettings> _options;
+
+        public SubjectAutomateRepositoryTests()
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<SubjectMappingProfile>();
+                cfg.AddProfile<UserMappingProfile>();
+                cfg.AddProfile<SubjectPublisherMappingProfile>();
+            });
+
+            _mapper = config.CreateMapper();
+
+            var settings = new SubjectSettings
+            {
+                GetAllUrl = "http://localhost/subjects?api-version=1",
+                GetByIdUrl = "http://localhost/subjects?api-version=1",
+                GetPagedUrl = "http://localhost/subjects?api-version=1"
+            };
+
+            _options = Options.Create(settings);
+        }
+
         [Fact]
         public async Task GetSubjectByIdAsync_ShouldReturnMappedSubject_WhenDtoExists()
         {
-            var subjectByIdUrl = "http://localhost/subjects?api-version=1";
-            Environment.SetEnvironmentVariable("SUBJECT_GETBYID_URL", subjectByIdUrl);
-
             var subjectId = Guid.Parse("86d87fc0-9f2e-4a3b-a750-bf752645080a");
             var ownerId = "17115131-c022-4c9b-a284-29ccf79f5b93";
-
             var dto = new SubjectAutomateDto
             {
                 ID = "9875",
@@ -47,7 +67,7 @@ namespace LimbooCards.UnitTests.Infra
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(req =>
                         req.Method == HttpMethod.Get &&
-                        req.RequestUri!.ToString().StartsWith(subjectByIdUrl)),
+                        req.RequestUri!.ToString().StartsWith(_options.Value.GetByIdUrl)),
                     ItExpr.IsAny<CancellationToken>()
                 )
                 .ReturnsAsync(new HttpResponseMessage
@@ -57,33 +77,19 @@ namespace LimbooCards.UnitTests.Infra
                 });
 
             var httpClient = new HttpClient(handlerMock.Object);
-
-            var configuration = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<ContentMappingProfile>();
-                cfg.AddProfile<SubjectMappingProfile>();
-                cfg.AddProfile<UserMappingProfile>();
-                cfg.AddProfile<SubjectPublisherMappingProfile>();
-            });
-            var mapper = configuration.CreateMapper();
-
-            var repository = new SubjectAutomateRepository(httpClient, mapper);
+            var repository = new SubjectAutomateRepository(httpClient, _mapper, _options);
 
             var result = await repository.GetSubjectByIdAsync(subjectId);
 
-            Assert.NotNull(result);
+            result.Should().NotBeNull();
             result!.Id.Should().Be(subjectId);
             result.Name.Should().Be("Adaptação e Flexibilização Curricular");
         }
 
-
         [Fact]
         public async Task GetSubjectByIdAsync_ShouldReturnNull_WhenApiReturnsNull()
         {
-            var subjectId = Guid.CreateVersion7();
-
-            var subjectByIdUrl = "http://localhost/subjects?api-version=1";
-            Environment.SetEnvironmentVariable("SUBJECT_GETBYID_URL", subjectByIdUrl);
+            var subjectId = Guid.NewGuid();
 
             var handlerMock = new Mock<HttpMessageHandler>();
             handlerMock
@@ -100,15 +106,13 @@ namespace LimbooCards.UnitTests.Infra
                 });
 
             var httpClient = new HttpClient(handlerMock.Object);
-
             var mapperMock = new Mock<IMapper>();
-            var repository = new SubjectAutomateRepository(httpClient, mapperMock.Object);
+            var repository = new SubjectAutomateRepository(httpClient, mapperMock.Object, _options);
 
             var result = await repository.GetSubjectByIdAsync(subjectId);
 
-            Assert.Null(result);
+            result.Should().BeNull();
             mapperMock.Verify(m => m.Map<Subject>(It.IsAny<SubjectAutomateDto>()), Times.Never);
         }
     }
-
 }
