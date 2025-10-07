@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -8,18 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper"/>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection"/>
-    <PackageReference Include="HotChocolate.ApolloFederation"/>
-    <PackageReference Include="HotChocolate.AspNetCore"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore"/>
+    <PackageReference Include="AutoMapper" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+
+    <PackageReference Include="HotChocolate.ApolloFederation" />
+    <PackageReference Include="HotChocolate.AspNetCore" />
+
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="NATS.Client"/>
-    <PackageReference Include="NATS.Client.JetStream"/>
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
+
+    <PackageReference Include="NATS.Client" />
+    <PackageReference Include="NATS.Client.JetStream" />
   </ItemGroup>
 
 </Project>

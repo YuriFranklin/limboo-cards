@@ -8,7 +8,7 @@ namespace LimbooCards.Domain.Services
     {
         public static CardCategoryApplied? EvaluateCardPins(Subject subject, Planner planner, string cardId)
         {
-            if (planner.PinRules == null || planner.PinRules.Count == 0)
+            if (planner?.PinRules == null || planner.PinRules.Count == 0)
                 return null;
 
             var appliedCategories = new Dictionary<string, bool>();

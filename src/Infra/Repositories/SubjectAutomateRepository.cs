@@ -37,14 +37,14 @@ namespace LimbooCards.Infra.Repositories
 
         public async Task<Subject?> GetSubjectByIdAsync(Guid subjectId)
         {
-            var url = $"{settings.GetByIdUrl}?subject-id={subjectId}";
+            var url = $"{settings.GetByIdUrl}&subject-id={subjectId}";
             var result = await httpClient.GetFromJsonAsync<SubjectAutomateDto>(url);
             return result is null ? null : mapper.Map<Subject>(result);
         }
 
         public async Task<IReadOnlyList<Subject>> GetSubjectsPageAsync(Guid? afterId, int pageSize)
         {
-            var url = $"{settings.GetPagedUrl}?after={afterId}&first={pageSize}";
+            var url = $"{settings.GetPagedUrl}&after={afterId}&first={pageSize}";
             var result = await httpClient.GetFromJsonAsync<SubjectsPageAutomateResponseDto>(url);
 
             return result?.Items?.Select(dto => mapper.Map<Subject>(dto)).ToList()

@@ -6,13 +6,13 @@ services:
     ports:
       - "5000:5000"
       - "5001:5001"
-    volumes:
-      - ./src:/app
     environment:
       - DOTNET_USE_POLLING_FILE_WATCHER=1
       - DOTNET_HOST_PATH=/usr/share/dotnet/dotnet
       - ASPNETCORE_ENVIRONMENT=Development
       - DOTNET_RUNNING_IN_CONTAINER=true
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=limboocardsdb;Username=postgres;Password=postgres
+      - Nats__Url=nats://nats:4222
     depends_on:
       - nats
       - postgres

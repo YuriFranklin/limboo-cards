@@ -11,7 +11,6 @@ using NATS.Client;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 using LimbooCards.Domain.Services;
-using LimbooCards.Infra.Services;
 using LimbooCards.Infra.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -107,7 +106,6 @@ builder.Services.AddScoped<ICardRepository>(sp =>
     return new CachedCardAuomateRepository(inner, cache);
 });
 
-builder.Services.AddHttpClient<ISynonymProvider, ConceptNetSynonymProvider>();
 builder.Services.AddScoped<CardSubjectMatcherService>();
 
 builder.Services.AddScoped<PlannerApplicationService>();
@@ -119,6 +117,7 @@ builder.Services.AddScoped<SubjectQueries>();
 builder.Services.AddScoped<CardQueries>();
 
 builder.Services.AddScoped<PlannerMutations>();
+builder.Services.AddScoped<CardMutations>();
 // -------------------
 // GraphQL
 // -------------------

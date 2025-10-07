@@ -4,34 +4,29 @@ using System.Text;
 
 namespace LimbooCards.Domain.Services
 {
-    public class CardSubjectMatcherService(ISynonymProvider synonymProvider)
+    public class CardSubjectMatcherService
     {
         private const double MatchThreshold = 0.5;
-        private readonly ISynonymProvider _synonymProvider = synonymProvider;
 
-        public async Task<Subject?> MatchSubjectForCardAsync(Card card, IEnumerable<Subject> subjects)
+        public static Subject? MatchSubjectForCardAsync(Card card, IEnumerable<Subject> subjects)
         {
             if (card.SubjectId.HasValue)
             {
                 var existing = subjects.FirstOrDefault(s => s.Id == card.SubjectId.Value);
                 if (existing != null)
-                {
                     return existing;
-                }
-
             }
 
-            var directMatch = subjects.FirstOrDefault(s =>
+            var un = CardTitleNormalizeService.Unnormalize(card.Title);
+            if (un is { } u)
             {
-                var un = CardTitleNormalizeService.Unnormalize(card.Title);
-                return un is { } u &&
-                    string.Equals(u.Name, s.Name, StringComparison.OrdinalIgnoreCase);
-            });
+                var direct = subjects.FirstOrDefault(s =>
+                    string.Equals(u.Name, s.Name, StringComparison.OrdinalIgnoreCase));
+                if (direct != null)
+                    return direct;
+            }
 
-            if (directMatch != null)
-                return directMatch;
-
-            var cardTokens = await NormalizeTokensAsync(card.Title);
+            var cardTokens = NormalizeTokens(card.Title);
             if (cardTokens.Count == 0)
                 return null;
 
@@ -40,7 +35,7 @@ namespace LimbooCards.Domain.Services
 
             foreach (var subject in subjects)
             {
-                var subjectTokens = await NormalizeTokensAsync(subject.Name);
+                var subjectTokens = NormalizeTokens(subject.Name);
                 double score = CalculateJaccardSimilarity(cardTokens, subjectTokens);
 
                 if (score > bestScore)
@@ -78,6 +73,20 @@ namespace LimbooCards.Domain.Services
             { "sete", "7" }, { "oito", "8" }, { "nove", "9" }, { "dez", "10" }
         };
 
+        private static readonly Dictionary<string, string[]> LocalSynonyms = new(StringComparer.OrdinalIgnoreCase)
+        {
+            { "matematica", ["matemática","matemat"] },
+            { "historia", ["história","histórico"] },
+            { "fisica", ["física","fisico"] },
+            { "quimica", ["química","quimico"] },
+            { "geografia", ["geo","mapas"] },
+            { "biologia", ["vida","bio"] },
+            { "portugues", ["língua","gramática","linguagem"] },
+            { "ingles", ["english","idioma","língua inglesa"] },
+            { "arte", ["artes","desenho"] },
+            { "educacao", ["ensino","aprendizado","escola"] },
+        };
+
         private static int RomanToInt(string s)
         {
             if (string.IsNullOrWhiteSpace(s)) return 0;
@@ -103,12 +112,11 @@ namespace LimbooCards.Domain.Services
             return total;
         }
 
-        private async Task<List<string>> NormalizeTokensAsync(string input)
+        private static List<string> NormalizeTokens(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
                 return new List<string>();
 
-            // Remove acentos
             string normalized = input.Normalize(NormalizationForm.FormD);
             var sb = new StringBuilder();
             foreach (var ch in normalized)
@@ -135,19 +143,46 @@ namespace LimbooCards.Domain.Services
                     continue;
 
                 int roman = RomanToInt(token);
-                if (roman > 0) { outTokens.Add(roman.ToString()); continue; }
+                if (roman > 0)
+                {
+                    outTokens.Add(roman.ToString());
+                    continue;
+                }
 
                 if (PortugueseNumberWords.TryGetValue(token, out var numWord))
-                { outTokens.Add(numWord); continue; }
+                {
+                    outTokens.Add(numWord);
+                    continue;
+                }
 
-                outTokens.Add(token);
+                var baseForm = SimplifyWord(token);
+                outTokens.Add(baseForm);
 
-                var synonyms = await _synonymProvider.GetSynonymsAsync(token);
-                foreach (var syn in synonyms)
+                foreach (var syn in GetLocalSynonyms(baseForm))
                     outTokens.Add(syn);
             }
 
             return [.. outTokens];
+        }
+
+        private static string SimplifyWord(string word)
+        {
+            if (word.EndsWith("s", StringComparison.OrdinalIgnoreCase) && word.Length > 3)
+                word = word[..^1];
+            if (word.EndsWith("mente", StringComparison.OrdinalIgnoreCase))
+                word = word[..^5];
+            if (word.EndsWith("cao", StringComparison.OrdinalIgnoreCase))
+                word = word[..^3] + "ção";
+            if (word.EndsWith("oes", StringComparison.OrdinalIgnoreCase))
+                word = word[..^3] + "ão";
+            return word;
+        }
+
+        private static string[] GetLocalSynonyms(string word)
+        {
+            if (LocalSynonyms.TryGetValue(word, out var list))
+                return list;
+            return [];
         }
     }
 }

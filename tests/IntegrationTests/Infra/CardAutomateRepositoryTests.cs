@@ -2,8 +2,6 @@ namespace LimbooCards.IntegrationTests.Infra
 {
     public class CardAutomateRepositoryTests
     {
-        private readonly IMapper _mapper;
-        private readonly CardSettings _settings;
         private readonly CardAutomateRepository _repository;
 
         public CardAutomateRepositoryTests()
@@ -14,20 +12,20 @@ namespace LimbooCards.IntegrationTests.Infra
                 cfg.AddProfile<ChecklistItemMappingProfile>();
             });
 
-            _mapper = config.CreateMapper();
+            var mapper = config.CreateMapper();
 
             var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.Development.json")
             .Build();
 
-            _settings = configuration
+            var settings = configuration
             .GetSection("Services:Card")
             .Get<CardSettings>()
             ?? throw new InvalidOperationException("Card settings not found in configuration.");
 
             var httpClient = new HttpClient();
 
-            _repository = new CardAutomateRepository(httpClient, _mapper, Options.Create(_settings));
+            _repository = new CardAutomateRepository(httpClient, mapper, Options.Create(settings));
         }
 
         [Fact]
@@ -39,6 +37,20 @@ namespace LimbooCards.IntegrationTests.Infra
 
             Assert.NotNull(card);
             Assert.Equal(cardId, card.Id);
+        }
+
+        [Fact]
+        public async Task GetCardByIdAsync_WhenApiReturnsNotFound_ShouldThrowHttpRequestException()
+        {
+            var cardId = "non-existent-id";
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await _repository.GetCardByIdAsync(cardId));
+        }
+
+        [Fact]
+        public async Task GetAllCardsAsync_WhenApiReturnsCards_ShouldReturnCardList()
+        {
+            var cards = await _repository.GetAllCardsAsync();
+            Assert.IsType<IEnumerable<Card>>(cards, exactMatch: false);
         }
     }
 }

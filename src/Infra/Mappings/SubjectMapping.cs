@@ -24,7 +24,11 @@ namespace LimbooCards.Infra.Mappings
             .ForCtorParam("contents", opt => opt.MapFrom(dto => BuildContentsDictionary(dto)))
             .ForCtorParam("owner", opt => opt.MapFrom(dto => GetOwner(dto.OWNERS)))
             .ForCtorParam("coOwners", opt => opt.MapFrom(dto => GetCoOwners(dto.OWNERS)))
-            .ForCtorParam("publishers", opt => opt.MapFrom(dto => dto.PUBLISHERS));
+            .ForCtorParam("publishers", opt => opt.MapFrom(dto =>
+                dto.PUBLISHERS != null
+                    ? dto.PUBLISHERS.Where(p => !string.IsNullOrWhiteSpace(p.NOME))
+                    : new List<SubjectPublisherAutomateDto>()
+            ));
         }
 
         private static List<UserAutomateDto>? GetCoOwners(List<UserAutomateDto>? owners)

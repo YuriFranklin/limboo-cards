@@ -7,17 +7,13 @@ namespace LimbooCards.UnitTests.Application
 
         private readonly Mock<IPlannerRepository> plannerRepositoryMock = new();
         private readonly Mock<IMapper> mapperMock = new();
-        private readonly Mock<CardSubjectMatcherService> matcherMock;
         private readonly CardApplicationService service;
         public CardApplicationServiceTests()
         {
-            matcherMock = new Mock<CardSubjectMatcherService>(MockBehavior.Strict, Mock.Of<ISynonymProvider>());
-
             service = new CardApplicationService(
                 cardRepositoryMock.Object,
                 subjectRepositoryMock.Object,
                 plannerRepositoryMock.Object,
-                matcherMock.Object,
                 mapperMock.Object
             );
         }

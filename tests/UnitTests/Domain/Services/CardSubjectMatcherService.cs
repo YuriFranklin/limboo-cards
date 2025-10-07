@@ -5,22 +5,8 @@ namespace LimbooCards.UnitTests.Domain.Services
 
     public class CardSubjectMatcherServiceTests
     {
-        private readonly Mock<ISynonymProvider> _synonymProviderMock;
-        private readonly CardSubjectMatcherService _service;
-
-        public CardSubjectMatcherServiceTests()
-        {
-            _synonymProviderMock = new Mock<ISynonymProvider>();
-
-            _synonymProviderMock
-                .Setup(x => x.GetSynonymsAsync(It.IsAny<string>()))
-                .ReturnsAsync([]);
-
-            _service = new CardSubjectMatcherService(_synonymProviderMock.Object);
-        }
-
         [Fact]
-        public async Task MatchSubjectForCardAsync_ShouldReturnExistingSubject_WhenCardHasValidSubjectId()
+        public void MatchSubjectForCardAsync_ShouldReturnExistingSubject_WhenCardHasValidSubjectId()
         {
             // Arrange
             var ofert = new Ofert("DIG", "AE");
@@ -35,7 +21,7 @@ namespace LimbooCards.UnitTests.Domain.Services
             );
 
             // Act
-            var result = await _service.MatchSubjectForCardAsync(card, [subject]);
+            var result = CardSubjectMatcherService.MatchSubjectForCardAsync(card, [subject]);
 
             // Assert
             Assert.NotNull(result);
@@ -43,7 +29,7 @@ namespace LimbooCards.UnitTests.Domain.Services
         }
 
         [Fact]
-        public async Task MatchSubjectForCardAsync_ShouldReturnNull_WhenCardHasSubjectIdButNotFound()
+        public void MatchSubjectForCardAsync_ShouldReturnNull_WhenCardHasSubjectIdButNotFound()
         {
             // Arrange
             var card = new Card(
@@ -63,14 +49,14 @@ namespace LimbooCards.UnitTests.Domain.Services
             };
 
             // Act
-            var result = await _service.MatchSubjectForCardAsync(card, subjects);
+            var result = CardSubjectMatcherService.MatchSubjectForCardAsync(card, subjects);
 
             // Assert
             Assert.Null(result);
         }
 
         [Fact]
-        public async Task MatchSubjectForCardAsync_ShouldReturnBestMatch_ByJaccardSimilarity()
+        public void MatchSubjectForCardAsync_ShouldReturnBestMatch_ByJaccardSimilarity()
         {
             // Arrange
             var card = new Card(
@@ -90,7 +76,7 @@ namespace LimbooCards.UnitTests.Domain.Services
             var subjects = new[] { s1, s2, s3 };
 
             // Act
-            var result = await _service.MatchSubjectForCardAsync(card, subjects);
+            var result = CardSubjectMatcherService.MatchSubjectForCardAsync(card, subjects);
 
             // Assert
             Assert.NotNull(result);
@@ -98,7 +84,7 @@ namespace LimbooCards.UnitTests.Domain.Services
         }
 
         [Fact]
-        public async Task MatchSubjectForCardAsync_ShouldReturnNull_WhenSimilarityIsBelowThreshold()
+        public void MatchSubjectForCardAsync_ShouldReturnNull_WhenSimilarityIsBelowThreshold()
         {
             // Arrange
             var card = new Card(
@@ -113,41 +99,14 @@ namespace LimbooCards.UnitTests.Domain.Services
             List<Subject> subjects = [new(id: Guid.NewGuid(), modelId: "123", name: "Matemática Básica", semester: "20252", status: SubjectStatus.Complete, oferts: new List<Ofert> { ofert })];
 
             // Act
-            var result = await _service.MatchSubjectForCardAsync(card, subjects);
+            var result = CardSubjectMatcherService.MatchSubjectForCardAsync(card, subjects);
 
             // Assert
             Assert.Null(result);
         }
 
         [Fact]
-        public async Task MatchSubjectForCardAsync_ShouldConsiderSynonymsFromProvider()
-        {
-            // Arrange
-            _synonymProviderMock
-                .Setup(x => x.GetSynonymsAsync("bio"))
-                .ReturnsAsync(["biologia"]);
-
-            var card = new Card(
-                id: Guid.NewGuid().ToString(),
-                title: "Bio",
-                hasDescription: false,
-                createdBy: Guid.NewGuid().ToString(),
-                planId: Guid.NewGuid().ToString()
-            );
-
-            var ofert = new Ofert("DIG", "AE");
-            var subject = new Subject(id: Guid.NewGuid(), modelId: "123", name: "Biologia", semester: "20252", status: SubjectStatus.Complete, oferts: new List<Ofert> { ofert });
-
-            // Act
-            var result = await _service.MatchSubjectForCardAsync(card, [subject]);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(subject.Id, result!.Id);
-        }
-
-        [Fact]
-        public async Task MatchSubjectForCardAsync_ShouldNormalizeNumbersAndRomans()
+        public void MatchSubjectForCardAsync_ShouldNormalizeNumbersAndRomans()
         {
             // Arrange
             var card = new Card(
@@ -162,7 +121,7 @@ namespace LimbooCards.UnitTests.Domain.Services
             var subject = new Subject(id: Guid.NewGuid(), modelId: "123", name: "Discíplina 4", semester: "20252", status: SubjectStatus.Complete, oferts: new List<Ofert> { ofert });
 
             // Act
-            var result = await _service.MatchSubjectForCardAsync(card, [subject]);
+            var result = CardSubjectMatcherService.MatchSubjectForCardAsync(card, [subject]);
 
             // Assert
             Assert.NotNull(result);
@@ -170,7 +129,7 @@ namespace LimbooCards.UnitTests.Domain.Services
         }
 
         [Fact]
-        public async Task MatchSubjectForCardAsync_ShouldIgnoreStopWords()
+        public void MatchSubjectForCardAsync_ShouldIgnoreStopWords()
         {
             // Arrange
             var card = new Card(
@@ -185,7 +144,7 @@ namespace LimbooCards.UnitTests.Domain.Services
             var subject = new Subject(id: Guid.NewGuid(), modelId: "123", name: "História Brasil", semester: "20252", status: SubjectStatus.Complete, oferts: new List<Ofert> { ofert });
 
             // Act
-            var result = await _service.MatchSubjectForCardAsync(card, [subject]);
+            var result = CardSubjectMatcherService.MatchSubjectForCardAsync(card, [subject]);
 
             // Assert
             Assert.NotNull(result);

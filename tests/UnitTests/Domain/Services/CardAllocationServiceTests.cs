@@ -71,7 +71,8 @@ namespace LimbooCards.UnitTests.Domain.Services
         }
 
         [Fact]
-        public void AllocateCardToBucket_ShouldReturnNull_WhenAlreadyAllocated()
+
+        public void AllocateCardToBucket_ShouldReturnExistingAllocation_WhenAlreadyAllocated()
         {
             // Arrange
             var planner = CreateValidPlanner();
@@ -83,24 +84,25 @@ namespace LimbooCards.UnitTests.Domain.Services
             var result = CardAllocationService.AllocateCardToBucket(card, subject, planner);
 
             // Assert
-            result.Should().BeNull();
+            result.Should().NotBeNull();
+            result?.PlannerId.Should().Be(planner.Id);
+            result?.BucketId.Should().Be(bucket.Id);
         }
 
         [Fact]
-        public void AllocateCardToBucket_ShouldThrow_WhenCardHasNoId()
+        public void AllocateCardToBucket_ShouldBeNull_WhenCardHasNoId()
         {
             var card = CreateValidCard(id: null);
             var subject = CreateValidSubject();
             var planner = CreateValidPlanner();
 
-            Action act = () => CardAllocationService.AllocateCardToBucket(card, subject, planner);
+            var result = CardAllocationService.AllocateCardToBucket(card, subject, planner);
 
-            act.Should().Throw<ArgumentException>()
-               .WithMessage("*CardId*");
+            result.Should().BeNull();
         }
 
         [Fact]
-        public void AllocateCardToBucket_ShouldThrow_WhenCardHasNoChecklist()
+        public void AllocateCardToBucket_ShouldBeNull_WhenCardHasNoChecklist()
         {
             var card = new Card(
                 title: "Sample",
@@ -113,23 +115,21 @@ namespace LimbooCards.UnitTests.Domain.Services
             var subject = CreateValidSubject();
             var planner = CreateValidPlanner();
 
-            Action act = () => CardAllocationService.AllocateCardToBucket(card, subject, planner);
+            var result = CardAllocationService.AllocateCardToBucket(card, subject, planner);
 
-            act.Should().Throw<ArgumentException>()
-               .WithMessage("*checklist*");
+            result.Should().BeNull();
         }
 
         [Fact]
-        public void AllocateCardToBucket_ShouldThrow_WhenSubjectHasNoMissingContent()
+        public void AllocateCardToBucket_ShouldBeNull_WhenSubjectHasNoMissingContent()
         {
             var card = CreateValidCard();
             var subject = CreateValidSubject(withMissingContent: false);
             var planner = CreateValidPlanner();
 
-            Action act = () => CardAllocationService.AllocateCardToBucket(card, subject, planner);
+            var result = CardAllocationService.AllocateCardToBucket(card, subject, planner);
 
-            act.Should().Throw<ArgumentException>()
-               .WithMessage("*missing content*");
+            result.Should().BeNull();
         }
 
         [Fact]

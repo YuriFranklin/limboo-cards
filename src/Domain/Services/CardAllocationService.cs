@@ -9,19 +9,16 @@ namespace LimbooCards.Domain.Services
         public static CardPlannerAllocated? AllocateCardToBucket(Card card, Subject subject, Planner planner)
         {
             if (card.Id == null || card.Id == string.Empty)
-                throw new ArgumentException("CardId cannot be null or empty.", nameof(card));
+                return null;
 
             if (card.Checklist == null || card.Checklist.Count == 0)
-                throw new ArgumentException("Card must have a checklist to be allocated.", nameof(card));
+                return null;
 
             if (subject.Contents == null || !subject.Contents.Any(c => c.ContentStatus == ContentStatus.Missing))
-                throw new ArgumentException("Subject must have at least one missing content.", nameof(subject));
+                return null;
 
             var bucket = GetBestBucket(subject, planner)
                          ?? throw new InvalidOperationException("No suitable bucket found and no default bucket available.");
-
-            if (card.BucketId == bucket.Id && card.PlanId == planner.Id)
-                return null;
 
             return new CardPlannerAllocated(
                 card.Id,

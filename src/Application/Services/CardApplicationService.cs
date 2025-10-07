@@ -11,7 +11,6 @@ namespace LimbooCards.Application.Services
         ICardRepository cardRepository,
         ISubjectRepository subjectRepository,
         IPlannerRepository plannerRepository,
-        CardSubjectMatcherService matcher,
         IMapper mapper
     )
     {
@@ -19,7 +18,6 @@ namespace LimbooCards.Application.Services
         private readonly ISubjectRepository subjectRepository = subjectRepository;
         private readonly IPlannerRepository plannerRepository = plannerRepository;
         private readonly IMapper mapper = mapper;
-        private readonly CardSubjectMatcherService matcher = matcher;
 
         public async Task<CardDto> CreateCardAsync(CreateCardDto dto)
         {
@@ -66,7 +64,7 @@ namespace LimbooCards.Application.Services
             if (!card.SubjectId.HasValue)
             {
                 var subjects = await this.subjectRepository.GetAllSubjectsAsync();
-                subject = await matcher.MatchSubjectForCardAsync(card, subjects);
+                subject = CardSubjectMatcherService.MatchSubjectForCardAsync(card, subjects);
             }
             else
             {
@@ -115,7 +113,7 @@ namespace LimbooCards.Application.Services
                     var card = await cardRepository.GetCardByIdAsync(id);
                     if (card == null) return (Success: (CardDto?)null, Failed: id);
 
-                    var subject = await matcher.MatchSubjectForCardAsync(card, allSubjects);
+                    var subject = CardSubjectMatcherService.MatchSubjectForCardAsync(card, allSubjects);
                     if (subject == null) return (Success: null, Failed: id);
 
                     var planner = await plannerRepository.GetPlannerByIdAsync(card.PlanId);
@@ -123,13 +121,13 @@ namespace LimbooCards.Application.Services
 
                     var normalizedItems = CardChecklistNormalizeService.NormalizeChecklist(card);
 
-                    var newChecklist = normalizedItems
-                        .Select(n =>
-                            card.Checklist!
-                                .First(orig => orig.Id == n.ChecklistItemId)
-                                .With(title: n.NormalizedTitle)
-                        )
-                        .ToList();
+                    List<ChecklistItem> newChecklist = [.. normalizedItems
+                    .Select(n =>
+                    {
+                        var original = card?.Checklist?.FirstOrDefault(orig => orig.Id == n.ChecklistItemId);
+                        return original?.With(title: n.NormalizedTitle);
+                    })
+                    .OfType<ChecklistItem>()];
 
                     var normalizedCard = card.With(checklist: newChecklist);
 
@@ -137,11 +135,11 @@ namespace LimbooCards.Application.Services
 
                     var notFoundedItems = ChecklistComparisonService
                         .GetNotFoundChecklistItems(normalizedCard, subject)
-                        .Select(nf => new ChecklistItem(
+                        .Select((nf, index) => new ChecklistItem(
                             id: nf.ChecklistItemId,
                             title: nf.ChecklistItemTitle,
                             isChecked: false,
-                            orderHint: string.Empty,
+                            orderHint: (index + 1).ToString(),
                             updatedAt: DateTime.UtcNow,
                             updatedBy: "system"
                         ));
@@ -154,10 +152,9 @@ namespace LimbooCards.Application.Services
 
                     if (string.IsNullOrWhiteSpace(card.Id)) return (Success: null, Failed: id);
 
-#pragma warning disable CS8602
                     var appliedCategories = PinEvaluatorService
                         .EvaluateCardPins(subject, planner, card.Id)
-                        .AppliedCategories ?? new Dictionary<string, bool>();
+                        ?.AppliedCategories ?? new Dictionary<string, bool>();
 
                     var cardPlannerAllocated = CardAllocationService
                         .AllocateCardToBucket(cardWithFinalChecklist, subject, planner);
@@ -167,8 +164,8 @@ namespace LimbooCards.Application.Services
                         title: CardTitleNormalizeService.Normalize(subject),
                         subjectId: subject.Id,
                         appliedCategories: appliedCategories,
-                        bucketId: cardPlannerAllocated.BucketId,
-                        planId: cardPlannerAllocated.PlannerId
+                        bucketId: cardPlannerAllocated?.BucketId,
+                        planId: cardPlannerAllocated?.PlannerId
                         );
 
                     return (Success: mapper.Map<CardDto>(finalCard), Failed: null!);
