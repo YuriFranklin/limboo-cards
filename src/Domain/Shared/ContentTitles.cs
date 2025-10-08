@@ -1,4 +1,4 @@
-namespace LimbooCards.Infra.Constants
+namespace LimbooCards.Domain.Shared
 {
     public static class ContentTitles
     {

@@ -5,7 +5,7 @@ namespace LimbooCards.Presentation.GraphQL.Models
 
     public class CardModel
     {
-        public string Id { get; set; } = string.Empty;
+        public string? Id { get; set; } = string.Empty;
         public string PlanId { get; set; } = string.Empty;
         public string BucketId { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;

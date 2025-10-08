@@ -4,11 +4,12 @@ namespace LimbooCards.Domain.Services
     using LimbooCards.Domain.Entities;
     using System.Globalization;
 
-    public static class CardTitleNormalizeService
+    public static partial class CardTitleNormalizeService
     {
-        private static readonly Regex _pattern = new(
-            @"^\[PENDÊNCIA - (?<modelId>[^\]]+)\]\s(?<name>.+)$",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        private static readonly Regex _pattern = NormalizeRegex();
+
+        [GeneratedRegex(@"^\[PENDÊNCIA - (?<modelId>[^\]]+)\]\s(?<name>.+)$", RegexOptions.CultureInvariant)]
+        private static partial Regex NormalizeRegex();
 
         public static string Normalize(Subject subject)
         {

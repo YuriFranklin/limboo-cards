@@ -6,7 +6,7 @@ namespace LimbooCards.Domain.Services
     using LimbooCards.Domain.Events;
     public class PinEvaluatorService
     {
-        public static CardCategoryApplied? EvaluateCardPins(Subject subject, Planner planner, string cardId)
+        public static CardCategoryApplied? EvaluateCardPins(Subject subject, Planner planner, string? cardId)
         {
             if (planner?.PinRules == null || planner.PinRules.Count == 0)
                 return null;
@@ -17,7 +17,7 @@ namespace LimbooCards.Domain.Services
             {
                 if (EvaluateExpression(subject, planner, rule.Expression))
                 {
-                    var key = rule.PinColor.ToString();
+                    var key = GetEnumMemberValue(rule.PinColor);
                     appliedCategories.TryAdd(key, true);
                 }
             }
@@ -206,6 +206,18 @@ namespace LimbooCards.Domain.Services
             }
 
             return string.Compare(left, right, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string GetEnumMemberValue(Enum enumValue)
+        {
+            var member = enumValue.GetType()
+                .GetMember(enumValue.ToString())
+                .FirstOrDefault();
+
+            var attribute = member?
+                .GetCustomAttribute<System.Runtime.Serialization.EnumMemberAttribute>();
+
+            return attribute?.Value ?? enumValue.ToString();
         }
     }
 }

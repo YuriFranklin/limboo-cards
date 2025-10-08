@@ -2,7 +2,8 @@ namespace LimbooCards.Infra.Mappings
 {
     using AutoMapper;
     using LimbooCards.Domain.Entities;
-    using LimbooCards.Infra.Constants;
+    using LimbooCards.Domain.Shared;
+
     public class ContentMappingProfile : Profile
     {
         public ContentMappingProfile()

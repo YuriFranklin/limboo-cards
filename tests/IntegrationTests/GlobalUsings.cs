@@ -24,6 +24,5 @@ global using LimbooCards.Infra.Repositories;
 global using LimbooCards.Infra.Mappings;
 global using LimbooCards.Infra.Settings;
 global using LimbooCards.Infra.Persistence;
-global using LimbooCards.Infra.Services;
 
 global using LimbooCards.Domain.Shared;

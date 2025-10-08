@@ -5,12 +5,17 @@ namespace LimbooCards.Domain.Entities
         public string Id { get; private set; }
         public string Name { get; private set; }
         public bool IsDefault { get; private set; }
+        public bool IsEnd { get; private set; }
+        public bool IsHistory { get; private set; }
 
-        public PlannerBucket(string id, string name, bool isDefault = false)
+
+        public PlannerBucket(string id, string name, bool isDefault = false, bool isEnd = false, bool isHistory = false)
         {
             Id = id;
             Name = name;
             IsDefault = isDefault;
+            IsEnd = isEnd;
+            IsHistory = isHistory;
 
             Validate();
         }

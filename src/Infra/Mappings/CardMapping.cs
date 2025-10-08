@@ -16,6 +16,8 @@ namespace LimbooCards.Infra.Mappings
                 string.IsNullOrWhiteSpace(src.dueDateTime) ? (DateTime?)null : DateTime.Parse(src.dueDateTime)))
             .ForCtorParam("subjectId", opt => opt.MapFrom(src =>
                 string.IsNullOrWhiteSpace(src.subjectId) ? (Guid?)null : Guid.Parse(src.subjectId)));
+
+            CreateMap<Card, CardAutomateDto>();
         }
     }
 }

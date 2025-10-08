@@ -1,9 +1,9 @@
 namespace LimbooCards.IntegrationTests.Application
 {
-    public class CardApplicationServiceTests
+    public class SubjectApplicationServiceTests
     {
-        private readonly CardApplicationService _service;
-        public CardApplicationServiceTests()
+        private readonly SubjectApplicationService _service;
+        public SubjectApplicationServiceTests()
         {
             var config = new MapperConfiguration(cfg =>
             {
@@ -23,19 +23,17 @@ namespace LimbooCards.IntegrationTests.Application
             .AddJsonFile("appsettings.Development.json")
             .Build();
 
+            var subjectSettings = configuration
+            .GetSection("Services:Subject")
+            .Get<SubjectSettings>()
+            ?? throw new InvalidOperationException("Subject settings not found in configuration.");
+
             var cardSettings = configuration
             .GetSection("Services:Card")
             .Get<CardSettings>()
             ?? throw new InvalidOperationException("Card settings not found in configuration.");
 
             var httpClient = new HttpClient();
-
-            var cardRepository = new CardAutomateRepository(httpClient, _mapper, Options.Create(cardSettings));
-
-            var subjectSettings = configuration
-            .GetSection("Services:Subject")
-            .Get<SubjectSettings>()
-            ?? throw new InvalidOperationException("Subject settings not found in configuration.");
 
             var subjectRepository = new SubjectAutomateRepository(httpClient, _mapper, Options.Create(subjectSettings));
 
@@ -47,30 +45,26 @@ namespace LimbooCards.IntegrationTests.Application
 
             var context = new AppDbContext(options);
 
+            var cardRepository = new CardAutomateRepository(httpClient, _mapper, Options.Create(cardSettings));
             var plannerRepository = new PlannerDbRepository(context, _mapper);
 
-            _service = new CardApplicationService(cardRepository, subjectRepository, plannerRepository, _mapper);
+            var userRepository = new UserAutomateRepository(httpClient, _mapper);
+
+            _service = new SubjectApplicationService(subjectRepository, userRepository, plannerRepository, cardRepository, _mapper);
         }
 
         [Fact]
-        public async Task NormalizeCardsAsync_ShouldReturnNormalizedCards()
+        public async Task EnsureCardForSubject_ShouldCreateNewCard_WhenSubjectAndPlannerExist()
         {
-            var cardIds = new List<string>(["0YuzjRsvl0eYXhJX-2QIcGQAPXtr"]);
-            try
-            {
-                var result = await _service.NormalizeCardsAsync(cardIds);
+            // Arrange
+            var subjectId = Guid.Parse("01997738-2b96-7d0e-be93-85471d961fb3");
+            var plannerId = "r69txn4te023WTwwj8jHL2QAFVIN";
 
-                Assert.Single(result.Success!);
-                Assert.Empty(result.Failed!);
+            // Act
+            var result = await _service.EnsureCardForSubject(plannerId, subjectId);
 
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine($"Erro HTTP: {ex.Message}");
-                throw;
-            }
-
-
+            // Assert
+            result.Should().NotBeNull();
         }
     }
 }

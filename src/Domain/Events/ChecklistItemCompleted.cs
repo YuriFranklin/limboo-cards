@@ -3,12 +3,14 @@ namespace LimbooCards.Domain.Events
     public class ChecklistItemCompleted
     {
         public ChecklistItemCompleted(
+            string checklistItemTitle,
             string checklistItemId,
             string completedBy,
             DateTime completedAt,
             string cardId,
             Guid subjectId)
         {
+            this.ChecklistItemTitle = checklistItemTitle;
             this.ChecklistItemId = checklistItemId;
             this.CompletedBy = completedBy;
             this.CompletedAt = completedAt;
@@ -18,6 +20,7 @@ namespace LimbooCards.Domain.Events
             this.Validate();
         }
 
+        public string ChecklistItemTitle { get; private set; }
         public string ChecklistItemId { get; private set; }
         public string CompletedBy { get; private set; }
         public DateTime CompletedAt { get; private set; }
@@ -26,6 +29,8 @@ namespace LimbooCards.Domain.Events
 
         private void Validate()
         {
+            if (string.IsNullOrWhiteSpace(this.ChecklistItemTitle))
+                throw new ArgumentException("ChecklistItemTitle must be set.", nameof(this.ChecklistItemTitle));
             if (string.IsNullOrWhiteSpace(this.ChecklistItemId))
                 throw new ArgumentException("ChecklistItemId must be set.", nameof(this.ChecklistItemId));
 

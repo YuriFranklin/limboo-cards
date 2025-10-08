@@ -14,9 +14,9 @@ namespace LimbooCards.Infra.Repositories
         private readonly IMapper mapper = mapper;
         private readonly CardSettings settings = options.Value;
 
-        public Task AddCardAsync(Card card)
+        public async Task AddCardAsync(Card card)
         {
-            throw new NotImplementedException();
+            Console.WriteLine(card.ToString());
         }
 
         public Task DeleteCardAsync(string cardId)
@@ -37,9 +37,17 @@ namespace LimbooCards.Infra.Repositories
             return result is null ? null : mapper.Map<Card>(result);
         }
 
-        public Task UpdateCardAsync(Card card)
+        public async Task UpdateCardAsync(Card card)
         {
-            throw new NotImplementedException();
+            if (card is null || string.IsNullOrWhiteSpace(card.Id))
+            {
+                throw new ArgumentException("Card or Card.Id cannot be null for update.");
+            }
+
+            var cardDto = mapper.Map<CardAutomateDto>(card);
+            var url = $"{settings.UpdateUrl}&card-id={card.Id}";
+            var response = await httpClient.PutAsJsonAsync(url, cardDto);
+            response.EnsureSuccessStatusCode();
         }
     }
 }

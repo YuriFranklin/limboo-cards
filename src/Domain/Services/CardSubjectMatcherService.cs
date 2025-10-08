@@ -1,14 +1,38 @@
-using LimbooCards.Domain.Entities;
-using System.Globalization;
-using System.Text;
-
 namespace LimbooCards.Domain.Services
 {
+    using LimbooCards.Domain.Entities;
+    using System.Globalization;
+    using System.Text;
+
     public class CardSubjectMatcherService
     {
         private const double MatchThreshold = 0.5;
 
-        public static Subject? MatchSubjectForCardAsync(Card card, IEnumerable<Subject> subjects)
+        public static Card? MatchCardForSubject(Subject subject, IEnumerable<Card> cards)
+        {
+            var subjectTokens = NormalizeTokens(subject.Name);
+            if (subjectTokens.Count == 0)
+                return null;
+
+            Card? bestMatch = null;
+            double bestScore = 0;
+
+            foreach (var card in cards)
+            {
+                var cardTokens = NormalizeTokens(card.Title);
+                double score = CalculateJaccardSimilarity(subjectTokens, cardTokens);
+
+                if (score > bestScore)
+                {
+                    bestScore = score;
+                    bestMatch = card;
+                }
+            }
+
+            return bestScore >= MatchThreshold ? bestMatch : null;
+        }
+
+        public static Subject? MatchSubjectForCard(Card card, IEnumerable<Subject> subjects)
         {
             if (card.SubjectId.HasValue)
             {
@@ -56,60 +80,7 @@ namespace LimbooCards.Domain.Services
             if (setA.Count == 0 && setB.Count == 0) return 1.0;
             if (setA.Count == 0 || setB.Count == 0) return 0.0;
 
-            return (double)setA.Intersect(setB, StringComparer.OrdinalIgnoreCase).Count()
-                 / setA.Union(setB, StringComparer.OrdinalIgnoreCase).Count();
-        }
-
-        private static readonly HashSet<string> StopWords = new(StringComparer.OrdinalIgnoreCase)
-        {
-            "da","de","do","das","dos","a","o","e","para","por","na","no","em"
-        };
-
-        private static readonly Dictionary<string, string> PortugueseNumberWords = new(StringComparer.OrdinalIgnoreCase)
-        {
-            { "um", "1" }, { "uma", "1" }, { "dois", "2" }, { "duas", "2" },
-            { "tres", "3" }, { "três", "3" },
-            { "quatro", "4" }, { "cinco", "5" }, { "seis", "6" },
-            { "sete", "7" }, { "oito", "8" }, { "nove", "9" }, { "dez", "10" }
-        };
-
-        private static readonly Dictionary<string, string[]> LocalSynonyms = new(StringComparer.OrdinalIgnoreCase)
-        {
-            { "matematica", ["matemática","matemat"] },
-            { "historia", ["história","histórico"] },
-            { "fisica", ["física","fisico"] },
-            { "quimica", ["química","quimico"] },
-            { "geografia", ["geo","mapas"] },
-            { "biologia", ["vida","bio"] },
-            { "portugues", ["língua","gramática","linguagem"] },
-            { "ingles", ["english","idioma","língua inglesa"] },
-            { "arte", ["artes","desenho"] },
-            { "educacao", ["ensino","aprendizado","escola"] },
-        };
-
-        private static int RomanToInt(string s)
-        {
-            if (string.IsNullOrWhiteSpace(s)) return 0;
-
-            s = s.ToUpperInvariant();
-            foreach (var c in s)
-                if ("MDCLXVI".IndexOf(c) < 0)
-                    return 0;
-
-            var map = new Dictionary<char, int>
-            {
-                { 'M', 1000 }, { 'D', 500 }, { 'C', 100 },
-                { 'L', 50 }, { 'X', 10 }, { 'V', 5 }, { 'I', 1 }
-            };
-
-            int total = 0, prev = 0;
-            for (int i = s.Length - 1; i >= 0; i--)
-            {
-                int val = map[s[i]];
-                if (val < prev) total -= val;
-                else { total += val; prev = val; }
-            }
-            return total;
+            return (double)setA.Intersect(setB).Count() / setA.Union(setB).Count();
         }
 
         private static List<string> NormalizeTokens(string input)
@@ -163,6 +134,52 @@ namespace LimbooCards.Domain.Services
             }
 
             return [.. outTokens];
+        }
+
+        private static readonly HashSet<string> StopWords = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "da","de","do","das","dos","a","o","e","para","por","na","no","em"
+        };
+
+        private static readonly Dictionary<string, string> PortugueseNumberWords = new(StringComparer.OrdinalIgnoreCase)
+        {
+            { "um", "1" }, { "uma", "1" }, { "dois", "2" }, { "duas", "2" },
+            { "tres", "3" }, { "três", "3" },
+            { "quatro", "4" }, { "cinco", "5" }, { "seis", "6" },
+            { "sete", "7" }, { "oito", "8" }, { "nove", "9" }, { "dez", "10" }
+        };
+
+        private static readonly Dictionary<string, string[]> LocalSynonyms = new(StringComparer.OrdinalIgnoreCase)
+        {
+            { "matematica", ["matemática","matemat"] }, { "historia", ["história","histórico"] },
+            { "fisica", ["física","fisico"] }, { "quimica", ["química","quimico"] },
+            { "geografia", ["geo","mapas"] }, { "biologia", ["vida","bio"] },
+            { "portugues", ["língua","gramática","linguagem"] }, { "ingles", ["english","idioma","língua inglesa"] },
+            { "arte", ["artes","desenho"] }, { "educacao", ["ensino","aprendizado","escola"] },
+        };
+
+        private static int RomanToInt(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s)) return 0;
+
+            s = s.ToUpperInvariant();
+            foreach (var c in s)
+                if ("MDCLXVI".IndexOf(c) < 0) return 0;
+
+            var map = new Dictionary<char, int>
+            {
+                { 'M', 1000 }, { 'D', 500 }, { 'C', 100 },
+                { 'L', 50 }, { 'X', 10 }, { 'V', 5 }, { 'I', 1 }
+            };
+
+            int total = 0, prev = 0;
+            for (int i = s.Length - 1; i >= 0; i--)
+            {
+                int val = map[s[i]];
+                if (val < prev) total -= val;
+                else { total += val; prev = val; }
+            }
+            return total;
         }
 
         private static string SimplifyWord(string word)

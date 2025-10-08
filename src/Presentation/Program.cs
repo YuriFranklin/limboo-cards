@@ -118,6 +118,7 @@ builder.Services.AddScoped<CardQueries>();
 
 builder.Services.AddScoped<PlannerMutations>();
 builder.Services.AddScoped<CardMutations>();
+builder.Services.AddScoped<SubjectMutations>();
 // -------------------
 // GraphQL
 // -------------------

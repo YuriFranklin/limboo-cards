@@ -23,6 +23,7 @@ namespace LimbooCards.Domain.Services
                 if (subject.Contents.Any(c => c.ChecklistItemTitle == item.Title && c.ContentStatus == ContentStatus.Missing))
                 {
                     completedItems.Add(new ChecklistItemCompleted(
+                        checklistItemTitle: item.Title,
                         cardId: card.Id,
                         subjectId: subject.Id,
                         checklistItemId: item.Id,

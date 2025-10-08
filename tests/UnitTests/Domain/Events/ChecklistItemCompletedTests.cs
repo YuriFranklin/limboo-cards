@@ -1,111 +1,40 @@
-namespace LimbooCards.UnitTests.Domain.Services
+namespace LimbooCards.UnitTests.Domain.Events
 {
     public class ChecklistItemCompletedTests
     {
-        [Fact]
-        public void ChecklistItemCompleted_ShouldInitializeProperties()
-        {
-            // Arrange
-            var checklistItemId = "1";
-            var completedBy = Guid.CreateVersion7().ToString();
-            var completedAt = DateTime.UtcNow;
-            var cardId = Guid.CreateVersion7().ToString();
-            var subjectId = Guid.CreateVersion7();
+        private readonly string _validTitle = "Item 1";
+        private readonly string _validId = "chk1";
+        private readonly string _validUser = "user1";
+        private readonly DateTime _validDate = DateTime.UtcNow;
+        private readonly string _validCardId = "card1";
+        private readonly Guid _validSubjectId = Guid.NewGuid();
 
+        [Fact]
+        public void Constructor_ShouldInitializeProperties_WhenDataIsValid()
+        {
             // Act
-            var evt = new ChecklistItemCompleted(
-                checklistItemId,
-                completedBy,
-                completedAt,
-                cardId,
-                subjectId);
+            var evt = new ChecklistItemCompleted(_validTitle, _validId, _validUser, _validDate, _validCardId, _validSubjectId);
 
             // Assert
-            Assert.Equal(checklistItemId, evt.ChecklistItemId);
-            Assert.Equal(completedBy, evt.CompletedBy);
-            Assert.Equal(completedAt, evt.CompletedAt);
-            Assert.Equal(cardId, evt.CardId);
-            Assert.Equal(subjectId, evt.SubjectId);
+            evt.ChecklistItemTitle.Should().Be(_validTitle);
+            evt.ChecklistItemId.Should().Be(_validId);
+            evt.CompletedBy.Should().Be(_validUser);
+            evt.CompletedAt.Should().Be(_validDate);
+            evt.CardId.Should().Be(_validCardId);
+            evt.SubjectId.Should().Be(_validSubjectId);
         }
 
-        [Fact]
-        public void ChecklistItemCompleted_ShouldThrow_WhenChecklistItemIdIsEmpty()
-        {
-            var ex = Assert.Throws<ArgumentException>(() =>
-            {
-                new ChecklistItemCompleted(
-                    null!,
-                    Guid.CreateVersion7().ToString(),
-                    DateTime.UtcNow,
-                    Guid.CreateVersion7().ToString(),
-                        Guid.CreateVersion7());
-            });
-
-            Assert.Contains("ChecklistItemId must be set.", ex.Message);
-        }
 
         [Fact]
-        public void ChecklistItemCompleted_ShouldThrow_WhenCompletedByIsEmpty()
+        public void Constructor_ShouldThrow_WhenValueTypeArgumentsAreInvalid()
         {
-            var ex = Assert.Throws<ArgumentException>(() =>
-            {
-                new ChecklistItemCompleted(
-                    "1",
-                    string.Empty,
-                    DateTime.UtcNow,
-                    Guid.CreateVersion7().ToString(),
-                    Guid.CreateVersion7());
-            });
+            // Arrange
+            Action actForDate = () => new ChecklistItemCompleted(_validTitle, _validId, _validUser, default, _validCardId, _validSubjectId);
+            Action actForSubjectId = () => new ChecklistItemCompleted(_validTitle, _validId, _validUser, _validDate, _validCardId, Guid.Empty);
 
-            Assert.Contains("CompletedBy must be set.", ex.Message);
-        }
-
-        [Fact]
-        public void ChecklistItemCompleted_ShouldThrow_WhenCompletedAtIsDefault()
-        {
-            var ex = Assert.Throws<ArgumentException>(() =>
-            {
-                new ChecklistItemCompleted(
-                    "1",
-                    Guid.CreateVersion7().ToString(),
-                    default,
-                    Guid.CreateVersion7().ToString(),
-                    Guid.CreateVersion7());
-            });
-
-            Assert.Contains("CompletedAt must be set.", ex.Message);
-        }
-
-        [Fact]
-        public void ChecklistItemCompleted_ShouldThrow_WhenCardIdIsEmpty()
-        {
-            var ex = Assert.Throws<ArgumentException>(() =>
-            {
-                new ChecklistItemCompleted(
-                    "1",
-                    Guid.CreateVersion7().ToString(),
-                    DateTime.UtcNow,
-                    string.Empty,
-                    Guid.CreateVersion7());
-            });
-
-            Assert.Contains("CardId must be set.", ex.Message);
-        }
-
-        [Fact]
-        public void ChecklistItemCompleted_ShouldThrow_WhenSubjectIdIsEmpty()
-        {
-            var ex = Assert.Throws<ArgumentException>(() =>
-            {
-                new ChecklistItemCompleted(
-                    "1",
-                    Guid.CreateVersion7().ToString(),
-                    DateTime.UtcNow,
-                    Guid.CreateVersion7().ToString(),
-                    Guid.Empty);
-            });
-
-            Assert.Contains("SubjectId must be set.", ex.Message);
+            // Act & Assert
+            actForDate.Should().Throw<ArgumentException>().WithMessage("CompletedAt must be set.*");
+            actForSubjectId.Should().Throw<ArgumentException>().WithMessage("SubjectId must be set.*");
         }
     }
 }

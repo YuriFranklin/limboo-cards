@@ -4,12 +4,14 @@ namespace LimbooCards.UnitTests.Application
     {
         private readonly Mock<ISubjectRepository> subjectRepositoryMock = new();
         private readonly Mock<IUserRepository> userRepositoryMock = new();
+        private readonly Mock<IPlannerRepository> plannerRepositoryMock = new();
+        private readonly Mock<ICardRepository> cardRepositoryMock = new();
         private readonly Mock<IMapper> mapperMock = new();
         private readonly SubjectApplicationService service;
 
         public SubjectApplicationServiceTests()
         {
-            service = new SubjectApplicationService(subjectRepositoryMock.Object, userRepositoryMock.Object, mapperMock.Object);
+            service = new SubjectApplicationService(subjectRepositoryMock.Object, userRepositoryMock.Object, plannerRepositoryMock.Object, cardRepositoryMock.Object, mapperMock.Object);
         }
 
         [Fact]
@@ -129,6 +131,107 @@ namespace LimbooCards.UnitTests.Application
             await service.DeleteSubjectAsync(subjectId);
 
             subjectRepositoryMock.Verify(r => r.DeleteSubjectAsync(subjectId), Times.Once);
+        }
+
+        [Fact]
+        public async Task EnsureCardForSubject_ShouldReturnExistingCard_WhenMatchIsFound()
+        {
+            // Arrange
+            var subjectId = Guid.NewGuid();
+            var plannerId = "planner1";
+
+            var subject = new Subject(subjectId, null, "Matemática I", "2025.1", SubjectStatus.Complete, [new Ofert("DIG", "AE")]);
+            var existingCard = new Card("CARD: Matemática 1", false, "user", plannerId, id: "card123");
+
+            subjectRepositoryMock.Setup(r => r.GetSubjectByIdAsync(subjectId)).ReturnsAsync(subject);
+            cardRepositoryMock.Setup(r => r.GetAllCardsAsync()).ReturnsAsync(new List<Card> { existingCard });
+
+            // Act
+            var result = await service.EnsureCardForSubject(plannerId, subjectId);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Id.Should().Be(existingCard.Id);
+            cardRepositoryMock.Verify(r => r.AddCardAsync(It.IsAny<Card>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task EnsureCardForSubject_ShouldCreateAndReturnNewCard_WhenNoMatchFoundAndSubjectIsEligible()
+        {
+            // Arrange
+            var subjectId = Guid.NewGuid();
+            var plannerId = "planner1";
+
+            var contents = new List<Content> { new("Topic 1", "Item A", ContentStatus.Missing) };
+            var subject = new Subject(subjectId, "123", "História", "2025.1", SubjectStatus.Complete, [new Ofert("DIG", "AE")], contents: contents, owner: new User("123", "Test User", "test"));
+            var planner = new Planner(plannerId, "Main Planner", new List<PlannerBucket> { new("b1", "Default", true, true, true) });
+
+            subjectRepositoryMock.Setup(r => r.GetSubjectByIdAsync(subjectId)).ReturnsAsync(subject);
+            cardRepositoryMock.Setup(r => r.GetAllCardsAsync()).ReturnsAsync(new List<Card>());
+            plannerRepositoryMock.Setup(r => r.GetPlannerByIdAsync(plannerId)).ReturnsAsync(planner);
+
+            // Act
+            var result = await service.EnsureCardForSubject(plannerId, subjectId);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.PlanId.Should().Be(plannerId);
+            cardRepositoryMock.Verify(r => r.AddCardAsync(It.IsAny<Card>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task EnsureCardForSubject_ShouldThrowArgumentException_WhenSubjectNotFound()
+        {
+            // Arrange
+            var subjectId = Guid.NewGuid();
+            subjectRepositoryMock.Setup(r => r.GetSubjectByIdAsync(subjectId)).ReturnsAsync((Subject?)null);
+
+            // Act
+            Func<Task> act = async () => await service.EnsureCardForSubject("planner1", subjectId);
+
+            // Assert
+            await act.Should().ThrowAsync<ArgumentException>().WithMessage($"*Subject with Id {subjectId} not found*");
+        }
+
+        [Fact]
+        public async Task EnsureCardForSubject_ShouldThrowArgumentException_WhenPlannerNotFound()
+        {
+            // Arrange
+            var subjectId = Guid.NewGuid();
+            var plannerId = "planner-nao-existe";
+
+            var subject = new Subject(subjectId, null, "Matemática", "2025.1", SubjectStatus.Complete, [new Ofert("DIG", "AE")], contents: new List<Content>());
+
+            subjectRepositoryMock.Setup(r => r.GetSubjectByIdAsync(subjectId)).ReturnsAsync(subject);
+            cardRepositoryMock.Setup(r => r.GetAllCardsAsync()).ReturnsAsync(new List<Card>());
+            plannerRepositoryMock.Setup(r => r.GetPlannerByIdAsync(plannerId)).ReturnsAsync((Planner?)null);
+
+            // Act
+            Func<Task> act = async () => await service.EnsureCardForSubject(plannerId, subjectId);
+
+            // Assert
+            await act.Should().ThrowAsync<ArgumentException>().WithMessage($"*Planner with Id {plannerId} not found*");
+        }
+
+        [Fact]
+        public async Task EnsureCardForSubject_ShouldThrowInvalidOperationException_WhenCardCannotBeCreated()
+        {
+            // Arrange
+            var subjectId = Guid.NewGuid();
+            var plannerId = "planner1";
+
+            var subject = new Subject(subjectId, null, "História", "2025.1", SubjectStatus.Complete, [new Ofert("DIG", "AE")], contents: new List<Content>());
+            var planner = new Planner(plannerId, "Main Planner", new List<PlannerBucket> { new("b1", "Default", true, true, true) });
+
+            subjectRepositoryMock.Setup(r => r.GetSubjectByIdAsync(subjectId)).ReturnsAsync(subject);
+            cardRepositoryMock.Setup(r => r.GetAllCardsAsync()).ReturnsAsync(new List<Card>());
+            plannerRepositoryMock.Setup(r => r.GetPlannerByIdAsync(plannerId)).ReturnsAsync(planner);
+
+            // Act
+            Func<Task> act = async () => await service.EnsureCardForSubject(plannerId, subjectId);
+
+            // Assert
+            await act.Should().ThrowAsync<InvalidOperationException>().WithMessage($"*Cannot create a card from Subject '{subject.Name}'*");
         }
     }
 

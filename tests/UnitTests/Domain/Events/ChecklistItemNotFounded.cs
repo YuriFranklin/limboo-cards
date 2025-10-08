@@ -1,4 +1,4 @@
-namespace LimbooCards.UnitTests.Domain.Services
+namespace LimbooCards.UnitTests.Domain.Events
 {
     public class ChecklistItemNotFoundedTests
     {

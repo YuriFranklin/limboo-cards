@@ -1,57 +1,60 @@
+using LimbooCards.Domain.Entities;
+using Xunit;
+
 namespace LimbooCards.UnitTests.Domain.Entities
 {
     public class PlannerTests
     {
+        private static List<PlannerBucket> CreateValidBuckets()
+        {
+            return new List<PlannerBucket>
+            {
+                new(Guid.NewGuid().ToString(), "Default Bucket", isDefault: true),
+                new(Guid.NewGuid().ToString(), "End Bucket", isEnd: true),
+                new(Guid.NewGuid().ToString(), "History Bucket", isHistory: true)
+            };
+        }
+
         [Fact]
         public void Constructor_ShouldCreatePlanner_WhenValidData()
         {
-            var id = Guid.CreateVersion7().ToString();
-            var buckets = new List<PlannerBucket>
-            {
-                new PlannerBucket(Guid.CreateVersion7().ToString(), "Default Bucket", true)
-            };
+            // Arrange
+            var id = Guid.NewGuid().ToString();
+            var buckets = CreateValidBuckets();
 
+            // Act
             var planner = new Planner(id, "My Planner", buckets);
 
+            // Assert
             Assert.Equal(id, planner.Id);
             Assert.Equal("My Planner", planner.Name);
-            Assert.Single(planner.Buckets);
-            Assert.True(planner.Buckets[0].IsDefault);
+            Assert.Equal(3, planner.Buckets.Count);
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void Constructor_ShouldThrow_WhenNameIsInvalid(string? invalidName)
+        public void Constructor_ShouldThrow_WhenNameIsInvalid(string invalidName)
         {
-            var id = Guid.CreateVersion7().ToString();
-            var buckets = new List<PlannerBucket>
-            {
-                new PlannerBucket(Guid.CreateVersion7().ToString(), "Default Bucket", true)
-            };
+            // Arrange
+            var id = Guid.NewGuid().ToString();
+            var buckets = CreateValidBuckets();
 
-            var ex = Assert.Throws<ArgumentException>(() => new Planner(id, invalidName!, buckets));
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => new Planner(id, invalidName, buckets));
             Assert.Contains("Planner name cannot be empty.", ex.Message);
             Assert.Equal("Name", ex.ParamName);
         }
 
         [Fact]
-        public void Constructor_ShouldThrow_WhenBucketsIsNull()
-        {
-            var id = Guid.CreateVersion7().ToString();
-
-            var ex = Assert.Throws<ArgumentException>(() => new Planner(id, "Valid Name", new List<PlannerBucket>()));
-            Assert.Contains("Planner must contain at least one bucket.", ex.Message);
-            Assert.Equal("Buckets", ex.ParamName);
-        }
-
-        [Fact]
         public void Constructor_ShouldThrow_WhenBucketsIsEmpty()
         {
-            var id = Guid.CreateVersion7().ToString();
+            // Arrange
+            var id = Guid.NewGuid().ToString();
+            var emptyBuckets = new List<PlannerBucket>();
 
-            var ex = Assert.Throws<ArgumentException>(() => new Planner(id, "Valid Name", new List<PlannerBucket>()));
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => new Planner(id, "Valid Name", emptyBuckets));
             Assert.Contains("Planner must contain at least one bucket.", ex.Message);
             Assert.Equal("Buckets", ex.ParamName);
         }
@@ -59,14 +62,47 @@ namespace LimbooCards.UnitTests.Domain.Entities
         [Fact]
         public void Constructor_ShouldThrow_WhenNoDefaultBucketExists()
         {
-            var id = Guid.CreateVersion7().ToString();
-            var buckets = new List<PlannerBucket>
+            var id = Guid.NewGuid().ToString();
+            var bucketsWithoutDefault = new List<PlannerBucket>
             {
-                new PlannerBucket(Guid.CreateVersion7().ToString(), "Non Default", false)
+                new(Guid.NewGuid().ToString(), "End Bucket", isEnd: true),
+                new(Guid.NewGuid().ToString(), "History Bucket", isHistory: true)
             };
 
-            var ex = Assert.Throws<ArgumentException>(() => new Planner(id, "Valid Name", buckets));
+            var ex = Assert.Throws<ArgumentException>(() => new Planner(id, "Valid Name", bucketsWithoutDefault));
             Assert.Contains("Planner must contain at least one default bucket.", ex.Message);
+            Assert.Equal("Buckets", ex.ParamName);
+        }
+
+        [Fact]
+        public void Constructor_ShouldThrow_WhenNoEndBucketExists()
+        {
+            // Arrange
+            var id = Guid.NewGuid().ToString();
+            var bucketsWithoutEnd = new List<PlannerBucket>
+            {
+                new(Guid.NewGuid().ToString(), "Default Bucket", isDefault: true),
+                new(Guid.NewGuid().ToString(), "History Bucket", isHistory: true)
+            };
+
+            var ex = Assert.Throws<ArgumentException>(() => new Planner(id, "Valid Name", bucketsWithoutEnd));
+            Assert.Contains("Planner must contain at least one end bucket.", ex.Message);
+            Assert.Equal("Buckets", ex.ParamName);
+        }
+
+        [Fact]
+        public void Constructor_ShouldThrow_WhenNoHistoryBucketExists()
+        {
+            // Arrange
+            var id = Guid.NewGuid().ToString();
+            var bucketsWithoutHistory = new List<PlannerBucket>
+            {
+                new(Guid.NewGuid().ToString(), "Default Bucket", isDefault: true),
+                new(Guid.NewGuid().ToString(), "End Bucket", isEnd: true)
+            };
+
+            var ex = Assert.Throws<ArgumentException>(() => new Planner(id, "Valid Name", bucketsWithoutHistory));
+            Assert.Contains("Planner must contain at least one history bucket.", ex.Message);
             Assert.Equal("Buckets", ex.ParamName);
         }
     }

@@ -17,9 +17,9 @@ namespace LimbooCards.Domain.Services
             .Where(x => x.content.ContentStatus == ContentStatus.Missing)
             .Select(x => new ChecklistItem(
                 id: (x.index + 1).ToString(),
-                title: x.content.Name,
+                title: x.content.ChecklistItemTitle,
                 isChecked: false,
-                orderHint: "0000000000",
+                orderHint: x.index.ToString(),
                 updatedAt: DateTime.UtcNow,
                 updatedBy: subject.Owner?.Id ?? string.Empty
             ))
@@ -31,7 +31,9 @@ namespace LimbooCards.Domain.Services
                 planId: planner.Id,
                 createdBy: subject.Owner?.Id ?? string.Empty,
                 createdAt: DateTime.UtcNow,
-                checklist: checklist
+                checklist: checklist,
+                subjectId: subject.Id,
+                appliedCategories: PinEvaluatorService.EvaluateCardPins(subject, planner, null)?.AppliedCategories
             );
 
             return card;

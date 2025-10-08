@@ -2,7 +2,6 @@ namespace LimbooCards.Presentation.Mappings
 {
     using AutoMapper;
     using LimbooCards.Application.DTOs;
-    using LimbooCards.Domain.Entities;
     using LimbooCards.Presentation.GraphQL.Contracts;
     using LimbooCards.Presentation.GraphQL.Models;
     public class PlannerMappingProfile : Profile

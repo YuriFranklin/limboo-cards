@@ -29,8 +29,14 @@ namespace LimbooCards.Domain.Entities
             if (Buckets == null || Buckets.Count == 0)
                 throw new ArgumentException("Planner must contain at least one bucket.", nameof(Buckets));
 
-            if (!Buckets.Any(b => b.IsDefault == true))
+            if (!Buckets.Any(b => b.IsDefault))
                 throw new ArgumentException("Planner must contain at least one default bucket.", nameof(Buckets));
+
+            if (!Buckets.Any(b => b.IsEnd))
+                throw new ArgumentException("Planner must contain at least one end bucket.", nameof(Buckets));
+
+            if (!Buckets.Any(b => b.IsHistory))
+                throw new ArgumentException("Planner must contain at least one history bucket.", nameof(Buckets));
         }
     }
 }

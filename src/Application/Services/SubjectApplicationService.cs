@@ -4,11 +4,14 @@ namespace LimbooCards.Application.Services
     using LimbooCards.Application.DTOs;
     using LimbooCards.Domain.Entities;
     using LimbooCards.Domain.Repositories;
+    using LimbooCards.Domain.Services;
 
-    public class SubjectApplicationService(ISubjectRepository subjectRepository, IUserRepository userRepository, IMapper mapper)
+    public class SubjectApplicationService(ISubjectRepository subjectRepository, IUserRepository userRepository, IPlannerRepository plannerRepository, ICardRepository cardRepository, IMapper mapper)
     {
         private readonly ISubjectRepository subjectRepository = subjectRepository;
         private readonly IUserRepository userRepository = userRepository;
+        private readonly IPlannerRepository plannerRepository = plannerRepository;
+        private readonly ICardRepository cardRepository = cardRepository;
         private readonly IMapper mapper = mapper;
 
         public async Task<SubjectDto> CreateSubjectAsync(CreateSubjectDto dto)
@@ -137,6 +140,32 @@ namespace LimbooCards.Application.Services
             await this.subjectRepository.DeleteSubjectAsync(subjectId);
         }
 
+        public async Task<CardDto?> EnsureCardForSubject(string plannerId, Guid subjectId)
+        {
+            var subject = await this.subjectRepository.GetSubjectByIdAsync(subjectId)
+                ?? throw new ArgumentException($"Subject with Id {subjectId} not found.");
+
+            var cards = await this.cardRepository.GetAllCardsAsync();
+
+            var card = CardSubjectMatcherService.MatchCardForSubject(subject, cards);
+
+            if (card != null)
+            {
+                return null;
+            }
+
+            var planner = await this.plannerRepository.GetPlannerByIdAsync(plannerId)
+                ?? throw new ArgumentException($"Planner with Id {plannerId} not found.");
+
+            var newCard = SubjectCardOrchestratorService.EnsureCardForSubject(subject, planner);
+
+            if (newCard == null)
+                return null;
+
+            await this.cardRepository.AddCardAsync(newCard);
+
+            return mapper.Map<CardDto>(newCard);
+        }
         private static Guid? DecodeCursor(string? cursor)
         {
             if (string.IsNullOrWhiteSpace(cursor)) return null;

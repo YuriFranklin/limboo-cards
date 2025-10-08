@@ -8,14 +8,25 @@ namespace LimbooCards.Domain.Services
     {
         public static CardPlannerAllocated? AllocateCardToBucket(Card card, Subject subject, Planner planner)
         {
-            if (card.Id == null || card.Id == string.Empty)
+            if (string.IsNullOrWhiteSpace(card.Id))
                 return null;
 
             if (card.Checklist == null || card.Checklist.Count == 0)
                 return null;
 
-            if (subject.Contents == null || !subject.Contents.Any(c => c.ContentStatus == ContentStatus.Missing))
+            bool hasNoMissingContent = subject.Contents == null || !subject.Contents.Any(c => c.ContentStatus == ContentStatus.Missing);
+
+            var currentBucket = planner.Buckets.FirstOrDefault(b => b.Id == card.BucketId);
+
+            if (currentBucket != null && currentBucket.IsEnd && hasNoMissingContent)
+            {
+                return new CardPlannerAllocated(card.Id, planner.Id, currentBucket.Id);
+            }
+
+            if (hasNoMissingContent)
+            {
                 return null;
+            }
 
             var bucket = GetBestBucket(subject, planner)
                          ?? throw new InvalidOperationException("No suitable bucket found and no default bucket available.");
@@ -26,6 +37,7 @@ namespace LimbooCards.Domain.Services
                 bucket.Id
             );
         }
+
         private static PlannerBucket? GetBestBucket(Subject subject, Planner planner)
         {
             return subject.Contents!

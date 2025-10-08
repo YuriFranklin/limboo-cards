@@ -1,8 +1,8 @@
 using System.Globalization;
 using System.Text;
 using LimbooCards.Domain.Entities;
-using LimbooCards.Infra.Constants;
 using LimbooCards.Domain.Events;
+using LimbooCards.Domain.Shared;
 
 namespace LimbooCards.Domain.Services
 {

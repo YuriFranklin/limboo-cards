@@ -2,6 +2,7 @@ namespace LimbooCards.Presentation.GraphQL.Models
 {
     public class ChecklistItemCompletedModel
     {
+        public string ChecklistItemTitle { get; set; } = string.Empty;
         public string ChecklistItemId { get; set; } = string.Empty;
         public string CompletedBy { get; set; } = string.Empty;
         public DateTime CompletedAt { get; set; }

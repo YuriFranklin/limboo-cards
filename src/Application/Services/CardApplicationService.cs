@@ -64,7 +64,7 @@ namespace LimbooCards.Application.Services
             if (!card.SubjectId.HasValue)
             {
                 var subjects = await this.subjectRepository.GetAllSubjectsAsync();
-                subject = CardSubjectMatcherService.MatchSubjectForCardAsync(card, subjects);
+                subject = CardSubjectMatcherService.MatchSubjectForCard(card, subjects);
             }
             else
             {
@@ -113,7 +113,7 @@ namespace LimbooCards.Application.Services
                     var card = await cardRepository.GetCardByIdAsync(id);
                     if (card == null) return (Success: (CardDto?)null, Failed: id);
 
-                    var subject = CardSubjectMatcherService.MatchSubjectForCardAsync(card, allSubjects);
+                    var subject = CardSubjectMatcherService.MatchSubjectForCard(card, allSubjects);
                     if (subject == null) return (Success: null, Failed: id);
 
                     var planner = await plannerRepository.GetPlannerByIdAsync(card.PlanId);
