@@ -6,10 +6,11 @@ namespace LimbooCards.Domain.Services
 
     public static partial class CardTitleNormalizeService
     {
-        private static readonly Regex _pattern = NormalizeRegex();
-
-        [GeneratedRegex(@"^\[PENDÊNCIA - (?<modelId>[^\]]+)\]\s(?<name>.+)$", RegexOptions.CultureInvariant)]
-        private static partial Regex NormalizeRegex();
+        // Regex única e poderosa para fazer o "parse" de todos os formatos
+        [GeneratedRegex(
+            @"^ (?: \[?\s*PEND[EÊ]NCIAS?\s*(?:-\s*(?<modelId>[^\]\s]*))?\s*\]? )? \s* (?: \[\s*(?<modelId>\d+)\s*\] )? \s* (?<name>.+) $",
+            RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace)]
+        private static partial Regex UnnormalizePattern();
 
         public static string Normalize(Subject subject)
         {
@@ -25,17 +26,23 @@ namespace LimbooCards.Domain.Services
             if (string.IsNullOrWhiteSpace(normalized))
                 return null;
 
-            var match = _pattern.Match(normalized);
-            if (!match.Success)
-                return null;
+            var match = UnnormalizePattern().Match(normalized);
 
-            var modelId = match.Groups["modelId"].Value.Trim();
+            if (!match.Success)
+            {
+                return (string.Empty, normalized);
+            }
+
+            var modelId = match.Groups["modelId"].Captures
+                               .Cast<Capture>()
+                               .LastOrDefault(c => !string.IsNullOrEmpty(c.Value))?.Value ?? string.Empty;
+
             var rawName = match.Groups["name"].Value.Trim();
 
             var textInfo = new CultureInfo("pt-BR").TextInfo;
             var titleCaseName = textInfo.ToTitleCase(rawName.ToLower());
 
-            return (modelId, titleCaseName);
+            return (modelId.Trim(), titleCaseName);
         }
     }
 }

@@ -140,31 +140,54 @@ namespace LimbooCards.Application.Services
             await this.subjectRepository.DeleteSubjectAsync(subjectId);
         }
 
-        public async Task<CardDto?> EnsureCardForSubject(string plannerId, Guid subjectId)
+        public async Task<List<CardDto>> EnsureCardsForSubjects(string plannerId, List<Guid> subjectIds)
         {
-            var subject = await this.subjectRepository.GetSubjectByIdAsync(subjectId)
-                ?? throw new ArgumentException($"Subject with Id {subjectId} not found.");
-
-            var cards = await this.cardRepository.GetAllCardsAsync();
-
-            var card = CardSubjectMatcherService.MatchCardForSubject(subject, cards);
-
-            if (card != null)
-            {
-                return null;
-            }
-
             var planner = await this.plannerRepository.GetPlannerByIdAsync(plannerId)
                 ?? throw new ArgumentException($"Planner with Id {plannerId} not found.");
 
-            var newCard = SubjectCardOrchestratorService.EnsureCardForSubject(subject, planner);
+            var existingCards = (await cardRepository.GetAllCardsAsync()).ToList();
 
-            if (newCard == null)
-                return null;
+            var allSubjects = await this.subjectRepository.GetAllSubjectsAsync();
+            var newlyCreatedCardDtos = new List<CardDto>();
 
-            await this.cardRepository.AddCardAsync(newCard);
+            foreach (var subjectId in subjectIds)
+            {
+                var subject = allSubjects.FirstOrDefault(s => s.Id == subjectId);
+                if (subject == null)
+                {
+                    continue;
+                }
 
-            return mapper.Map<CardDto>(newCard);
+                var matchedCard = CardSubjectMatcherService.MatchCardForSubject(subject, existingCards);
+                if (matchedCard != null)
+                {
+                    continue;
+                }
+
+                var cardToCreate = SubjectCardOrchestratorService.EnsureCardForSubject(subject, planner);
+                if (cardToCreate == null)
+                {
+                    continue;
+                }
+
+                var allocationResult = CardAllocationService.AllocateCardToBucket(cardToCreate, subject, planner);
+                if (allocationResult == null)
+                {
+                    continue;
+                }
+
+                var fullyAllocatedCard = cardToCreate.With(
+                    bucketId: allocationResult.BucketId,
+                    planId: allocationResult.PlannerId
+                );
+
+                var savedCard = await cardRepository.AddCardAsync(fullyAllocatedCard);
+
+                existingCards.Add(savedCard);
+                newlyCreatedCardDtos.Add(mapper.Map<CardDto>(savedCard));
+            }
+
+            return newlyCreatedCardDtos;
         }
         private static Guid? DecodeCursor(string? cursor)
         {

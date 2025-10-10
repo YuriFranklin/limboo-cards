@@ -56,7 +56,7 @@ namespace LimbooCards.UnitTests.Domain.Services
 
             // Assert
             result.Should().NotBeNull();
-            result!.AppliedCategories.Should().ContainKey(PinColor.Blue.ToString());
+            result!.AppliedCategories.Should().ContainKey(PinEvaluatorService.GetEnumMemberValue(PinColor.Blue));
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace LimbooCards.UnitTests.Domain.Services
 
             // Assert
             result.Should().NotBeNull();
-            result!.AppliedCategories.Should().ContainKeys(PinColor.Blue.ToString(), PinColor.Green.ToString());
+            result!.AppliedCategories.Should().ContainKeys(PinEvaluatorService.GetEnumMemberValue(PinColor.Blue), PinEvaluatorService.GetEnumMemberValue(PinColor.Green));
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace LimbooCards.UnitTests.Domain.Services
 
             // Assert
             result.Should().NotBeNull();
-            result!.AppliedCategories.Should().ContainKey(PinColor.Red.ToString());
+            result!.AppliedCategories.Should().ContainKey(PinEvaluatorService.GetEnumMemberValue(PinColor.Red));
         }
 
         [Fact]
@@ -138,7 +138,7 @@ namespace LimbooCards.UnitTests.Domain.Services
 
             // Assert
             result.Should().NotBeNull();
-            result!.AppliedCategories.Should().ContainKey(PinColor.Yellow.ToString());
+            result!.AppliedCategories.Should().ContainKey(PinEvaluatorService.GetEnumMemberValue(PinColor.Yellow));
         }
 
         [Fact]

@@ -14,15 +14,18 @@ namespace LimbooCards.Infra.Repositories
         private readonly string _bucket = "cards";
         private readonly TimeSpan _ttl = TimeSpan.FromHours(1);
 
-        public async Task AddCardAsync(Card card)
+        public async Task<Card> AddCardAsync(Card card)
         {
-            await _inner.AddCardAsync(card);
+            var addedCard = await _inner.AddCardAsync(card);
             _ = _cache.DeleteAsync(_bucket, "all");
+
+            return addedCard;
         }
 
-        public Task DeleteCardAsync(string cardId)
+        public async Task DeleteCardAsync(string cardId)
         {
-            throw new NotImplementedException();
+            await _inner.DeleteCardAsync(cardId);
+            _ = _cache.DeleteAsync(_bucket, "all");
         }
 
         public async Task<IEnumerable<Card>> GetAllCardsAsync()

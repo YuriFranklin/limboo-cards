@@ -37,41 +37,41 @@ namespace LimbooCards.UnitTests.Infra
 
             var dto = new CardAutomateDto
             {
-                id = cardId,
-                planId = planId,
-                bucketId = bucketId,
-                title = "Matemática - Exercícios",
-                description = "Lista de exercícios de equações",
-                hasDescription = true,
-                subjectId = Guid.CreateVersion7().ToString(),
-                orderHint = "A123",
-                createdDateTime = DateTime.UtcNow.AddDays(-1).ToString("O"),
-                dueDateTime = DateTime.UtcNow.AddDays(3).ToString("O"),
-                createdBy = new CreatedBy
+                Id = cardId,
+                PlanId = planId,
+                BucketId = bucketId,
+                Title = "Matemática - Exercícios",
+                Description = "Lista de exercícios de equações",
+                HasDescription = true,
+                SubjectId = Guid.NewGuid().ToString(),
+                OrderHint = "A123",
+                CreatedDateTime = DateTime.UtcNow.AddDays(-1).ToString("O"),
+                DueDateTime = DateTime.UtcNow.AddDays(3).ToString("O"),
+                CreatedBy = new CreatedBy
                 {
-                    user = new CreatedByUser { id = createdById }
+                    User = new CreatedByUser { Id = createdById }
                 },
-                appliedCategories = new Dictionary<string, bool>
+                AppliedCategories = new Dictionary<string, bool>
                 {
                     { "Álgebra", true }
                 },
-                checklist = new List<ChecklistItemAutomateDto>
+                Checklist = new List<ChecklistItemAutomateDto>
                 {
                     new ChecklistItemAutomateDto
                     {
-                        id = "chk1",
-                        value = new ChecklistValue
+                        Id = "chk1",
+                        Value = new ChecklistValue
                         {
-                            title = "Resolver 5 equações",
-                            isChecked = false,
-                            orderHint = "B123",
-                            lastModifiedDateTime = DateTime.UtcNow,
-                            lastModifiedBy = new LastModifiedBy
+                            Title = "Resolver 5 equações",
+                            IsChecked = false,
+                            OrderHint = "B123",
+                            LastModifiedDateTime = DateTime.UtcNow,
+                            LastModifiedBy = new LastModifiedBy
                             {
-                                user = new LastModifiedUser
+                                User = new LastModifiedUser
                                 {
-                                    id = Guid.CreateVersion7(),
-                                    displayName = "Professor"
+                                    Id = Guid.NewGuid(),
+                                    DisplayName = "Professor"
                                 }
                             }
                         }

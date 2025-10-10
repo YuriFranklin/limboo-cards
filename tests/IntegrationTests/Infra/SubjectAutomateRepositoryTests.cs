@@ -40,7 +40,7 @@ namespace LimbooCards.IntegrationTests.Infra
         [Fact]
         public async Task GetSubjectByIdAsync_WhenApiReturnsSubject_ShouldReturnSubject()
         {
-            var subjectId = Guid.Parse("01997737-1559-7bce-a05b-ef612d4df558");
+            var subjectId = Guid.Parse("0199c9d4-5f4b-7a26-a3ce-4ce29e37c850");
 
             var subject = await _repository.GetSubjectByIdAsync(subjectId);
 

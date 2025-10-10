@@ -5,7 +5,7 @@ namespace LimbooCards.Domain.Repositories
     {
         public Task<Card?> GetCardByIdAsync(string cardId);
         public Task<IEnumerable<Card>> GetAllCardsAsync();
-        public Task AddCardAsync(Card card);
+        public Task<Card> AddCardAsync(Card card);
         public Task UpdateCardAsync(Card card);
         public Task DeleteCardAsync(string cardId);
     }

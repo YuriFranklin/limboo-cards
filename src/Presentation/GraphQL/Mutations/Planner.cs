@@ -26,5 +26,11 @@ namespace LimbooCards.Presentation.GraphQL.Mutations
             await _plannerService.DeletePlannerAsync(id);
             return true;
         }
+
+        public async Task<bool> ArchiveFinishedCards(string plannerId)
+        {
+            await _plannerService.ArchiveFinishedCards(plannerId);
+            return true;
+        }
     }
 }

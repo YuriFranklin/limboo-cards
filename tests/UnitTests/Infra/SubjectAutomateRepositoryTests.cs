@@ -33,24 +33,25 @@ namespace LimbooCards.UnitTests.Infra
             var ownerId = "17115131-c022-4c9b-a284-29ccf79f5b93";
             var dto = new SubjectAutomateDto
             {
-                ID = "9875",
-                DISCIPLINA = "Adaptação e Flexibilização Curricular",
-                EQUIVALENCIA = "",
-                EDITORA_MASTER = "",
-                EDITORA_NASA = "FAEL",
-                OFERTAS = "[DIG - D]",
-                STATUS_DIG = "OK",
-                UUID = subjectId.ToString(),
-                OWNERS = new List<UserAutomateDto>
+                Id = "9875",
+                Disciplina = "Adaptação e Flexibilização Curricular",
+                Equivalencia = "",
+                EditoraMaster = "",
+                EditoraNasa = "FAEL",
+                Ofertas = "[DIG - D]",
+                Status = "OK",
+                Uuid = subjectId.ToString(),
+                Owners = new List<UserAutomateDto>
                 {
                     new UserAutomateDto
                     {
                         ID = ownerId,
+                        NAME = "DHIEGO",
                         FULLNAME = "DHIEGO",
                         EMAIL = "teste@test.com"
                     }
                 },
-                PUBLISHERS = new List<SubjectPublisherAutomateDto>
+                Publishers = new List<SubjectPublisherAutomateDto>
                 {
                     new SubjectPublisherAutomateDto
                     {

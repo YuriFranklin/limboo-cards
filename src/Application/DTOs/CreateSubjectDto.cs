@@ -7,6 +7,7 @@ namespace LimbooCards.Application.DTOs
         public string Name { get; set; } = string.Empty;
         public string? ModelId { get; set; }
         public string Semester { get; set; } = string.Empty;
+        public bool IsPractical { get; private set; }
         public SubjectStatus Status { get; set; }
         public List<OfertDto>? Oferts { get; set; }
         public List<string>? Equivalencies { get; set; }

@@ -1,35 +1,79 @@
+using System.Text.Json.Serialization;
+
 namespace LimbooCards.Infra.DTOs
 {
     public class SubjectAutomateDto
     {
-        public string? ID { get; set; }
-        public string? DISCIPLINA { get; set; }
-        public string? EQUIVALENCIA { get; set; }
-        public string? EDITORA_MASTER { get; set; }
-        public string? EDITORA_NASA { get; set; }
-        public string? OFERTAS { get; set; }
-        public string? AGENTE_DIG { get; set; }
-        public string? STATUS_DIG { get; set; }
-        public string? OBS_DIG { get; set; }
-        public string? BANNER { get; set; }
-        public string? DC { get; set; }
-        public string? AC { get; set; }
-        public string? VIDEOTECA_1 { get; set; }
-        public string? VIDEOTECA_2 { get; set; }
-        public string? VIDEOTECA_3 { get; set; }
-        public string? VIDEOTECA_4 { get; set; }
-        public string? E_BOOK { get; set; }
-        public string? MATERIAL_1 { get; set; }
-        public string? MATERIAL_2 { get; set; }
-        public string? MATERIAL_3 { get; set; }
-        public string? MATERIAL_4 { get; set; }
-        public string? BQ_1 { get; set; }
-        public string? BQ_2 { get; set; }
-        public string? BQ_3 { get; set; }
-        public string? BQ_4 { get; set; }
-        public string? UUID { get; set; }
-        public List<UserAutomateDto>? OWNERS { get; set; }
-        public List<SubjectPublisherAutomateDto>? PUBLISHERS { get; set; }
-        public string? EXTRA_PROPS { get; set; }
+        [JsonPropertyName("ID")]
+        public string? Id { get; set; }
+
+        [JsonPropertyName("DISCIPLINA")]
+        public string? Disciplina { get; set; }
+
+        [JsonPropertyName("EQUIVALENCIA")]
+        public string? Equivalencia { get; set; }
+
+        [JsonPropertyName("EDITORA_MASTER")]
+        public string? EditoraMaster { get; set; }
+
+        [JsonPropertyName("EDITORA_NASA")]
+        public string? EditoraNasa { get; set; }
+
+        [JsonPropertyName("OFERTAS")]
+        public string? Ofertas { get; set; }
+
+        [JsonPropertyName("PRATICA")]
+        public string? Pratica { get; set; }
+
+        [JsonPropertyName("AGENTES")]
+        public string? Agentes { get; set; }
+
+        [JsonPropertyName("STATUS")]
+        public string? Status { get; set; }
+
+        [JsonPropertyName("OBS")]
+        public string? Obs { get; set; }
+
+        [JsonPropertyName("PDFS")]
+        public string? Pdfs { get; set; }
+
+        [JsonPropertyName("SCORM_1")]
+        public string? Scorm1 { get; set; }
+
+        [JsonPropertyName("SCORM_2")]
+        public string? Scorm2 { get; set; }
+
+        [JsonPropertyName("SCORM_3")]
+        public string? Scorm3 { get; set; }
+
+        [JsonPropertyName("SCORM_4")]
+        public string? Scorm4 { get; set; }
+
+        [JsonPropertyName("VIDEO_1")]
+        public string? Video1 { get; set; }
+
+        [JsonPropertyName("VIDEO_2")]
+        public string? Video2 { get; set; }
+
+        [JsonPropertyName("VIDEO_3")]
+        public string? Video3 { get; set; }
+
+        [JsonPropertyName("VIDEO_4")]
+        public string? Video4 { get; set; }
+
+        [JsonPropertyName("PLANO_AULA")]
+        public string? PlanoAula { get; set; }
+
+        [JsonPropertyName("UUID")]
+        public string? Uuid { get; set; }
+
+        [JsonPropertyName("OWNERS")]
+        public List<UserAutomateDto>? Owners { get; set; }
+
+        [JsonPropertyName("PUBLISHERS")]
+        public List<SubjectPublisherAutomateDto>? Publishers { get; set; }
+
+        [JsonPropertyName("EXTRA_PROPS")]
+        public string? ExtraProps { get; set; }
     }
 }

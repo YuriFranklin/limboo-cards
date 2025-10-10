@@ -32,7 +32,7 @@ namespace LimbooCards.UnitTests.Domain.Services
                     ),
                     new(
                         id: "chk2",
-                        title: "Material 3",
+                        title: "Scorm 3",
                         isChecked: false,
                         orderHint: "B",
                         updatedAt: updatedAt,

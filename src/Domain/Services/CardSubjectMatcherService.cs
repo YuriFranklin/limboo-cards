@@ -19,13 +19,19 @@ namespace LimbooCards.Domain.Services
 
             foreach (var card in cards)
             {
-                var cardTokens = NormalizeTokens(card.Title);
-                double score = CalculateJaccardSimilarity(subjectTokens, cardTokens);
+                var titleUnormalized = CardTitleNormalizeService.Unnormalize(card.Title);
 
-                if (score > bestScore)
+                if (titleUnormalized.HasValue)
                 {
-                    bestScore = score;
-                    bestMatch = card;
+                    var (ModelId, Name) = titleUnormalized.Value;
+                    var cardTokens = NormalizeTokens(Name);
+                    double score = CalculateJaccardSimilarity(subjectTokens, cardTokens);
+
+                    if (score > bestScore)
+                    {
+                        bestScore = score;
+                        bestMatch = card;
+                    }
                 }
             }
 

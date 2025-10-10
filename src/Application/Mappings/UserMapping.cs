@@ -9,7 +9,7 @@ namespace LimbooCards.Application.Mappings
         {
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<CreateUserDto, User>()
-            .ConstructUsing(dto => new User(dto.Id ?? Guid.CreateVersion7().ToString(), dto.FullName, dto.Email));
+            .ConstructUsing(dto => new User(dto.Id ?? Guid.CreateVersion7().ToString(), dto.Name, dto.FullName, dto.Email));
         }
     }
 

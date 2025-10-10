@@ -8,6 +8,7 @@ namespace LimbooCards.Presentation.GraphQL.Models
         public UserModel? Owner { get; set; }
         public string Semester { get; set; } = string.Empty;
         public string? Status { get; set; }
+        public bool IsPractical { get; private set; }
         public List<OfertModel> Oferts { get; set; } = new();
         public List<string>? Equivalencies { get; set; }
         public List<ContentModel>? Contents { get; set; }

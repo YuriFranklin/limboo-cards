@@ -7,6 +7,7 @@ namespace LimbooCards.UnitTests.Domain.Services
         {
             var owner = new User(
                 id: Guid.NewGuid().ToString(),
+                name: "John",
                 fullName: "John Doe",
                 email: "test@test.com"
                 );

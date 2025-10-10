@@ -2,7 +2,7 @@ namespace LimbooCards.Domain.Events
 {
     public class CardPlannerAllocated
     {
-        public CardPlannerAllocated(string cardId, string plannerId, string bucketId)
+        public CardPlannerAllocated(string? cardId, string plannerId, string bucketId)
         {
             CardId = cardId;
             PlannerId = plannerId;
@@ -10,14 +10,11 @@ namespace LimbooCards.Domain.Events
 
             Validate();
         }
-        public string CardId { get; }
+        public string? CardId { get; }
         public string PlannerId { get; }
         public string BucketId { get; }
         private void Validate()
         {
-            if (CardId == null || CardId == string.Empty)
-                throw new ArgumentException("CardId cannot be null or empty.", nameof(CardId));
-
             if (PlannerId == null || PlannerId == string.Empty)
                 throw new ArgumentException("PlannerId cannot be null or empty.", nameof(PlannerId));
 

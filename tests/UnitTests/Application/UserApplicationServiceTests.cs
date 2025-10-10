@@ -14,8 +14,8 @@ namespace LimbooCards.UnitTests.Application
         [Fact]
         public async Task CreateUserAsync_Should_Create_And_Return_UserDto()
         {
-            var dto = new CreateUserDto { FullName = "John Doe" };
-            var user = new User(Guid.CreateVersion7().ToString(), dto.FullName, "user@test.com");
+            var dto = new CreateUserDto { FullName = "John Doe", Name = "John", Email = "user@test.com" };
+            var user = new User(Guid.CreateVersion7().ToString(), dto.Name, dto.FullName, dto.Email);
             var userDto = new UserDto { Id = user.Id, FullName = user.FullName };
 
             mapperMock.Setup(m => m.Map<User>(dto)).Returns(user);
@@ -32,7 +32,7 @@ namespace LimbooCards.UnitTests.Application
         public async Task GetUserByIdAsync_Should_Return_UserDto_When_Found()
         {
             var userId = Guid.CreateVersion7().ToString();
-            var user = new User(userId, "Jane Doe", "user@test.com");
+            var user = new User(userId, "Jane", "Jane Doe", "user@test.com");
             var userDto = new UserDto { Id = userId, FullName = user.FullName };
 
             userRepositoryMock.Setup(r => r.GetUserByIdAsync(userId)).ReturnsAsync(user);
@@ -50,9 +50,9 @@ namespace LimbooCards.UnitTests.Application
             var fullName = "Jane";
             var users = new List<User>
             {
-                new(Guid.CreateVersion7().ToString(), "Jane Doe", "user1@test.com"),
-                new(Guid.CreateVersion7().ToString(), "Alice", "user2@test.com"),
-                new(Guid.CreateVersion7().ToString(), "Bob", "user3@test.com")
+                new(Guid.CreateVersion7().ToString(), "Jane", "Jane Doe", "user1@test.com"),
+                new(Guid.CreateVersion7().ToString(), "Alice","Alice", "user2@test.com"),
+                new(Guid.CreateVersion7().ToString(), "Bob","Bob", "user3@test.com")
             };
 
             var expectedDtos = users
@@ -80,8 +80,8 @@ namespace LimbooCards.UnitTests.Application
         {
             var users = new List<User>
             {
-                new User(Guid.CreateVersion7().ToString(), "Alice", "user@test.com"),
-                new User(Guid.CreateVersion7().ToString(), "Bob", "user@test.com")
+                new User(Guid.CreateVersion7().ToString(), "Alice", "Alice", "user@test.com"),
+                new User(Guid.CreateVersion7().ToString(), "Bob", "Bob", "user@test.com")
             };
             var userDtos = users.Select(u => new UserDto { Id = u.Id, FullName = u.FullName }).ToList();
 
@@ -98,9 +98,9 @@ namespace LimbooCards.UnitTests.Application
         [Fact]
         public async Task UpdateUserAsync_Should_Update_And_Return_UserDto()
         {
-            var dto = new UpdateUserDto { Id = Guid.CreateVersion7().ToString(), FullName = "Updated Name", Email = "user@test.com" };
-            var existingUser = new User(dto.Id, "Old Name", "user@test.com");
-            var updatedUser = new User(dto.Id, dto.FullName, "user@test.com");
+            var dto = new UpdateUserDto { Id = Guid.CreateVersion7().ToString(), Name = "Updated", FullName = "Updated Name", Email = "user@test.com" };
+            var existingUser = new User(dto.Id, "Old", "Old Name", "user@test.com");
+            var updatedUser = new User(dto.Id, dto.Name, dto.FullName, "user@test.com");
             var updatedUserDto = new UserDto { Id = dto.Id, FullName = dto.FullName };
 
             userRepositoryMock.Setup(r => r.GetUserByIdAsync(dto.Id)).ReturnsAsync(existingUser);

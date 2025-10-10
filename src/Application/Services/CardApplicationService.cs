@@ -168,6 +168,7 @@ namespace LimbooCards.Application.Services
                         planId: cardPlannerAllocated?.PlannerId
                         );
 
+                    await cardRepository.UpdateCardAsync(finalCard);
                     return (Success: mapper.Map<CardDto>(finalCard), Failed: null!);
                 }
                 catch

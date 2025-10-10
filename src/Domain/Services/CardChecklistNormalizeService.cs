@@ -43,9 +43,6 @@ namespace LimbooCards.Domain.Services
 
                 if (bestMatch.Score < MatchThreshold)
                 {
-                    /* throw new InvalidOperationException(
-                        $"No reliable match found for '{item.Title}'. " +
-                        $"Best score: {bestMatch.Score:F2}"); */
                     continue;
                 }
 

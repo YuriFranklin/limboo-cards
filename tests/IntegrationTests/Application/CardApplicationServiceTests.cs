@@ -52,25 +52,15 @@ namespace LimbooCards.IntegrationTests.Application
             _service = new CardApplicationService(cardRepository, subjectRepository, plannerRepository, _mapper);
         }
 
-        [Fact]
+        [Fact(Timeout = 120000)]
         public async Task NormalizeCardsAsync_ShouldReturnNormalizedCards()
         {
-            var cardIds = new List<string>(["0YuzjRsvl0eYXhJX-2QIcGQAPXtr"]);
-            try
-            {
-                var result = await _service.NormalizeCardsAsync(cardIds);
+            var cardIds = new List<string>(["wazJJyHvIUCM2MyXg6PFaWQAOEcZ"]);
 
-                Assert.Single(result.Success!);
-                Assert.Empty(result.Failed!);
+            var result = await _service.NormalizeCardsAsync(cardIds);
 
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine($"Erro HTTP: {ex.Message}");
-                throw;
-            }
-
-
+            Assert.Single(result.Success!);
+            Assert.Empty(result.Failed!);
         }
     }
 }

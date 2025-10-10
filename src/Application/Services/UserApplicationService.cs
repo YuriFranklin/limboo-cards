@@ -42,7 +42,7 @@ namespace LimbooCards.Application.Services
             var user = await userRepository.GetUserByIdAsync(dto.Id)
                 ?? throw new ArgumentException($"User with Id {dto.Id} not found.");
 
-            var updatedUser = new User(user.Id, dto.FullName, dto.Email);
+            var updatedUser = new User(id: user.Id, name: dto.Name, fullName: dto.FullName, email: dto.Email);
 
             await userRepository.UpdateUserAsync(updatedUser);
 

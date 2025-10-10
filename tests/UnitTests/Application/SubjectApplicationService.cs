@@ -27,8 +27,8 @@ namespace LimbooCards.UnitTests.Application
                 Oferts = new List<OfertDto> { new() { Project = "P1", Module = "M1" } },
             };
 
-            var owner = new User(dto.OwnerId, "Owner Name", "user@test.com");
-            var coOwner = new User(dto.CoOwnerIds.First(), "CoOwner Name", "user@test.com");
+            var owner = new User(dto.OwnerId, "Owner", "Owner Name", "user@test.com");
+            var coOwner = new User(dto.CoOwnerIds.First(), "CoOwner", "CoOwner Name", "user@test.com");
 
             userRepositoryMock.Setup(r => r.GetUserByIdAsync(dto.OwnerId)).ReturnsAsync(owner);
             userRepositoryMock.Setup(r => r.GetUserByIdAsync(dto.CoOwnerIds.First())).ReturnsAsync(coOwner);
@@ -110,8 +110,8 @@ namespace LimbooCards.UnitTests.Application
             };
 
             var existingSubject = new Subject(dto.Id, null, "Math", "2025.1", SubjectStatus.Complete, new List<Ofert> { new("P0", "M0") });
-            var owner = new User(dto.OwnerId, "Owner Name", "user@test.com");
-            var coOwner = new User(dto.CoOwnerIds.First(), "CoOwner Name", "user@test.com");
+            var owner = new User(dto.OwnerId, "Owner", "Owner Name", "user@test.com");
+            var coOwner = new User(dto.CoOwnerIds.First(), "CoOwner", "CoOwner Name", "user@test.com");
 
             subjectRepositoryMock.Setup(r => r.GetSubjectByIdAsync(dto.Id)).ReturnsAsync(existingSubject);
             userRepositoryMock.Setup(r => r.GetUserByIdAsync(dto.OwnerId)).ReturnsAsync(owner);
@@ -134,67 +134,64 @@ namespace LimbooCards.UnitTests.Application
         }
 
         [Fact]
-        public async Task EnsureCardForSubject_ShouldReturnExistingCard_WhenMatchIsFound()
+        public async Task EnsureCardsForSubjects_ShouldReturnEmptyList_WhenMatchIsFound()
         {
             // Arrange
             var subjectId = Guid.NewGuid();
             var plannerId = "planner1";
+            var planner = new Planner(plannerId, "Main Planner", new List<PlannerBucket> { new("b1", "Default", true, true, true) });
 
             var subject = new Subject(subjectId, null, "Matemática I", "2025.1", SubjectStatus.Complete, [new Ofert("DIG", "AE")]);
             var existingCard = new Card("CARD: Matemática 1", false, "user", plannerId, id: "card123");
 
             subjectRepositoryMock.Setup(r => r.GetSubjectByIdAsync(subjectId)).ReturnsAsync(subject);
             cardRepositoryMock.Setup(r => r.GetAllCardsAsync()).ReturnsAsync(new List<Card> { existingCard });
+            plannerRepositoryMock.Setup(r => r.GetPlannerByIdAsync(plannerId)).ReturnsAsync(planner);
 
             // Act
-            var result = await service.EnsureCardForSubject(plannerId, subjectId);
+            var resultList = await service.EnsureCardsForSubjects(plannerId, new List<Guid> { subjectId });
 
             // Assert
-            result.Should().NotBeNull();
-            result.Id.Should().Be(existingCard.Id);
+            resultList.Should().NotBeNull();
+            resultList.Should().HaveCount(0);
             cardRepositoryMock.Verify(r => r.AddCardAsync(It.IsAny<Card>()), Times.Never);
         }
 
+
         [Fact]
-        public async Task EnsureCardForSubject_ShouldCreateAndReturnNewCard_WhenNoMatchFoundAndSubjectIsEligible()
+        public async Task EnsureCardsForSubjects_ShouldCreateAndReturnNewCard_WhenNoMatchFoundAndSubjectIsEligible()
         {
             // Arrange
             var subjectId = Guid.NewGuid();
             var plannerId = "planner1";
 
             var contents = new List<Content> { new("Topic 1", "Item A", ContentStatus.Missing) };
-            var subject = new Subject(subjectId, "123", "História", "2025.1", SubjectStatus.Complete, [new Ofert("DIG", "AE")], contents: contents, owner: new User("123", "Test User", "test"));
+            var subject = new Subject(subjectId, "123", "História", "2025.1", SubjectStatus.Complete, [new Ofert("DIG", "AE")], contents: contents, owner: new User("123", "Test", "Test User", "test"));
             var planner = new Planner(plannerId, "Main Planner", new List<PlannerBucket> { new("b1", "Default", true, true, true) });
 
-            subjectRepositoryMock.Setup(r => r.GetSubjectByIdAsync(subjectId)).ReturnsAsync(subject);
+            subjectRepositoryMock.Setup(r => r.GetAllSubjectsAsync()).ReturnsAsync(new List<Subject> { subject });
             cardRepositoryMock.Setup(r => r.GetAllCardsAsync()).ReturnsAsync(new List<Card>());
             plannerRepositoryMock.Setup(r => r.GetPlannerByIdAsync(plannerId)).ReturnsAsync(planner);
 
+            mapperMock.Setup(m => m.Map<CardDto>(It.IsAny<Card>()))
+                      .Returns((Card source) => new CardDto { Id = source.Id, PlanId = source.PlanId, Title = source.Title });
+
             // Act
-            var result = await service.EnsureCardForSubject(plannerId, subjectId);
+            var resultList = await service.EnsureCardsForSubjects(plannerId, new List<Guid> { subjectId });
 
             // Assert
-            result.Should().NotBeNull();
-            result.PlanId.Should().Be(plannerId);
+            resultList.Should().NotBeNull();
+            resultList.Should().HaveCount(1);
+
+            var createdCardDto = resultList.First();
+            createdCardDto.Should().NotBeNull();
+            createdCardDto!.PlanId.Should().Be(plannerId);
+
             cardRepositoryMock.Verify(r => r.AddCardAsync(It.IsAny<Card>()), Times.Once);
         }
 
         [Fact]
-        public async Task EnsureCardForSubject_ShouldThrowArgumentException_WhenSubjectNotFound()
-        {
-            // Arrange
-            var subjectId = Guid.NewGuid();
-            subjectRepositoryMock.Setup(r => r.GetSubjectByIdAsync(subjectId)).ReturnsAsync((Subject?)null);
-
-            // Act
-            Func<Task> act = async () => await service.EnsureCardForSubject("planner1", subjectId);
-
-            // Assert
-            await act.Should().ThrowAsync<ArgumentException>().WithMessage($"*Subject with Id {subjectId} not found*");
-        }
-
-        [Fact]
-        public async Task EnsureCardForSubject_ShouldThrowArgumentException_WhenPlannerNotFound()
+        public async Task EnsureCardsForSubjects_ShouldThrowArgumentException_WhenPlannerNotFound()
         {
             // Arrange
             var subjectId = Guid.NewGuid();
@@ -202,36 +199,46 @@ namespace LimbooCards.UnitTests.Application
 
             var subject = new Subject(subjectId, null, "Matemática", "2025.1", SubjectStatus.Complete, [new Ofert("DIG", "AE")], contents: new List<Content>());
 
-            subjectRepositoryMock.Setup(r => r.GetSubjectByIdAsync(subjectId)).ReturnsAsync(subject);
+            subjectRepositoryMock.Setup(r => r.GetAllSubjectsAsync()).ReturnsAsync(new List<Subject> { subject });
             cardRepositoryMock.Setup(r => r.GetAllCardsAsync()).ReturnsAsync(new List<Card>());
             plannerRepositoryMock.Setup(r => r.GetPlannerByIdAsync(plannerId)).ReturnsAsync((Planner?)null);
 
             // Act
-            Func<Task> act = async () => await service.EnsureCardForSubject(plannerId, subjectId);
+            Func<Task> act = async () => await service.EnsureCardsForSubjects(plannerId, new List<Guid> { subjectId });
 
             // Assert
             await act.Should().ThrowAsync<ArgumentException>().WithMessage($"*Planner with Id {plannerId} not found*");
         }
 
         [Fact]
-        public async Task EnsureCardForSubject_ShouldThrowInvalidOperationException_WhenCardCannotBeCreated()
+        public async Task EnsureCardsForSubjects_ShouldReturnNullInList_WhenCardCannotBeCreated()
         {
             // Arrange
             var subjectId = Guid.NewGuid();
             var plannerId = "planner1";
 
-            var subject = new Subject(subjectId, null, "História", "2025.1", SubjectStatus.Complete, [new Ofert("DIG", "AE")], contents: new List<Content>());
+            var contents = new List<Content>
+            {
+                new("Content1", "Checklist1", ContentStatus.Missing),
+                new("Content2", "Checklist2", ContentStatus.Missing)
+            };
+
+            var user = new User(Guid.NewGuid().ToString(), "Test", "Test User", "test@user.com");
+
+            var subject = new Subject(subjectId, "1234", "História", "2025.1", SubjectStatus.Complete, [new Ofert("DIG", "AE")], contents: contents, owner: user);
             var planner = new Planner(plannerId, "Main Planner", new List<PlannerBucket> { new("b1", "Default", true, true, true) });
 
-            subjectRepositoryMock.Setup(r => r.GetSubjectByIdAsync(subjectId)).ReturnsAsync(subject);
+            subjectRepositoryMock.Setup(r => r.GetAllSubjectsAsync()).ReturnsAsync(new List<Subject> { subject });
             cardRepositoryMock.Setup(r => r.GetAllCardsAsync()).ReturnsAsync(new List<Card>());
             plannerRepositoryMock.Setup(r => r.GetPlannerByIdAsync(plannerId)).ReturnsAsync(planner);
 
             // Act
-            Func<Task> act = async () => await service.EnsureCardForSubject(plannerId, subjectId);
+            var resultList = await service.EnsureCardsForSubjects(plannerId, new List<Guid> { subjectId });
 
             // Assert
-            await act.Should().ThrowAsync<InvalidOperationException>().WithMessage($"*Cannot create a card from Subject '{subject.Name}'*");
+            resultList.Should().NotBeNull();
+            resultList.Should().HaveCount(1);
+            resultList.First().Should().BeNull();
         }
     }
 

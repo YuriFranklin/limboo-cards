@@ -8,9 +8,6 @@ namespace LimbooCards.Domain.Services
     {
         public static CardPlannerAllocated? AllocateCardToBucket(Card card, Subject subject, Planner planner)
         {
-            if (string.IsNullOrWhiteSpace(card.Id))
-                return null;
-
             if (card.Checklist == null || card.Checklist.Count == 0)
                 return null;
 
@@ -20,7 +17,7 @@ namespace LimbooCards.Domain.Services
 
             if (currentBucket != null && currentBucket.IsEnd && hasNoMissingContent)
             {
-                return new CardPlannerAllocated(card.Id, planner.Id, currentBucket.Id);
+                return new CardPlannerAllocated(plannerId: planner.Id, bucketId: currentBucket.Id, cardId: card?.Id);
             }
 
             if (hasNoMissingContent)

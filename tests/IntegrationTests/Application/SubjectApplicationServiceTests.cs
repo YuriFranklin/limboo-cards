@@ -53,18 +53,24 @@ namespace LimbooCards.IntegrationTests.Application
             _service = new SubjectApplicationService(subjectRepository, userRepository, plannerRepository, cardRepository, _mapper);
         }
 
-        [Fact]
+        [Fact(Timeout = 120000)]
         public async Task EnsureCardForSubject_ShouldCreateNewCard_WhenSubjectAndPlannerExist()
         {
             // Arrange
-            var subjectId = Guid.Parse("01997738-2b96-7d0e-be93-85471d961fb3");
+            var subjectId = Guid.Parse("0199c9d4-5f4b-7a26-a3ce-4ce29e37c850");
             var plannerId = "r69txn4te023WTwwj8jHL2QAFVIN";
 
             // Act
-            var result = await _service.EnsureCardForSubject(plannerId, subjectId);
+            var resultList = await _service.EnsureCardsForSubjects(plannerId, new List<Guid> { subjectId });
 
             // Assert
-            result.Should().NotBeNull();
+            resultList.Should().NotBeNull();
+            resultList.Should().HaveCount(1);
+
+            var createdCardDto = resultList.First();
+            createdCardDto.Should().NotBeNull();
+            createdCardDto!.PlanId.Should().Be(plannerId);
+            createdCardDto.Title.Should().NotBeNullOrWhiteSpace();
         }
     }
 }

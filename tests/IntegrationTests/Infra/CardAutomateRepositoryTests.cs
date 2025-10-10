@@ -31,7 +31,7 @@ namespace LimbooCards.IntegrationTests.Infra
         [Fact]
         public async Task GetCardById_ShouldReturnCard()
         {
-            var cardId = "6uuxN7xpSESpiSy5Jyg7CWQAJt_m";
+            var cardId = "0YuzjRsvl0eYXhJX-2QIcGQAPXtr";
 
             var card = await _repository.GetCardByIdAsync(cardId);
 

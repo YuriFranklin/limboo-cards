@@ -16,7 +16,8 @@ namespace LimbooCards.Domain.Entities
             List<Content>? contents = null,
             User? owner = null,
             List<User>? coOwners = null,
-            List<SubjectPublisher>? publishers = null
+            List<SubjectPublisher>? publishers = null,
+            bool? isPractical = false
         )
         {
             this.Id = id ?? Guid.CreateVersion7();
@@ -30,6 +31,7 @@ namespace LimbooCards.Domain.Entities
             this.Owner = owner;
             this.CoOwners = coOwners;
             this.Publishers = publishers;
+            this.IsPractical = isPractical ?? false;
 
             Validate();
         }
@@ -41,6 +43,7 @@ namespace LimbooCards.Domain.Entities
         [JsonInclude] public string? ModelId { get; private set; }
         [JsonInclude] public string Name { get; private set; } = null!;
         [JsonInclude] public User? Owner { get; private set; }
+        [JsonInclude] public bool IsPractical { get; private set; } = false;
         [JsonInclude] public string Semester { get; private set; } = null!;
         [JsonInclude] public SubjectStatus? Status { get; private set; }
         [JsonInclude] public List<Ofert> Oferts { get; private set; } = new();

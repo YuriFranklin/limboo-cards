@@ -208,7 +208,7 @@ namespace LimbooCards.Domain.Services
             return string.Compare(left, right, StringComparison.OrdinalIgnoreCase);
         }
 
-        private static string GetEnumMemberValue(Enum enumValue)
+        public static string GetEnumMemberValue(Enum enumValue)
         {
             var member = enumValue.GetType()
                 .GetMember(enumValue.ToString())

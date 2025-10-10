@@ -1,29 +1,45 @@
 namespace LimbooCards.Infra.DTOs
 {
-#pragma warning disable IDE1006
+    using System.Text.Json.Serialization;
     public class ChecklistItemAutomateDto
     {
-        public string id { get; set; } = string.Empty;
-        public ChecklistValue value { get; set; } = null!;
+        [JsonPropertyName("id")]
+        public string Id { get; set; } = string.Empty;
+
+        [JsonPropertyName("value")]
+        public ChecklistValue Value { get; set; } = null!;
     }
 
     public class ChecklistValue
     {
-        public bool isChecked { get; set; }
-        public string title { get; set; } = string.Empty;
-        public string orderHint { get; set; } = string.Empty;
-        public DateTime lastModifiedDateTime { get; set; }
-        public LastModifiedBy lastModifiedBy { get; set; } = null!;
+        [JsonPropertyName("isChecked")]
+        public bool IsChecked { get; set; }
+
+        [JsonPropertyName("title")]
+        public string Title { get; set; } = string.Empty;
+
+        [JsonPropertyName("orderHint")]
+        public string OrderHint { get; set; } = string.Empty;
+
+        [JsonPropertyName("lastModifiedDateTime")]
+        public DateTime LastModifiedDateTime { get; set; }
+
+        [JsonPropertyName("lastModifiedBy")]
+        public LastModifiedBy LastModifiedBy { get; set; } = null!;
     }
 
     public class LastModifiedBy
     {
-        public LastModifiedUser user { get; set; } = null!;
+        [JsonPropertyName("user")]
+        public LastModifiedUser User { get; set; } = null!;
     }
 
     public class LastModifiedUser
     {
-        public string? displayName { get; set; }
-        public Guid id { get; set; }
+        [JsonPropertyName("displayName")]
+        public string? DisplayName { get; set; }
+
+        [JsonPropertyName("id")]
+        public Guid Id { get; set; }
     }
 }
